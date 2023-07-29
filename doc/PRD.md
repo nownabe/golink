@@ -55,21 +55,21 @@ It eliminates the need for unnecessary tasks to open websites and saves both you
 
 ### Components
 
-Golink consists of four components, Chrome extension, Goto, API, and Console.
-Goto, API and Console are deployed to Google App Engine for each company or for each user.
+Golink consists of four components, Chrome extension, Redirector, API, and Console.
+Redirector, API and Console are deployed to Google App Engine for each company or for each user.
 A host `golink.example.com` used below is an example host for a user's own URL for Golink backends.
 
 #### Chrome Extension
 
-Golink Chrome extension redirects `http://go/linkname` to `https://golink.example.com/goto/linkname`.
+Golink Chrome extension redirects `http://go/linkname` to `https://golink.example.com/linkname`.
 Golink also provides a popup interface to create a new golink to the URL of the current tab, and to list golinks related to the URL.
 
 The host for each user can be configured in extension's option.
 
-#### Goto
+#### Redirector
 
-Goto is hosted on `https://golink.example.com/goto/`.
-Goto is responsible for redirecting users' requests to true URLs.
+Redirector is hosted on `https://golink.example.com/`.
+Redirector is responsible for redirecting users' requests to true URLs.
 
 #### API
 
@@ -78,7 +78,7 @@ API is the API to manage golinks.
 
 #### Console
 
-Console is hosted on `https://golink.example.com/console/`.
+Console is hosted on `https://golink.example.com/c/`.
 Console is the web based UI to mange golinks.
 
 ### Security
@@ -86,7 +86,7 @@ Console is the web based UI to mange golinks.
 Security is important for Golink because Golink is intended to be used in a closed environment like companies.
 Golink has two security functionalities.
 
-1. Only whitelisted users can access Goto, API, Console.
+1. Only whitelisted users can access Redirector, API, Console.
 2. Those who don't have ownership permission of a golink cannot edit or delete the golink.
 
 ## Alternatives
