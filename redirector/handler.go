@@ -49,6 +49,7 @@ func (h *redirectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	url, err := h.repo.GetURLAndUpdateStats(ctx, path[0])
+	// TODO: If no existence, redirect to /c/name
 	if err != nil {
 		// TODO: log: error: failed to get url
 		http.Error(w, "internal server error", http.StatusInternalServerError)
@@ -59,5 +60,5 @@ func (h *redirectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		url.Path = fmt.Sprintf("%s/%s", url.Path, strings.Join(path[1:], "/"))
 	}
 
-	http.Redirect(w, r, url.String(), 301)
+	http.Redirect(w, r, url.String(), http.StatusTemporaryRedirect)
 }
