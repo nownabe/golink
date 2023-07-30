@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Golink",
+  "version": "0.0.2",
+  
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
+  "description": "Golink",
+  "icons": {},
+  
+  "author": {
+    "email": "nownabe@gmail.com"
+  },
+  
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "host_permissions": ["http://go/*", "https://go/*"]
+  "permissions": ["declarativeNetRequest"],
+}
