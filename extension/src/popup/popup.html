@@ -1,7 +1,7 @@
 <html>
   <head>
-    <link rel="stylesheet" href="popup.css" />
-    <script src="popup.js"></script>
+    <link rel="stylesheet" href="./popup.css" />
+    <script type="module" src="./popup.ts"></script>
   </head>
   <body>
     <div class="container">
@@ -25,6 +25,10 @@
           name="url"
           placeholder="https://example.com"
         />
+      </div>
+      <div class="button-wrapper">
+        <button class="button" id="save">Save</button>
+        <button class="button" id="cancel">Cancel</button>
       </div>
       <hr />
     </div>

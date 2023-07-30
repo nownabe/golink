@@ -1,0 +1,1 @@
+{"mappings":"ACAA,QAAQ,GAAA,CAAI","sources":["<anon>","src/popup/popup.ts"],"sourcesContent":["var $566c8d9d74c4fb47$exports = {};\nconsole.log(\"This is a popup!\");\n\n\n//# sourceMappingURL=popup.9b534c19.js.map\n","console.log(\"This is a popup!\");\n"],"names":["console","log"],"version":3,"file":"popup.9b534c19.js.map"}

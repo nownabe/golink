@@ -1,0 +1,19 @@
+{
+  "scripts": {
+    "start:popup": "parcel src/popup/popup.html",
+    "build": "npm run build:background && npm run build:popup",
+    "build:background": "parcel build src/background/service-worker.ts",
+    "build:popup": "parcel build src/popup/popup.html"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.242",
+    "parcel": "^2.9.3",
+    "process": "^0.11.10",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "@bufbuild/connect": "^0.12.0",
+    "@bufbuild/connect-web": "^0.12.0",
+    "@bufbuild/protobuf": "^1.3.0"
+  }
+}

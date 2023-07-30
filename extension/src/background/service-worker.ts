@@ -1,4 +1,4 @@
-const host = "your-host";
+const host = "your-host.com";
 
 async function initialize() {
   const redirectRule = {
