@@ -17,5 +17,6 @@
     "service_worker": "dist/service-worker.js"
   },
   "host_permissions": ["http://go/*", "https://go/*"],
-  "permissions": ["cookies", "declarativeNetRequest"]
+  "options_page": "dist/options.html",
+  "permissions": ["cookies", "declarativeNetRequest", "storage"]
 }
