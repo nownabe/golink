@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package golink.v1;
+
+service GolinkService {
+  rpc CreateGolink(CreateGolinkRequest) returns (CreateGolinkResponse) {}
+  /* rpc GetGolink(GetGolinkRequest) returns (GetGolinkResponse) {} */
+  /* rpc ListGolinks(ListGolinksRequest) returns (ListGolinksResponse) {} */
+  /* rpc UpdateGolink(UpdateGolinkRequest) returns (UpdateGolinkResponse) {} */
+  /* rpc DeleteGolink(DeleteGolinkRequest) returns (DeleteGolinkResponse) {} */
+}
+
+message Golink {
+  string name = 1;
+  string url = 2;
+}
+
+message CreateGolinkRequest {
+  string name = 1;
+  string url = 2;
+}
+
+message CreateGolinkResponse {
+  Golink golink = 1;
+}
