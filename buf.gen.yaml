@@ -1,0 +1,20 @@
+version: v1
+managed:
+  enabled: true
+  go_package_prefix:
+    default: github.com/nownabe/golink/api/gen
+plugins:
+  - plugin: buf.build/protocolbuffers/go
+    out: api/gen
+    opt:
+      - paths=source_relative
+  - plugin: buf.build/bufbuild/connect-go
+    out: api/gen
+    opt:
+      - paths=source_relative
+  - plugin: buf.build/bufbuild/es
+    out: extension/gen
+    opt: target=ts
+  - plugin: buf.build/bufbuild/connect-es
+    out: extension/gen
+    opt: target=ts
