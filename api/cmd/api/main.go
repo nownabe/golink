@@ -15,7 +15,9 @@ func main() {
 
 	origins := strings.Split(os.Getenv("ALLOWED_ORIGINS"), ",")
 
-	svc := api.NewGolinkService(nil)
+	repo := api.NewRepository()
+
+	svc := api.NewGolinkService(repo)
 	if err := api.New(svc, port, "/api", origins).Run(); err != nil {
 		// TODO: log: fatal
 		panic(err)
