@@ -1,2 +1,1 @@
-# golink
-Go Link
+# Golink (go/link)
