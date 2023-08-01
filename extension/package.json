@@ -2,7 +2,7 @@
   "scripts": {
     "start:popup": "parcel --dist-dir .dist/ src/popup/popup.html",
     "start:options": "parcel --dist-dir .dist/ src/options/options.html",
-    "build": "npm run build:background && npm run build:popup",
+    "build": "npm run build:background && npm run build:popup && npm run build:options",
     "build:background": "parcel build src/background/service-worker.ts",
     "build:popup": "parcel build --public-url ./ --no-content-hash src/popup/popup.html",
     "build:options": "parcel build --public-url ./ --no-content-hash src/options/options.html"
