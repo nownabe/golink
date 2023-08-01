@@ -4,10 +4,11 @@ package golink.v1;
 
 service GolinkService {
   rpc CreateGolink(CreateGolinkRequest) returns (CreateGolinkResponse) {}
-  /* rpc GetGolink(GetGolinkRequest) returns (GetGolinkResponse) {} */
-  /* rpc ListGolinks(ListGolinksRequest) returns (ListGolinksResponse) {} */
-  /* rpc UpdateGolink(UpdateGolinkRequest) returns (UpdateGolinkResponse) {} */
-  /* rpc DeleteGolink(DeleteGolinkRequest) returns (DeleteGolinkResponse) {} */
+  rpc GetGolink(GetGolinkRequest) returns (GetGolinkResponse) {}
+  rpc ListGolinks(ListGolinksRequest) returns (ListGolinksResponse) {}
+  rpc ListGolinksByURL(ListGolinksByURLRequest) returns (ListGolinksByURLResponse) {}
+  rpc UpdateGolink(UpdateGolinkRequest) returns (UpdateGolinkResponse) {}
+  rpc DeleteGolink(DeleteGolinkRequest) returns (DeleteGolinkResponse) {}
 }
 
 message Golink {
@@ -22,4 +23,44 @@ message CreateGolinkRequest {
 
 message CreateGolinkResponse {
   Golink golink = 1;
+}
+
+message GetGolinkRequest {
+  string name = 1;
+}
+
+message GetGolinkResponse {
+  Golink golink = 1;
+}
+
+message ListGolinksRequest {
+  string owner = 1;
+}
+
+message ListGolinksResponse {
+  repeated Golink golinks = 1;
+}
+
+message ListGolinksByURLRequest {
+  string url = 1;
+}
+
+message ListGolinksByURLResponse {
+  repeated Golink golinks = 1;
+}
+
+message UpdateGolinkRequest {
+  string name = 1;
+  string url = 2;
+}
+
+message UpdateGolinkResponse {
+  Golink golink = 1;
+}
+
+message DeleteGolinkRequest {
+  string name = 1;
+}
+
+message DeleteGolinkResponse {
 }

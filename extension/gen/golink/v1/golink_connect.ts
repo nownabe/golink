@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { CreateGolinkRequest, CreateGolinkResponse } from "./golink_pb.js";
+import { CreateGolinkRequest, CreateGolinkResponse, DeleteGolinkRequest, DeleteGolinkResponse, GetGolinkRequest, GetGolinkResponse, ListGolinksByURLRequest, ListGolinksByURLResponse, ListGolinksRequest, ListGolinksResponse, UpdateGolinkRequest, UpdateGolinkResponse } from "./golink_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -19,6 +19,51 @@ export const GolinkService = {
       name: "CreateGolink",
       I: CreateGolinkRequest,
       O: CreateGolinkResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc golink.v1.GolinkService.GetGolink
+     */
+    getGolink: {
+      name: "GetGolink",
+      I: GetGolinkRequest,
+      O: GetGolinkResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc golink.v1.GolinkService.ListGolinks
+     */
+    listGolinks: {
+      name: "ListGolinks",
+      I: ListGolinksRequest,
+      O: ListGolinksResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc golink.v1.GolinkService.ListGolinksByURL
+     */
+    listGolinksByURL: {
+      name: "ListGolinksByURL",
+      I: ListGolinksByURLRequest,
+      O: ListGolinksByURLResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc golink.v1.GolinkService.UpdateGolink
+     */
+    updateGolink: {
+      name: "UpdateGolink",
+      I: UpdateGolinkRequest,
+      O: UpdateGolinkResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc golink.v1.GolinkService.DeleteGolink
+     */
+    deleteGolink: {
+      name: "DeleteGolink",
+      I: DeleteGolinkRequest,
+      O: DeleteGolinkResponse,
       kind: MethodKind.Unary,
     },
   }

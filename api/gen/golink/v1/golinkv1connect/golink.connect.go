@@ -36,11 +36,30 @@ const (
 	// GolinkServiceCreateGolinkProcedure is the fully-qualified name of the GolinkService's
 	// CreateGolink RPC.
 	GolinkServiceCreateGolinkProcedure = "/golink.v1.GolinkService/CreateGolink"
+	// GolinkServiceGetGolinkProcedure is the fully-qualified name of the GolinkService's GetGolink RPC.
+	GolinkServiceGetGolinkProcedure = "/golink.v1.GolinkService/GetGolink"
+	// GolinkServiceListGolinksProcedure is the fully-qualified name of the GolinkService's ListGolinks
+	// RPC.
+	GolinkServiceListGolinksProcedure = "/golink.v1.GolinkService/ListGolinks"
+	// GolinkServiceListGolinksByURLProcedure is the fully-qualified name of the GolinkService's
+	// ListGolinksByURL RPC.
+	GolinkServiceListGolinksByURLProcedure = "/golink.v1.GolinkService/ListGolinksByURL"
+	// GolinkServiceUpdateGolinkProcedure is the fully-qualified name of the GolinkService's
+	// UpdateGolink RPC.
+	GolinkServiceUpdateGolinkProcedure = "/golink.v1.GolinkService/UpdateGolink"
+	// GolinkServiceDeleteGolinkProcedure is the fully-qualified name of the GolinkService's
+	// DeleteGolink RPC.
+	GolinkServiceDeleteGolinkProcedure = "/golink.v1.GolinkService/DeleteGolink"
 )
 
 // GolinkServiceClient is a client for the golink.v1.GolinkService service.
 type GolinkServiceClient interface {
 	CreateGolink(context.Context, *connect_go.Request[v1.CreateGolinkRequest]) (*connect_go.Response[v1.CreateGolinkResponse], error)
+	GetGolink(context.Context, *connect_go.Request[v1.GetGolinkRequest]) (*connect_go.Response[v1.GetGolinkResponse], error)
+	ListGolinks(context.Context, *connect_go.Request[v1.ListGolinksRequest]) (*connect_go.Response[v1.ListGolinksResponse], error)
+	ListGolinksByURL(context.Context, *connect_go.Request[v1.ListGolinksByURLRequest]) (*connect_go.Response[v1.ListGolinksByURLResponse], error)
+	UpdateGolink(context.Context, *connect_go.Request[v1.UpdateGolinkRequest]) (*connect_go.Response[v1.UpdateGolinkResponse], error)
+	DeleteGolink(context.Context, *connect_go.Request[v1.DeleteGolinkRequest]) (*connect_go.Response[v1.DeleteGolinkResponse], error)
 }
 
 // NewGolinkServiceClient constructs a client for the golink.v1.GolinkService service. By default,
@@ -58,12 +77,42 @@ func NewGolinkServiceClient(httpClient connect_go.HTTPClient, baseURL string, op
 			baseURL+GolinkServiceCreateGolinkProcedure,
 			opts...,
 		),
+		getGolink: connect_go.NewClient[v1.GetGolinkRequest, v1.GetGolinkResponse](
+			httpClient,
+			baseURL+GolinkServiceGetGolinkProcedure,
+			opts...,
+		),
+		listGolinks: connect_go.NewClient[v1.ListGolinksRequest, v1.ListGolinksResponse](
+			httpClient,
+			baseURL+GolinkServiceListGolinksProcedure,
+			opts...,
+		),
+		listGolinksByURL: connect_go.NewClient[v1.ListGolinksByURLRequest, v1.ListGolinksByURLResponse](
+			httpClient,
+			baseURL+GolinkServiceListGolinksByURLProcedure,
+			opts...,
+		),
+		updateGolink: connect_go.NewClient[v1.UpdateGolinkRequest, v1.UpdateGolinkResponse](
+			httpClient,
+			baseURL+GolinkServiceUpdateGolinkProcedure,
+			opts...,
+		),
+		deleteGolink: connect_go.NewClient[v1.DeleteGolinkRequest, v1.DeleteGolinkResponse](
+			httpClient,
+			baseURL+GolinkServiceDeleteGolinkProcedure,
+			opts...,
+		),
 	}
 }
 
 // golinkServiceClient implements GolinkServiceClient.
 type golinkServiceClient struct {
-	createGolink *connect_go.Client[v1.CreateGolinkRequest, v1.CreateGolinkResponse]
+	createGolink     *connect_go.Client[v1.CreateGolinkRequest, v1.CreateGolinkResponse]
+	getGolink        *connect_go.Client[v1.GetGolinkRequest, v1.GetGolinkResponse]
+	listGolinks      *connect_go.Client[v1.ListGolinksRequest, v1.ListGolinksResponse]
+	listGolinksByURL *connect_go.Client[v1.ListGolinksByURLRequest, v1.ListGolinksByURLResponse]
+	updateGolink     *connect_go.Client[v1.UpdateGolinkRequest, v1.UpdateGolinkResponse]
+	deleteGolink     *connect_go.Client[v1.DeleteGolinkRequest, v1.DeleteGolinkResponse]
 }
 
 // CreateGolink calls golink.v1.GolinkService.CreateGolink.
@@ -71,9 +120,39 @@ func (c *golinkServiceClient) CreateGolink(ctx context.Context, req *connect_go.
 	return c.createGolink.CallUnary(ctx, req)
 }
 
+// GetGolink calls golink.v1.GolinkService.GetGolink.
+func (c *golinkServiceClient) GetGolink(ctx context.Context, req *connect_go.Request[v1.GetGolinkRequest]) (*connect_go.Response[v1.GetGolinkResponse], error) {
+	return c.getGolink.CallUnary(ctx, req)
+}
+
+// ListGolinks calls golink.v1.GolinkService.ListGolinks.
+func (c *golinkServiceClient) ListGolinks(ctx context.Context, req *connect_go.Request[v1.ListGolinksRequest]) (*connect_go.Response[v1.ListGolinksResponse], error) {
+	return c.listGolinks.CallUnary(ctx, req)
+}
+
+// ListGolinksByURL calls golink.v1.GolinkService.ListGolinksByURL.
+func (c *golinkServiceClient) ListGolinksByURL(ctx context.Context, req *connect_go.Request[v1.ListGolinksByURLRequest]) (*connect_go.Response[v1.ListGolinksByURLResponse], error) {
+	return c.listGolinksByURL.CallUnary(ctx, req)
+}
+
+// UpdateGolink calls golink.v1.GolinkService.UpdateGolink.
+func (c *golinkServiceClient) UpdateGolink(ctx context.Context, req *connect_go.Request[v1.UpdateGolinkRequest]) (*connect_go.Response[v1.UpdateGolinkResponse], error) {
+	return c.updateGolink.CallUnary(ctx, req)
+}
+
+// DeleteGolink calls golink.v1.GolinkService.DeleteGolink.
+func (c *golinkServiceClient) DeleteGolink(ctx context.Context, req *connect_go.Request[v1.DeleteGolinkRequest]) (*connect_go.Response[v1.DeleteGolinkResponse], error) {
+	return c.deleteGolink.CallUnary(ctx, req)
+}
+
 // GolinkServiceHandler is an implementation of the golink.v1.GolinkService service.
 type GolinkServiceHandler interface {
 	CreateGolink(context.Context, *connect_go.Request[v1.CreateGolinkRequest]) (*connect_go.Response[v1.CreateGolinkResponse], error)
+	GetGolink(context.Context, *connect_go.Request[v1.GetGolinkRequest]) (*connect_go.Response[v1.GetGolinkResponse], error)
+	ListGolinks(context.Context, *connect_go.Request[v1.ListGolinksRequest]) (*connect_go.Response[v1.ListGolinksResponse], error)
+	ListGolinksByURL(context.Context, *connect_go.Request[v1.ListGolinksByURLRequest]) (*connect_go.Response[v1.ListGolinksByURLResponse], error)
+	UpdateGolink(context.Context, *connect_go.Request[v1.UpdateGolinkRequest]) (*connect_go.Response[v1.UpdateGolinkResponse], error)
+	DeleteGolink(context.Context, *connect_go.Request[v1.DeleteGolinkRequest]) (*connect_go.Response[v1.DeleteGolinkResponse], error)
 }
 
 // NewGolinkServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -87,10 +166,45 @@ func NewGolinkServiceHandler(svc GolinkServiceHandler, opts ...connect_go.Handle
 		svc.CreateGolink,
 		opts...,
 	)
+	golinkServiceGetGolinkHandler := connect_go.NewUnaryHandler(
+		GolinkServiceGetGolinkProcedure,
+		svc.GetGolink,
+		opts...,
+	)
+	golinkServiceListGolinksHandler := connect_go.NewUnaryHandler(
+		GolinkServiceListGolinksProcedure,
+		svc.ListGolinks,
+		opts...,
+	)
+	golinkServiceListGolinksByURLHandler := connect_go.NewUnaryHandler(
+		GolinkServiceListGolinksByURLProcedure,
+		svc.ListGolinksByURL,
+		opts...,
+	)
+	golinkServiceUpdateGolinkHandler := connect_go.NewUnaryHandler(
+		GolinkServiceUpdateGolinkProcedure,
+		svc.UpdateGolink,
+		opts...,
+	)
+	golinkServiceDeleteGolinkHandler := connect_go.NewUnaryHandler(
+		GolinkServiceDeleteGolinkProcedure,
+		svc.DeleteGolink,
+		opts...,
+	)
 	return "/golink.v1.GolinkService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case GolinkServiceCreateGolinkProcedure:
 			golinkServiceCreateGolinkHandler.ServeHTTP(w, r)
+		case GolinkServiceGetGolinkProcedure:
+			golinkServiceGetGolinkHandler.ServeHTTP(w, r)
+		case GolinkServiceListGolinksProcedure:
+			golinkServiceListGolinksHandler.ServeHTTP(w, r)
+		case GolinkServiceListGolinksByURLProcedure:
+			golinkServiceListGolinksByURLHandler.ServeHTTP(w, r)
+		case GolinkServiceUpdateGolinkProcedure:
+			golinkServiceUpdateGolinkHandler.ServeHTTP(w, r)
+		case GolinkServiceDeleteGolinkProcedure:
+			golinkServiceDeleteGolinkHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -102,4 +216,24 @@ type UnimplementedGolinkServiceHandler struct{}
 
 func (UnimplementedGolinkServiceHandler) CreateGolink(context.Context, *connect_go.Request[v1.CreateGolinkRequest]) (*connect_go.Response[v1.CreateGolinkResponse], error) {
 	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("golink.v1.GolinkService.CreateGolink is not implemented"))
+}
+
+func (UnimplementedGolinkServiceHandler) GetGolink(context.Context, *connect_go.Request[v1.GetGolinkRequest]) (*connect_go.Response[v1.GetGolinkResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("golink.v1.GolinkService.GetGolink is not implemented"))
+}
+
+func (UnimplementedGolinkServiceHandler) ListGolinks(context.Context, *connect_go.Request[v1.ListGolinksRequest]) (*connect_go.Response[v1.ListGolinksResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("golink.v1.GolinkService.ListGolinks is not implemented"))
+}
+
+func (UnimplementedGolinkServiceHandler) ListGolinksByURL(context.Context, *connect_go.Request[v1.ListGolinksByURLRequest]) (*connect_go.Response[v1.ListGolinksByURLResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("golink.v1.GolinkService.ListGolinksByURL is not implemented"))
+}
+
+func (UnimplementedGolinkServiceHandler) UpdateGolink(context.Context, *connect_go.Request[v1.UpdateGolinkRequest]) (*connect_go.Response[v1.UpdateGolinkResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("golink.v1.GolinkService.UpdateGolink is not implemented"))
+}
+
+func (UnimplementedGolinkServiceHandler) DeleteGolink(context.Context, *connect_go.Request[v1.DeleteGolinkRequest]) (*connect_go.Response[v1.DeleteGolinkResponse], error) {
+	return nil, connect_go.NewError(connect_go.CodeUnimplemented, errors.New("golink.v1.GolinkService.DeleteGolink is not implemented"))
 }
