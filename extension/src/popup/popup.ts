@@ -13,13 +13,13 @@ import { GolinkService } from "../../gen/golink/v1/golink_connect";
 const golinkUrlKey = "golinkUrl";
 
 class GolinkPopup {
-  client: PromiseClient<GolinkService>;
+  client: PromiseClient<typeof GolinkService>;
 
-  constructor(client: PromiseClient<GolinkService>) {
+  constructor(client: PromiseClient<typeof GolinkService>) {
     this.client = client;
   }
 
-  setClient(client: PromiseClient<GolinkService>) {
+  setClient(client: PromiseClient<typeof GolinkService>) {
     this.client = client;
   }
 
