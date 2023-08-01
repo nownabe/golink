@@ -34,9 +34,13 @@ class GolinkPopup {
 }
 
 async function buildClient() {
-  const url = (await chrome.storage.sync.get(golinkUrlKey))[golinkUrlKey];
+  let url = (await chrome.storage.sync.get(golinkUrlKey))[golinkUrlKey];
+  if (!url.endsWith("/")) {
+    url += "/";
+  }
+
   const transport = createConnectTransport({
-    baseUrl: url + "/api",
+    baseUrl: url + "api",
     credentials: "include",
   });
   return createPromiseClient(GolinkService, transport);
