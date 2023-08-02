@@ -180,6 +180,38 @@ If the request user is the last owner of the golink, `DeleteOwner` returns a `FA
 
 ### Database
 
+There are only an object type, Golink. Golink documents are stored `golinks/` collection and identified by golink name.
+
+```json
+// golinks/ collection
+{
+  "linkname1": {
+    "url": "http://example.com/foo",
+    "redirect_count": 10,
+    "created_at": "...",
+    "updated_at": "...",
+    "owners": [
+      "owner1@example.com",
+      "owner2@example.com"
+    ]
+  },
+  "linkname2": { ... }
+}
+```
+
+Each gRPC method runs following queries:
+
+```go
+// CreateGolink, GetGolink, UpdateGolink, DeleteGolink, AddOwner, DeleteOwner
+client.Collection("golinks").Doc(linkName);
+
+// ListGolinks
+client.Collection("golinks").Where("owners", "array-contains-any", userEmail);
+
+// ListGolinksByUrl
+client.Collection("golinks").Where("url", "==", url);
+```
+
 ### Identity-Aware Proxy
 
 ### API
