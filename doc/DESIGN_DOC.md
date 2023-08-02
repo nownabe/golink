@@ -13,7 +13,7 @@ See [PRD](./PRD.md).
 
 Golink consists of six components: Chrome extension, API, Redirector, database, Identity-Aware Proxy, Console.
 
-![architecture](./architecture.png)
+[![architecture](./architecture.png)](https://googlecloudcheatsheet.withgoogle.com/architecture?link=0038ca10-313a-11ee-82a6-f9c22e3525da)
 
 Server-side components are built on Google Cloud.
 Clients, Chrome Extension and Console, communicate with API via gRPC.
