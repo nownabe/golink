@@ -98,8 +98,8 @@ Golink has two security functionalities.
 ### Differentiation
 
 - Open source
+- Self-host; not a SaaS and no pricing
 - Built on Google Cloud as fully managed
-- No SaaS, no pricing
 
 ## Appendix
 
