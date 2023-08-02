@@ -223,3 +223,7 @@ client.Collection("golinks").Where("url", "==", url);
 ### Console (Web Frontend)
 
 ## Alternatives Considered
+
+## Caveats
+
+- Cloud Firestore has a [limitation](https://cloud.google.com/firestore/docs/manage-data/add-data#increment_a_numeric_value) that a single document can be updated only once per second. As Redirector counts how many redirects happened for each golink, if a Golink grows too much, it has to use [distributed counters](https://cloud.google.com/firestore/docs/solutions/counters) or throttling.
