@@ -53,6 +53,8 @@ message Golink {
 }
 ```
 
+I'll use [connect](https://connectrpc.com/) as gRPC implementation because connect works on App Engine and doesn't need a proxy for communication with browsers.
+
 #### `CreateGolink` method
 
 ```proto
@@ -214,13 +216,23 @@ client.Collection("golinks").Where("url", "==", url);
 
 ### Identity-Aware Proxy
 
+Deployed Golink system is designed to be protected by [Identity-Aware Proxy](https://cloud.google.com/iap). Golink administrators can specify users who can access their Golink.
+
+Identity-Aware Proxy has to configured to [allow preflight requests](https://cloud.google.com/iap/docs/customizing#allowing_http_options_requests_cors_preflight).
+
 ### API
 
+API is a gRPC server written in Go deployed to App Engine as service. API handles requests with path prefix `/api`.
+
 ### Redirector
+
+Redirector redirects all requests following redirect rules stored in database, counting successful redirects. If no rule is found for the given name, redirect to Console to encourage the user to create a new golink.
 
 ### Chrome Extension
 
 ### Console (Web Frontend)
+
+### App Engine's Dispatcher
 
 ## Alternatives Considered
 
