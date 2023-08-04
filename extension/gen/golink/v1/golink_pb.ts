@@ -20,6 +20,11 @@ export class Golink extends Message<Golink> {
    */
   url = "";
 
+  /**
+   * @generated from field: repeated string owners = 3;
+   */
+  owners: string[] = [];
+
   constructor(data?: PartialMessage<Golink>) {
     super();
     proto3.util.initPartial(data, this);
@@ -30,6 +35,7 @@ export class Golink extends Message<Golink> {
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 2, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "owners", kind: "scalar", T: 9 /* ScalarType.STRING */, repeated: true },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Golink {
@@ -278,76 +284,76 @@ export class ListGolinksResponse extends Message<ListGolinksResponse> {
 }
 
 /**
- * @generated from message golink.v1.ListGolinksByURLRequest
+ * @generated from message golink.v1.ListGolinksByUrlRequest
  */
-export class ListGolinksByURLRequest extends Message<ListGolinksByURLRequest> {
+export class ListGolinksByUrlRequest extends Message<ListGolinksByUrlRequest> {
   /**
    * @generated from field: string url = 1;
    */
   url = "";
 
-  constructor(data?: PartialMessage<ListGolinksByURLRequest>) {
+  constructor(data?: PartialMessage<ListGolinksByUrlRequest>) {
     super();
     proto3.util.initPartial(data, this);
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "golink.v1.ListGolinksByURLRequest";
+  static readonly typeName = "golink.v1.ListGolinksByUrlRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListGolinksByURLRequest {
-    return new ListGolinksByURLRequest().fromBinary(bytes, options);
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListGolinksByUrlRequest {
+    return new ListGolinksByUrlRequest().fromBinary(bytes, options);
   }
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ListGolinksByURLRequest {
-    return new ListGolinksByURLRequest().fromJson(jsonValue, options);
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ListGolinksByUrlRequest {
+    return new ListGolinksByUrlRequest().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ListGolinksByURLRequest {
-    return new ListGolinksByURLRequest().fromJsonString(jsonString, options);
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ListGolinksByUrlRequest {
+    return new ListGolinksByUrlRequest().fromJsonString(jsonString, options);
   }
 
-  static equals(a: ListGolinksByURLRequest | PlainMessage<ListGolinksByURLRequest> | undefined, b: ListGolinksByURLRequest | PlainMessage<ListGolinksByURLRequest> | undefined): boolean {
-    return proto3.util.equals(ListGolinksByURLRequest, a, b);
+  static equals(a: ListGolinksByUrlRequest | PlainMessage<ListGolinksByUrlRequest> | undefined, b: ListGolinksByUrlRequest | PlainMessage<ListGolinksByUrlRequest> | undefined): boolean {
+    return proto3.util.equals(ListGolinksByUrlRequest, a, b);
   }
 }
 
 /**
- * @generated from message golink.v1.ListGolinksByURLResponse
+ * @generated from message golink.v1.ListGolinksByUrlResponse
  */
-export class ListGolinksByURLResponse extends Message<ListGolinksByURLResponse> {
+export class ListGolinksByUrlResponse extends Message<ListGolinksByUrlResponse> {
   /**
    * @generated from field: repeated golink.v1.Golink golinks = 1;
    */
   golinks: Golink[] = [];
 
-  constructor(data?: PartialMessage<ListGolinksByURLResponse>) {
+  constructor(data?: PartialMessage<ListGolinksByUrlResponse>) {
     super();
     proto3.util.initPartial(data, this);
   }
 
   static readonly runtime: typeof proto3 = proto3;
-  static readonly typeName = "golink.v1.ListGolinksByURLResponse";
+  static readonly typeName = "golink.v1.ListGolinksByUrlResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "golinks", kind: "message", T: Golink, repeated: true },
   ]);
 
-  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListGolinksByURLResponse {
-    return new ListGolinksByURLResponse().fromBinary(bytes, options);
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListGolinksByUrlResponse {
+    return new ListGolinksByUrlResponse().fromBinary(bytes, options);
   }
 
-  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ListGolinksByURLResponse {
-    return new ListGolinksByURLResponse().fromJson(jsonValue, options);
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ListGolinksByUrlResponse {
+    return new ListGolinksByUrlResponse().fromJson(jsonValue, options);
   }
 
-  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ListGolinksByURLResponse {
-    return new ListGolinksByURLResponse().fromJsonString(jsonString, options);
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ListGolinksByUrlResponse {
+    return new ListGolinksByUrlResponse().fromJsonString(jsonString, options);
   }
 
-  static equals(a: ListGolinksByURLResponse | PlainMessage<ListGolinksByURLResponse> | undefined, b: ListGolinksByURLResponse | PlainMessage<ListGolinksByURLResponse> | undefined): boolean {
-    return proto3.util.equals(ListGolinksByURLResponse, a, b);
+  static equals(a: ListGolinksByUrlResponse | PlainMessage<ListGolinksByUrlResponse> | undefined, b: ListGolinksByUrlResponse | PlainMessage<ListGolinksByUrlResponse> | undefined): boolean {
+    return proto3.util.equals(ListGolinksByUrlResponse, a, b);
   }
 }
 
@@ -496,6 +502,170 @@ export class DeleteGolinkResponse extends Message<DeleteGolinkResponse> {
 
   static equals(a: DeleteGolinkResponse | PlainMessage<DeleteGolinkResponse> | undefined, b: DeleteGolinkResponse | PlainMessage<DeleteGolinkResponse> | undefined): boolean {
     return proto3.util.equals(DeleteGolinkResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message golink.v1.AddOwnerRequest
+ */
+export class AddOwnerRequest extends Message<AddOwnerRequest> {
+  /**
+   * @generated from field: string name = 1;
+   */
+  name = "";
+
+  /**
+   * email
+   *
+   * @generated from field: string owner = 2;
+   */
+  owner = "";
+
+  constructor(data?: PartialMessage<AddOwnerRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "golink.v1.AddOwnerRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "owner", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): AddOwnerRequest {
+    return new AddOwnerRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): AddOwnerRequest {
+    return new AddOwnerRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): AddOwnerRequest {
+    return new AddOwnerRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: AddOwnerRequest | PlainMessage<AddOwnerRequest> | undefined, b: AddOwnerRequest | PlainMessage<AddOwnerRequest> | undefined): boolean {
+    return proto3.util.equals(AddOwnerRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message golink.v1.AddOwnerResponse
+ */
+export class AddOwnerResponse extends Message<AddOwnerResponse> {
+  /**
+   * @generated from field: golink.v1.Golink golink = 1;
+   */
+  golink?: Golink;
+
+  constructor(data?: PartialMessage<AddOwnerResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "golink.v1.AddOwnerResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "golink", kind: "message", T: Golink },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): AddOwnerResponse {
+    return new AddOwnerResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): AddOwnerResponse {
+    return new AddOwnerResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): AddOwnerResponse {
+    return new AddOwnerResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: AddOwnerResponse | PlainMessage<AddOwnerResponse> | undefined, b: AddOwnerResponse | PlainMessage<AddOwnerResponse> | undefined): boolean {
+    return proto3.util.equals(AddOwnerResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message golink.v1.RemoveOwnerRequest
+ */
+export class RemoveOwnerRequest extends Message<RemoveOwnerRequest> {
+  /**
+   * @generated from field: string name = 1;
+   */
+  name = "";
+
+  /**
+   * email
+   *
+   * @generated from field: string owner = 2;
+   */
+  owner = "";
+
+  constructor(data?: PartialMessage<RemoveOwnerRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "golink.v1.RemoveOwnerRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "owner", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): RemoveOwnerRequest {
+    return new RemoveOwnerRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): RemoveOwnerRequest {
+    return new RemoveOwnerRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RemoveOwnerRequest {
+    return new RemoveOwnerRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: RemoveOwnerRequest | PlainMessage<RemoveOwnerRequest> | undefined, b: RemoveOwnerRequest | PlainMessage<RemoveOwnerRequest> | undefined): boolean {
+    return proto3.util.equals(RemoveOwnerRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message golink.v1.RemoveOwnerResponse
+ */
+export class RemoveOwnerResponse extends Message<RemoveOwnerResponse> {
+  /**
+   * @generated from field: golink.v1.Golink golink = 1;
+   */
+  golink?: Golink;
+
+  constructor(data?: PartialMessage<RemoveOwnerResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "golink.v1.RemoveOwnerResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "golink", kind: "message", T: Golink },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): RemoveOwnerResponse {
+    return new RemoveOwnerResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): RemoveOwnerResponse {
+    return new RemoveOwnerResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): RemoveOwnerResponse {
+    return new RemoveOwnerResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: RemoveOwnerResponse | PlainMessage<RemoveOwnerResponse> | undefined, b: RemoveOwnerResponse | PlainMessage<RemoveOwnerResponse> | undefined): boolean {
+    return proto3.util.equals(RemoveOwnerResponse, a, b);
   }
 }
 

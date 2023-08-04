@@ -6,14 +6,17 @@ service GolinkService {
   rpc CreateGolink(CreateGolinkRequest) returns (CreateGolinkResponse) {}
   rpc GetGolink(GetGolinkRequest) returns (GetGolinkResponse) {}
   rpc ListGolinks(ListGolinksRequest) returns (ListGolinksResponse) {}
-  rpc ListGolinksByURL(ListGolinksByURLRequest) returns (ListGolinksByURLResponse) {}
+  rpc ListGolinksByUrl(ListGolinksByUrlRequest) returns (ListGolinksByUrlResponse) {}
   rpc UpdateGolink(UpdateGolinkRequest) returns (UpdateGolinkResponse) {}
   rpc DeleteGolink(DeleteGolinkRequest) returns (DeleteGolinkResponse) {}
+  rpc AddOwner(AddOwnerRequest) returns (AddOwnerResponse) {}
+  rpc RemoveOwner(RemoveOwnerRequest) returns (RemoveOwnerResponse) {}
 }
 
 message Golink {
   string name = 1;
   string url = 2;
+  repeated string owners = 3;
 }
 
 message CreateGolinkRequest {
@@ -41,11 +44,11 @@ message ListGolinksResponse {
   repeated Golink golinks = 1;
 }
 
-message ListGolinksByURLRequest {
+message ListGolinksByUrlRequest {
   string url = 1;
 }
 
-message ListGolinksByURLResponse {
+message ListGolinksByUrlResponse {
   repeated Golink golinks = 1;
 }
 
@@ -63,4 +66,22 @@ message DeleteGolinkRequest {
 }
 
 message DeleteGolinkResponse {
+}
+
+message AddOwnerRequest {
+  string name = 1;
+  string owner = 2; // email
+}
+
+message AddOwnerResponse {
+  Golink golink = 1;
+}
+
+message RemoveOwnerRequest {
+  string name = 1;
+  string owner = 2; // email
+}
+
+message RemoveOwnerResponse {
+  Golink golink = 1;
 }

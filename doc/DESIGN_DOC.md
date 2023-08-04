@@ -43,7 +43,7 @@ service GolinkService {
   rpc UpdateGolink(UpdateGolinkRequest) returns (UpdateGolinkResponse) {}
   rpc DeleteGolink(DeleteGolinkRequest) returns (DeleteGolinkResponse) {}
   rpc AddOwner(AddOwnerRequest) returns (AddOwnerResponse) {}
-  rpc DeleteOwner(DeleteOwnerRequest) returns (DeleteOwnerResponse) {}
+  rpc RemoveOwner(RemoveOwnerRequest) returns (RemoveOwnerResponse) {}
 }
 
 message Golink {
@@ -163,15 +163,15 @@ message AddOwnerResponse {
 `AddOwner` adds a new owner given as an email. If the request user is not an owner of the golink, `AddOwner` returns a `PERMISSION_DENIED` error.
 `AddOwner` is used by Console.
 
-#### `DeleteOwner` methods
+#### `RemoveOwner` methods
 
 ```proto
-message DeleteOwnerRequest {
+message RemoveOwnerRequest {
   string name = 1;
   string owner = 2;
 }
 
-message DeleteOwnerResponse {
+message RemoveOwnerResponse {
   Golink golink = 1;
 }
 ```
