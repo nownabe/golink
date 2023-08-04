@@ -230,9 +230,37 @@ Redirector redirects all requests following redirect rules stored in database, c
 
 ### Chrome Extension
 
+Golink Chrome Extension is composed of Service Worker, Popup and Options. It's built on [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/intro/).
+
+In Options, users can configure their own Golink backend URL, which means App Engine's URL. Golink backend URL configured in Options is stored [storage sync](https://developer.chrome.com/docs/extensions/reference/storage/#property-sync) so that users can use the URL in any Chrome they signed in.
+
+Service Worker interrupts requests to `http://go/*` and redirects them to Redirector. On Manifest V3, using [declarativeNetRequest](https://developer.chrome.com/docs/extensions/reference/declarativeNetRequest/) is required to redirect. Since target URL to redirect is dynamically configured in Options by users, Golink needs to use dynamic rules instead of static rules cannot be eligible for Golink.
+
+Popup provides quick UI to create a new golink to the current URL. Popup calls Golink APIs to create new golinks and to list golinks related to the current tab's URL. For quick creation, Popup gets the URL of the current tab and fill it in Popup's form. Popup needs client code generated from gRPC definitions to call API, and cookies to access API through IAP. If users don't signed in, users have to be redirected to sign-in dialogue.
+
+To provide these features, Golink Chrome Extension needs permissions: `declarativeNetRequest`, `storage` and `tabs`.
+
+As development logistics, I chose TypeScript to keep benefits of types from gRPC, Parcel for zero-configuration builds.
+
 ### Console (Web Frontend)
 
+Console is web UI to give users all features of Golink.
+
+It is built with Next.js and hosted on App Engine as `console` service at `/c`.
+
 ### App Engine's Dispatcher
+
+App Engine dispatches each request to each service following `dispatch.yaml`.
+
+```yaml
+dispatch:
+  - url: "*/api/*"
+    service: api
+  - url: "*/c/*"
+    service: c
+  - url: "*/*"
+    service: default
+```
 
 ## Alternatives Considered
 
