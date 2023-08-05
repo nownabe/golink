@@ -4,20 +4,20 @@
     <script type="module" src="./popup.ts"></script>
   </head>
   <body>
-    <div class="container">
-      <h1>Golink Settings</h1>
+    <div id="container" class="container">
+      <h1>Golink</h1>
 
-      <div id="not-configured" hidden>
+      <div id="not-configured" class="container" hidden>
         <p>Golink is not configured. Please configure your URL in Options.</p>
         <button class="button" id="open-options">Open Options</button>
       </div>
 
-      <div id="unauthenticated" hidden>
+      <div id="unauthenticated" class="container" hidden>
         <p>You are not authenticated.</p>
         <button class="button" id="open-console">Sign in</button>
       </div>
 
-      <div id="golink-ui" hidden>
+      <div id="golink-ui" class="container" hidden>
         <h2 id="tab-title"></h2>
         <div class="name-wrapper">
           <span class="name-prefix">go/</span>
@@ -26,7 +26,7 @@
             type="text"
             id="name"
             name="name"
-            placeholder="golink name"
+            placeholder="golink-name"
           />
         </div>
         <div class="url-wrapper">
@@ -39,12 +39,10 @@
             placeholder="https://example.com"
           />
         </div>
-        <div class="button-wrapper">
-          <button class="button" id="save">Save</button>
-          <p id="saved" hidden>Saved!</p>
-        </div>
+        <button class="button" id="save">Save</button>
+        <p id="saved" hidden>Saved!</p>
         <hr />
-        <div id="golinks-container" hidden>
+        <div id="golinks-container" class="container" hidden>
           <h2>This URL has the following golinks:</h2>
           <ul id="golinks"></ul>
         </div>

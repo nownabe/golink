@@ -63,9 +63,11 @@ class GolinkPopup {
       if (tabs.length > 0) {
         const title = tabs[0].title || "";
         document.getElementById("tab-title")!.innerText = title;
-        (document.getElementById("url") as HTMLInputElement).value = tabs[0].url || "";
+        (document.getElementById("url") as HTMLInputElement).value =
+          tabs[0].url || "";
         const match = title.match(/go\/(?<name>[\w-]+)/);
-        (document.getElementById("name") as HTMLInputElement).value = match?.groups?.name || "";
+        (document.getElementById("name") as HTMLInputElement).value =
+          match?.groups?.name || "";
       }
       showGolinkUi();
       await this.listGolinks();
@@ -161,8 +163,6 @@ class GolinkPopup {
 }
 
 async function initialize() {
-  if (!document) return;
-
   const popup = await GolinkPopup.create();
   await popup.initialize();
 
