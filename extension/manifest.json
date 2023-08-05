@@ -18,5 +18,5 @@
   },
   "host_permissions": ["http://go/*", "https://go/*"],
   "options_page": "dist/options.html",
-  "permissions": ["cookies", "declarativeNetRequest", "storage"]
+  "permissions": ["declarativeNetRequest", "storage", "tabs"]
 }
