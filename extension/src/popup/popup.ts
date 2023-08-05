@@ -61,6 +61,14 @@ class GolinkPopup {
     }
 
     if (await this.checkAuth()) {
+      const tabs = await chrome.tabs.query({
+        active: true,
+        currentWindow: true,
+      });
+      if (tabs.length > 0) {
+        document.getElementById("tab-title").innerText = tabs[0].title || "";
+        document.getElementById("url").value = tabs[0].url;
+      }
       showGolinkUi();
     } else {
       showUnauthenticated();
@@ -115,7 +123,6 @@ async function initialize() {
     .getElementById("open-console")
     .addEventListener("click", popup.openConsole);
   document.getElementById("save").addEventListener("click", popup.onSave);
-  document.getElementById("cancel").addEventListener("click", popup.onCancel);
   console.log("initialized");
 }
 
