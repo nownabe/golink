@@ -73,6 +73,7 @@ class GolinkPopup {
         document.getElementById("name").value = match?.groups?.name || "";
       }
       showGolinkUi();
+      await this.listGolinks();
     } else {
       showUnauthenticated();
     }
@@ -124,6 +125,33 @@ class GolinkPopup {
       credentials: "include",
     });
     this.client = createPromiseClient(GolinkService, transport);
+  }
+
+  private async listGolinks() {
+    const url = document.getElementById("url").value;
+    if (!url) return;
+
+    try {
+      const res = await this.client.listGolinksByUrl({ url });
+      const golinks = res.golinks;
+
+      if (golinks.length === 0) return;
+
+      const ul = document.getElementById("golinks");
+      golinks.forEach((golink) => {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = golink.url;
+        a.innerText = "go/" + golink.name;
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+
+      document.getElementById("golinks-container").hidden = false;
+    } catch (rawErr) {
+      const err = ConnectError.from(rawErr);
+      alert(err.message);
+    }
   }
 }
 
