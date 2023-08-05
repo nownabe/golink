@@ -19,12 +19,12 @@ const golinks: Golink[] = [
   {
     name: "mylink1",
     url: "https://mylink1.example.com",
-    owners: ["my@example.com"],
+    owners: ["myself@example.com"],
   },
   {
-    name: "mylink2",
-    url: "https://mylink2.example.com",
-    owners: ["my@example.com"],
+    name: "otherlink1",
+    url: "https://otherlink1.example.com",
+    owners: ["other@example.com"],
   },
 ];
 
