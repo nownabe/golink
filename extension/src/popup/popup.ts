@@ -85,7 +85,17 @@ class GolinkPopup {
     const url = (document.getElementById("url") as HTMLInputElement).value;
 
     if (!name || !url) {
-      alert("name and url are required");
+      alert("golink name and url are required");
+      return;
+    }
+
+    if (!this.validateName(name)) {
+      alert("invalid golink name");
+      return;
+    }
+
+    if (!this.validateUrl(url)) {
+      alert("invalid URL");
       return;
     }
 
@@ -158,6 +168,19 @@ class GolinkPopup {
     } catch (rawErr) {
       const err = ConnectError.from(rawErr);
       alert(err.message);
+    }
+  }
+
+  private validateName(name: string): boolean {
+    return /^[a-z0-9_-]+$/.test(name);
+  }
+
+  private validateUrl(url: string): boolean {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
     }
   }
 }
