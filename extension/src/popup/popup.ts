@@ -109,18 +109,6 @@ function updateClientFunc(popup: GolinkPopup) {
   };
 }
 
-function urlCallback(updateClient: () => Promise<void>) {
-  return async (
-    changes: { [key: string]: chrome.storage.StorageChange },
-    namespace: string,
-  ) => {
-    if (namespace === "sync" && golinkUrlKey in changes) {
-      console.log("url changed");
-      await updateClient();
-    }
-  };
-}
-
 async function openOptionsPage() {
   await chrome.runtime.openOptionsPage();
 }
@@ -130,8 +118,6 @@ async function initialize() {
 
   const updateClient = updateClientFunc(popup);
   await updateClient();
-
-  chrome.storage.onChanged.addListener(urlCallback(updateClient));
 
   document
     .getElementById("open-options")
