@@ -66,8 +66,11 @@ class GolinkPopup {
         currentWindow: true,
       });
       if (tabs.length > 0) {
-        document.getElementById("tab-title").innerText = tabs[0].title || "";
+        const title = tabs[0].title || "";
+        document.getElementById("tab-title").innerText = title;
         document.getElementById("url").value = tabs[0].url;
+        const match = title.match(/go\/(?<name>[\w-]+)/);
+        document.getElementById("name").value = match?.groups?.name || "";
       }
       showGolinkUi();
     } else {
