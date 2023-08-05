@@ -22,7 +22,7 @@ class GolinkPopup {
       if (!this.url.endsWith("/")) {
         this.url += "/";
       }
-      this.api = url + "api";
+      this.api = this.url + "api";
       this.buildClient();
     }
   }
