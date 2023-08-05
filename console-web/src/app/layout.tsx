@@ -8,8 +8,10 @@ import {
 import {
   AppBar,
   Box,
+  Button,
   Divider,
   Drawer,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -19,6 +21,9 @@ import {
   Typography,
 } from "@mui/material";
 import zIndex from "@mui/material/styles/zIndex";
+import Link from "next/link";
+import { useCallback } from "react";
+import { useRouter } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -32,6 +37,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // const router = useRouter();
+  // const toAppRoot = useCallback(() => router.push("/c"), [router]);
+
   return (
     <html lang="en">
       <body>
@@ -39,10 +47,29 @@ export default function RootLayout({
           <Box sx={{ display: "flex" }}>
             <AppBar position="fixed" sx={{ zIndex: zIndex.drawer + 1 }}>
               <Toolbar>
-                <LinkIcon sx={{ mr: 2 }} />
-                <Typography variant="h6" noWrap component="div">
-                  Golink
-                </Typography>
+                <Link
+                  href="/c/"
+                  style={{
+                    color: "#fff",
+                    textDecoration: "none",
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{
+                      display: "flex",
+                      color: "#fff",
+                      alignItems: "center",
+                      "&:active": { textDecoration: "none" },
+                      gap: 1,
+                    }}
+                  >
+                    <LinkIcon />
+                    Golink
+                  </Typography>
+                </Link>
               </Toolbar>
             </AppBar>
             <Drawer
@@ -61,7 +88,7 @@ export default function RootLayout({
               <Divider />
               <List>
                 <ListItem disablePadding>
-                  <ListItemButton>
+                  <ListItemButton LinkComponent={Link} href="/c/-/new">
                     <ListItemIcon>
                       <AddIcon />
                     </ListItemIcon>
@@ -69,7 +96,7 @@ export default function RootLayout({
                   </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                  <ListItemButton>
+                  <ListItemButton LinkComponent={Link} href="/c/-/">
                     <ListItemIcon>
                       <ListIcon />
                     </ListItemIcon>
