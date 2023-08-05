@@ -6,31 +6,44 @@
   <body>
     <div class="container">
       <h1>Golink Settings</h1>
-      <div class="name-wrapper">
-        <span class="name-prefix">go/</span>
-        <input
-          class="name-input"
-          type="text"
-          id="name"
-          name="name"
-          placeholder="golink name"
-        />
+
+      <div id="not-configured">
+        <p>Golink is not configured. Please configure your URL in Options.</p>
+        <button class="button" id="open-options">Open Options</button>
       </div>
-      <div class="url-wrapper">
-        <span class="url-prefix">to</span>
-        <input
-          class="url-input"
-          type="text"
-          id="url"
-          name="url"
-          placeholder="https://example.com"
-        />
+
+      <div id="unauthenticated" hidden>
+        <p>You are not authenticated.</p>
+        <button class="button" id="open-console">Sign in</button>
       </div>
-      <div class="button-wrapper">
-        <button class="button" id="save">Save</button>
-        <button class="button" id="cancel">Cancel</button>
+
+      <div id="golink-ui" hidden>
+        <div class="name-wrapper">
+          <span class="name-prefix">go/</span>
+          <input
+            class="name-input"
+            type="text"
+            id="name"
+            name="name"
+            placeholder="golink name"
+          />
+        </div>
+        <div class="url-wrapper">
+          <span class="url-prefix">to</span>
+          <input
+            class="url-input"
+            type="text"
+            id="url"
+            name="url"
+            placeholder="https://example.com"
+          />
+        </div>
+        <div class="button-wrapper">
+          <button class="button" id="save">Save</button>
+          <button class="button" id="cancel">Cancel</button>
+        </div>
+        <hr />
       </div>
-      <hr />
     </div>
   </body>
 </html>
