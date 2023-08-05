@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ThemeRegistry from "./components/ThemeRegistry/ThemeRegistry";
+import ThemeRegistry from "../components/ThemeRegistry/ThemeRegistry";
 import {
   Link as LinkIcon,
   List as ListIcon,
