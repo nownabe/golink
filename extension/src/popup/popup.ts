@@ -13,24 +13,61 @@ import { GolinkService } from "../../gen/golink/v1/golink_connect";
 const golinkUrlKey = "golinkUrl";
 
 class GolinkPopup {
-  client: PromiseClient<typeof GolinkService>;
+  client: PromiseClient<typeof GolinkService> | undefined;
+  url: string | null;
 
-  constructor(url: string) {
-    this.setUrl(url);
-  }
-
-  setUrl(url: string) {
+  constructor(url: string | null) {
     this.url = url;
-    this.api = url + "api";
-
-    const transport = createConnectTransport({
-      baseUrl: this.api,
-      credentials: "include",
-    });
-    this.client = createPromiseClient(GolinkService, transport);
+    if (this.url) {
+      if (!this.url.endsWith("/")) {
+        this.url += "/";
+      }
+      this.api = url + "api";
+      this.buildClient();
+    }
   }
 
-  async checkAuth(): boolean {
+  public static async create(): Promise<GolinkPopup> {
+    const url = (await chrome.storage.sync.get(golinkUrlKey))[golinkUrlKey];
+    return new GolinkPopup(url);
+  }
+
+  public async initialize() {
+    const notConfiguredElem = document.getElementById("not-configured");
+    const unauthenticatedElem = document.getElementById("unauthenticated");
+    const golinkUiElem = document.getElementById("golink-ui");
+
+    const showNotConfigured = () => {
+      notConfiguredElem.hidden = false;
+      unauthenticatedElem.hidden = true;
+      golinkUiElem.hidden = true;
+    };
+
+    const showUnauthenticated = () => {
+      notConfiguredElem.hidden = true;
+      unauthenticatedElem.hidden = false;
+      golinkUiElem.hidden = true;
+    };
+
+    const showGolinkUi = () => {
+      notConfiguredElem.hidden = true;
+      unauthenticatedElem.hidden = true;
+      golinkUiElem.hidden = false;
+    };
+
+    if (!this.url) {
+      showNotConfigured();
+      return;
+    }
+
+    if (await this.checkAuth()) {
+      showGolinkUi();
+    } else {
+      showUnauthenticated();
+    }
+  }
+
+  private async checkAuth(): boolean {
     try {
       const res = await fetch(this.api + "/healthz", {
         credentials: "include",
@@ -42,7 +79,7 @@ class GolinkPopup {
     }
   }
 
-  onSave = async () => {
+  public onSave = async () => {
     const res = await this.client.createGolink({
       name: "mylink",
       url: "https://example.com",
@@ -50,78 +87,30 @@ class GolinkPopup {
     console.log(res);
   };
 
-  openConsole = async () => {
+  public openConsole = async () => {
     chrome.tabs.create({ url: this.url + "c" });
   };
-}
 
-async function getGolinkUrl(): Promise<string | null> {
-  let url = (await chrome.storage.sync.get(golinkUrlKey))[golinkUrlKey];
-  if (!url) {
-    return null;
+  private buildClient() {
+    if (!this.url) return;
+
+    const transport = createConnectTransport({
+      baseUrl: this.api,
+      credentials: "include",
+    });
+    this.client = createPromiseClient(GolinkService, transport);
   }
-
-  if (!url.endsWith("/")) {
-    url += "/";
-  }
-
-  return url;
-}
-
-function updateClientFunc(popup: GolinkPopup) {
-  const notConfiguredElem = document.getElementById("not-configured");
-  const unauthenticatedElem = document.getElementById("unauthenticated");
-  const golinkUiElem = document.getElementById("golink-ui");
-
-  const showNotConfigured = () => {
-    notConfiguredElem.hidden = false;
-    unauthenticatedElem.hidden = true;
-    golinkUiElem.hidden = true;
-  };
-
-  const showUnauthenticated = () => {
-    notConfiguredElem.hidden = true;
-    unauthenticatedElem.hidden = false;
-    golinkUiElem.hidden = true;
-  };
-
-  const showGolinkUi = () => {
-    notConfiguredElem.hidden = true;
-    unauthenticatedElem.hidden = true;
-    golinkUiElem.hidden = false;
-  };
-
-  return async () => {
-    const url = await getGolinkUrl();
-
-    if (!url) {
-      showNotConfigured();
-      return;
-    }
-
-    popup.setUrl(url);
-
-    if (await popup.checkAuth()) {
-      showGolinkUi();
-    } else {
-      showUnauthenticated();
-    }
-  };
-}
-
-async function openOptionsPage() {
-  await chrome.runtime.openOptionsPage();
 }
 
 async function initialize() {
-  const popup = new GolinkPopup();
-
-  const updateClient = updateClientFunc(popup);
-  await updateClient();
+  const popup = await GolinkPopup.create();
+  await popup.initialize();
 
   document
     .getElementById("open-options")
-    .addEventListener("click", openOptionsPage);
+    .addEventListener("click", async () => {
+      await chrome.runtime.openOptionsPage();
+    });
   document
     .getElementById("open-console")
     .addEventListener("click", popup.openConsole);
