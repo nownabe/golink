@@ -2,6 +2,7 @@ import { ConnectError } from "@bufbuild/connect";
 import { useCallback, useRef, useState } from "react";
 
 import client from "@/client";
+import { validateEmail, validateUrl } from "@/validator";
 
 export function useUrl(name: string) {
   const ref = useRef<HTMLInputElement>(null);
@@ -13,6 +14,11 @@ export function useUrl(name: string) {
   const onUrlUpdate = useCallback(() => {
     (async () => {
       if (!ref.current) {
+        return;
+      }
+
+      if (!validateUrl(ref.current.value)) {
+        setError("URL must be a valid URL");
         return;
       }
 
@@ -91,16 +97,12 @@ export function useOwners(ownersFromServer: string[]) {
         return;
       }
 
-      console.log(addRef);
-      console.log(addRef.current);
-      console.log(addRef.current.value);
-      const owner = addRef.current.value;
-      console.log(owner);
-      if (!owner || !owner.includes("@")) {
+      if (!validateEmail(addRef.current.value)) {
         setAddError("Owner email must be a valid email address");
         return;
       }
 
+      const owner = addRef.current.value;
       setAdding(true);
 
       try {

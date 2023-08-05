@@ -9,31 +9,7 @@ import { useCallback, useRef, useState } from "react";
 import client from "@/client";
 import ProgressButton from "@/components/ProgressButton";
 import Snackbar from "@/components/Snackbar";
-
-const validateName = (name: string): boolean => {
-  if (name === "") {
-    return false;
-  }
-
-  if (name.startsWith("-") || name.endsWith("-")) {
-    return false;
-  }
-
-  if (name.match(/^_+$/) || name.startsWith("__") || name.endsWith("__")) {
-    return false;
-  }
-
-  return true;
-};
-
-const validateUrl = (url: string): boolean => {
-  try {
-    new URL(url);
-    return true;
-  } catch (e) {
-    return false;
-  }
-};
+import { validateGolinkName, validateUrl } from "@/validator";
 
 export default function Form() {
   const searchParams = useSearchParams();
@@ -48,7 +24,7 @@ export default function Form() {
 
   const onClick = useCallback(() => {
     (async () => {
-      if (!nameRef.current || !validateName(nameRef.current.value)) {
+      if (!nameRef.current || !validateGolinkName(nameRef.current.value)) {
         setError("Invalid name");
         return;
       }
