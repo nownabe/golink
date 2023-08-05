@@ -50,7 +50,7 @@ export default function RootLayout({
                   <Typography
                     variant="h6"
                     noWrap
-                    component="div"
+                    component="h1"
                     sx={{
                       display: "flex",
                       color: "#fff",
