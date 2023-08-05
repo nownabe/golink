@@ -8,10 +8,8 @@ import {
 import {
   AppBar,
   Box,
-  Button,
   Divider,
   Drawer,
-  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -22,8 +20,6 @@ import {
 } from "@mui/material";
 import zIndex from "@mui/material/styles/zIndex";
 import Link from "next/link";
-import { useCallback } from "react";
-import { useRouter } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -37,9 +33,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // const router = useRouter();
-  // const toAppRoot = useCallback(() => router.push("/c"), [router]);
-
   return (
     <html lang="en">
       <body>
