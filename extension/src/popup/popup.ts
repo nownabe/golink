@@ -1,13 +1,7 @@
-import { MethodKind } from "@bufbuild/protobuf";
 import { createPromiseClient, ConnectError } from "@bufbuild/connect";
 import { createConnectTransport } from "@bufbuild/connect-web";
-
 import type { PromiseClient } from "@bufbuild/connect";
 
-import {
-  CreateGolinkRequest,
-  CreateGolinkResponse,
-} from "../../gen/golink/v1/golink_pb";
 import { GolinkService } from "../../gen/golink/v1/golink_connect";
 
 const golinkUrlKey = "golinkUrl";
@@ -15,6 +9,7 @@ const golinkUrlKey = "golinkUrl";
 class GolinkPopup {
   client: PromiseClient<typeof GolinkService> | undefined;
   url: string | null;
+  api: string | null = null;
 
   constructor(url: string | null) {
     this.url = url;
@@ -33,9 +28,9 @@ class GolinkPopup {
   }
 
   public async initialize() {
-    const notConfiguredElem = document.getElementById("not-configured");
-    const unauthenticatedElem = document.getElementById("unauthenticated");
-    const golinkUiElem = document.getElementById("golink-ui");
+    const notConfiguredElem = document.getElementById("not-configured")!;
+    const unauthenticatedElem = document.getElementById("unauthenticated")!;
+    const golinkUiElem = document.getElementById("golink-ui")!;
 
     const showNotConfigured = () => {
       notConfiguredElem.hidden = false;
@@ -67,10 +62,10 @@ class GolinkPopup {
       });
       if (tabs.length > 0) {
         const title = tabs[0].title || "";
-        document.getElementById("tab-title").innerText = title;
-        document.getElementById("url").value = tabs[0].url;
+        document.getElementById("tab-title")!.innerText = title;
+        (document.getElementById("url") as HTMLInputElement).value = tabs[0].url || "";
         const match = title.match(/go\/(?<name>[\w-]+)/);
-        document.getElementById("name").value = match?.groups?.name || "";
+        (document.getElementById("name") as HTMLInputElement).value = match?.groups?.name || "";
       }
       showGolinkUi();
       await this.listGolinks();
@@ -80,8 +75,12 @@ class GolinkPopup {
   }
 
   public onSave = async () => {
-    const name = document.getElementById("name").value;
-    const url = document.getElementById("url").value;
+    if (!this.client) {
+      return;
+    }
+
+    const name = (document.getElementById("name") as HTMLInputElement).value;
+    const url = (document.getElementById("url") as HTMLInputElement).value;
 
     if (!name || !url) {
       alert("name and url are required");
@@ -93,8 +92,8 @@ class GolinkPopup {
         name: name,
         url: url,
       });
-      document.getElementById("save").hidden = true;
-      document.getElementById("saved").hidden = false;
+      document.getElementById("save")!.hidden = true;
+      document.getElementById("saved")!.hidden = false;
     } catch (rawErr) {
       const err = ConnectError.from(rawErr);
       alert(err.message);
@@ -105,7 +104,7 @@ class GolinkPopup {
     chrome.tabs.create({ url: this.url + "c" });
   };
 
-  private async checkAuth(): boolean {
+  private async checkAuth(): Promise<boolean> {
     try {
       const res = await fetch(this.api + "/healthz", {
         credentials: "include",
@@ -118,7 +117,7 @@ class GolinkPopup {
   }
 
   private buildClient() {
-    if (!this.url) return;
+    if (!this.url || !this.api) return;
 
     const transport = createConnectTransport({
       baseUrl: this.api,
@@ -128,7 +127,11 @@ class GolinkPopup {
   }
 
   private async listGolinks() {
-    const url = document.getElementById("url").value;
+    if (!this.client) {
+      return;
+    }
+
+    const url = (document.getElementById("url") as HTMLInputElement).value;
     if (!url) return;
 
     try {
@@ -138,6 +141,8 @@ class GolinkPopup {
       if (golinks.length === 0) return;
 
       const ul = document.getElementById("golinks");
+      if (!ul) return;
+
       golinks.forEach((golink) => {
         const li = document.createElement("li");
         const a = document.createElement("a");
@@ -147,7 +152,7 @@ class GolinkPopup {
         ul.appendChild(li);
       });
 
-      document.getElementById("golinks-container").hidden = false;
+      document.getElementById("golinks-container")!.hidden = false;
     } catch (rawErr) {
       const err = ConnectError.from(rawErr);
       alert(err.message);
@@ -156,18 +161,20 @@ class GolinkPopup {
 }
 
 async function initialize() {
+  if (!document) return;
+
   const popup = await GolinkPopup.create();
   await popup.initialize();
 
   document
     .getElementById("open-options")
-    .addEventListener("click", async () => {
+    ?.addEventListener("click", async () => {
       await chrome.runtime.openOptionsPage();
     });
   document
     .getElementById("open-console")
-    .addEventListener("click", popup.openConsole);
-  document.getElementById("save").addEventListener("click", popup.onSave);
+    ?.addEventListener("click", popup.openConsole);
+  document.getElementById("save")?.addEventListener("click", popup.onSave);
   console.log("initialized");
 }
 

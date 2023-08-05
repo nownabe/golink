@@ -5,7 +5,8 @@
     "build": "npm run build:background && npm run build:popup && npm run build:options",
     "build:background": "parcel build src/background/service-worker.ts",
     "build:popup": "parcel build --public-url ./ --no-content-hash src/popup/popup.html",
-    "build:options": "parcel build --public-url ./ --no-content-hash src/options/options.html"
+    "build:options": "parcel build --public-url ./ --no-content-hash src/options/options.html",
+    "check": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.242",
