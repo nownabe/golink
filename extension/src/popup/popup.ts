@@ -1,5 +1,5 @@
 import { MethodKind } from "@bufbuild/protobuf";
-import { createPromiseClient } from "@bufbuild/connect";
+import { createPromiseClient, ConnectError } from "@bufbuild/connect";
 import { createConnectTransport } from "@bufbuild/connect-web";
 
 import type { PromiseClient } from "@bufbuild/connect";
@@ -78,6 +78,32 @@ class GolinkPopup {
     }
   }
 
+  public onSave = async () => {
+    const name = document.getElementById("name").value;
+    const url = document.getElementById("url").value;
+
+    if (!name || !url) {
+      alert("name and url are required");
+      return;
+    }
+
+    try {
+      await this.client.createGolink({
+        name: name,
+        url: url,
+      });
+      document.getElementById("save").hidden = true;
+      document.getElementById("saved").hidden = false;
+    } catch (rawErr) {
+      const err = ConnectError.from(rawErr);
+      alert(err.message);
+    }
+  };
+
+  public openConsole = async () => {
+    chrome.tabs.create({ url: this.url + "c" });
+  };
+
   private async checkAuth(): boolean {
     try {
       const res = await fetch(this.api + "/healthz", {
@@ -89,18 +115,6 @@ class GolinkPopup {
       return false;
     }
   }
-
-  public onSave = async () => {
-    const res = await this.client.createGolink({
-      name: "mylink",
-      url: "https://example.com",
-    });
-    console.log(res);
-  };
-
-  public openConsole = async () => {
-    chrome.tabs.create({ url: this.url + "c" });
-  };
 
   private buildClient() {
     if (!this.url) return;
