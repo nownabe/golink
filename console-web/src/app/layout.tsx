@@ -1,9 +1,7 @@
-import type { Metadata } from "next";
-import ThemeRegistry from "../components/ThemeRegistry/ThemeRegistry";
 import {
+  Add as AddIcon,
   Link as LinkIcon,
   List as ListIcon,
-  Add as AddIcon,
 } from "@mui/icons-material";
 import {
   AppBar,
@@ -19,19 +17,40 @@ import {
   Typography,
 } from "@mui/material";
 import zIndex from "@mui/material/styles/zIndex";
+import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
+
+import ThemeRegistry from "../components/ThemeRegistry/ThemeRegistry";
 
 export const metadata: Metadata = {
   title: "Golink",
 };
 
 const drawerWidth = 240;
+const appEngineUserEmailHeader = "X-Goog-Authenticated-User-Email";
+
+export function getUserEmail() {
+  const authenticatedUserEmail = headers().get(appEngineUserEmailHeader);
+
+  let email;
+
+  if (!authenticatedUserEmail) {
+    email = "";
+  } else {
+    email = authenticatedUserEmail[0].split(":")[1];
+  }
+
+  return email;
+}
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const email = getUserEmail();
+
   return (
     <html lang="en">
       <body>
@@ -44,6 +63,7 @@ export default function RootLayout({
                   style={{
                     color: "#fff",
                     textDecoration: "none",
+                    flexGrow: 1,
                   }}
                 >
                   <Typography
@@ -62,6 +82,9 @@ export default function RootLayout({
                     Golink
                   </Typography>
                 </Link>
+                <Typography variant="body1" component="span">
+                  {email}
+                </Typography>
               </Toolbar>
             </AppBar>
             <Drawer
