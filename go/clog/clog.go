@@ -24,7 +24,7 @@ func SetDefault(l *Logger) {
 	defaultLogger.Store(l)
 }
 
-func New(w io.Writer, l slog.Level) *Logger {
+func New(w io.Writer, l slog.Level, opts ...option) *Logger {
 	jh := slog.NewJSONHandler(w, &slog.HandlerOptions{
 		Level: l,
 		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
@@ -35,15 +35,12 @@ func New(w io.Writer, l slog.Level) *Logger {
 		},
 	})
 	h := &sourceHandler{&otelTraceHandler{jh}}
+
+	for _, opt := range opts {
+		h = opt(h)
+	}
+
 	return &Logger{slog.New(h)}
-}
-
-func With(args ...any) *Logger {
-	return Default().With(args...)
-}
-
-func WithErr(err error) *Logger {
-	return Default().WithErr(err)
 }
 
 func Debug(ctx context.Context, msg string, args ...any) {
@@ -110,7 +107,6 @@ func Emergencyf(ctx context.Context, format string, args ...any) {
 	Default().Log(ctx, LevelEmergency, fmt.Sprintf(format, args...))
 }
 
-// TODO
-func Err(ctx context.Context, err error, args ...any) {
-	Default().WithErr(err).Error(ctx, err.Error(), args...)
+func Err(ctx context.Context, err error) {
+	Default().err(ctx, LevelError, err)
 }

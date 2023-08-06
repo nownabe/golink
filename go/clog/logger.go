@@ -15,15 +15,6 @@ type Logger struct {
 	*slog.Logger
 }
 
-func (l *Logger) With(args ...any) *Logger {
-	return &Logger{l.Logger.With(args...)}
-}
-
-// TODO
-func (l *Logger) WithErr(err error) *Logger {
-	return l.With("error", err)
-}
-
 func (l *Logger) Debug(ctx context.Context, msg string, args ...any) {
 	l.Log(ctx, LevelDebug, msg, args...)
 }
@@ -88,6 +79,24 @@ func (l *Logger) Emergencyf(ctx context.Context, format string, args ...any) {
 	l.Log(ctx, LevelEmergency, fmt.Sprintf(format, args...))
 }
 
-func (l *Logger) Err(ctx context.Context, err error, args ...any) {
-	l.WithErr(err).Log(ctx, LevelError, err.Error(), args...)
+func (l *Logger) Err(ctx context.Context, err error) {
+	l.err(ctx, LevelError, err)
+}
+
+func (l *Logger) err(ctx context.Context, lv Level, err error) {
+	var attrs []slog.Attr
+
+	if ee, ok := err.(ErrorEvent); ok {
+		attrs = append(attrs, slog.String("@type", "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent"))
+
+		if ec := ee.ErrorContext(); ec != nil {
+			attrs = append(attrs, slog.Group("context", ec))
+		}
+
+		if s := ee.Stack(); s != nil {
+			attrs = append(attrs, slog.String("stack_trace", string(s)))
+		}
+	}
+
+	l.LogAttrs(ctx, lv, err.Error(), attrs...)
 }
