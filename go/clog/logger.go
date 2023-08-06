@@ -7,9 +7,7 @@ import (
 	"golang.org/x/exp/slog"
 )
 
-var (
-	logger *Logger
-)
+var logger *Logger
 
 type Logger struct {
 	*slog.Logger
@@ -83,7 +81,7 @@ func (l *Logger) Err(ctx context.Context, err error) {
 	l.err(ctx, LevelError, err)
 }
 
-func (l *Logger) err(ctx context.Context, lv Level, err error) {
+func (l *Logger) err(ctx context.Context, lv slog.Level, err error) {
 	var attrs []slog.Attr
 
 	if ee, ok := err.(ErrorEvent); ok {

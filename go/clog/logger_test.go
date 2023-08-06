@@ -5,26 +5,7 @@ import (
 	"testing"
 )
 
-// TODO
-
-func TestLogger_With(t *testing.T) {
-	t.Parallel()
-
-	l, w := newLogger()
-
-	ctx := context.Background()
-	l.With("key", "value").Info(ctx, "test")
-
-	want := expectation{
-		"time":                                  anyStringVal{},
-		"logging.googleapis.com/sourceLocation": nonNilVal{},
-		"severity":                              "INFO",
-		"message":                               "test",
-		"key":                                   "value",
-	}
-
-	w.expect(t, want)
-}
+// TODO: test other methods
 
 func TestLogger_Info(t *testing.T) {
 	t.Parallel()

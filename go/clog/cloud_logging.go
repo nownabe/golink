@@ -59,6 +59,8 @@ func (r *HTTPRequest) LogValue() slog.Value {
 	)
 }
 
+// TODO
+/*
 func WithHTTPRequest(r *HTTPRequest) *Logger {
 	return Default().With(httpRequestKey, r)
 }
@@ -66,6 +68,7 @@ func WithHTTPRequest(r *HTTPRequest) *Logger {
 func WithInsertID(id string) *Logger {
 	return Default().With(insertIDKey, id)
 }
+*/
 
 // TODO: Labels
 
@@ -85,9 +88,12 @@ func (o *Operation) LogValue() slog.Value {
 	)
 }
 
+// TODO
+/*
 func WithOperation(o *Operation) *Logger {
 	return Default().With(operationKey, o)
 }
+*/
 
 type sourceHandler struct {
 	slog.Handler
