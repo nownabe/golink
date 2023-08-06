@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/bufbuild/connect-go"
 	"github.com/rs/cors"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
@@ -52,7 +53,8 @@ func (a *api) Run() error {
 }
 
 func (a *api) serve() error {
-	path, handler := golinkv1connect.NewGolinkServiceHandler(a.golinkSvc)
+	interceptors := connect.WithInterceptors(newAuthorizer())
+	path, handler := golinkv1connect.NewGolinkServiceHandler(a.golinkSvc, interceptors)
 
 	mux := http.NewServeMux()
 	mux.Handle(a.pathPrefix+path, a.trimPrefix(handler))
@@ -105,7 +107,7 @@ func (a *api) serve() error {
 
 func (a *api) healthz(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("ok"))
+	_, _ = w.Write([]byte("ok"))
 }
 
 // connect-go doesn't support path prefix.
