@@ -18,18 +18,23 @@ const (
 "X-Cloud-Trace-Context":[]string{"6dc654ab15a4edc4f222de83a6b5b861/11553923864589023457"},
 */
 
-// TODO
+// TODO ?
 
 func newAuthorizer() connect.UnaryInterceptorFunc {
 	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
 		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			email := strings.Split(req.Header().Get(headerUserEmail), ":")[1]
-			ctx = withValue[UserEmail](ctx, UserEmail(email))
+			ctx = WithUserEmail(ctx, email)
 
 			userID := strings.Split(req.Header().Get(headerUserID), ":")[1]
-			ctx = withValue[UserID](ctx, UserID(userID))
+			ctx = WithUserID(ctx, userID)
 
 			return next(ctx, req)
 		})
 	})
 }
+
+// TODO: request log
+// TODO: request id
+// TODO: recover
+// TODO: trace

@@ -2,13 +2,25 @@ package api
 
 import "context"
 
-type contextKey[T any] struct{}
+type (
+	contextKeyUserEmail struct{}
+	contextKeyUserID    struct{}
+)
 
-func withValue[T any](ctx context.Context, val T) context.Context {
-	return context.WithValue(ctx, contextKey[T]{}, val)
+func WithUserEmail(ctx context.Context, email string) context.Context {
+	return context.WithValue(ctx, contextKeyUserEmail{}, email)
 }
 
-func valueFrom[T any](ctx context.Context) (T, bool) {
-	v, ok := ctx.Value(contextKey[T]{}).(T)
+func UserEmailFrom(ctx context.Context) (string, bool) {
+	v, ok := ctx.Value(contextKeyUserEmail{}).(string)
+	return v, ok
+}
+
+func WithUserID(ctx context.Context, id string) context.Context {
+	return context.WithValue(ctx, contextKeyUserID{}, id)
+}
+
+func UserIDFrom(ctx context.Context) (string, bool) {
+	v, ok := ctx.Value(contextKeyUserID{}).(string)
 	return v, ok
 }

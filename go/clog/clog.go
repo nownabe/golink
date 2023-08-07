@@ -110,3 +110,19 @@ func Emergencyf(ctx context.Context, format string, args ...any) {
 func Err(ctx context.Context, err error) {
 	Default().err(ctx, LevelError, err)
 }
+
+func WarningErr(ctx context.Context, err error) {
+	Default().err(ctx, LevelWarning, err)
+}
+
+func CriticalErr(ctx context.Context, err error) {
+	Default().err(ctx, LevelCritical, err)
+}
+
+func AlertErr(ctx context.Context, err error) {
+	Default().err(ctx, LevelAlert, err)
+}
+
+func EmergencyErr(ctx context.Context, err error) {
+	Default().err(ctx, LevelEmergency, err)
+}
