@@ -81,6 +81,22 @@ func (l *Logger) Err(ctx context.Context, err error) {
 	l.err(ctx, LevelError, err)
 }
 
+func (l *Logger) WarningErr(ctx context.Context, err error) {
+	l.err(ctx, LevelWarning, err)
+}
+
+func (l *Logger) CriticalErr(ctx context.Context, err error) {
+	l.err(ctx, LevelCritical, err)
+}
+
+func (l *Logger) AlertErr(ctx context.Context, err error) {
+	l.err(ctx, LevelAlert, err)
+}
+
+func (l *Logger) EmergencyErr(ctx context.Context, err error) {
+	l.err(ctx, LevelEmergency, err)
+}
+
 func (l *Logger) err(ctx context.Context, lv slog.Level, err error) {
 	var attrs []slog.Attr
 
