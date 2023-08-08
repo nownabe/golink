@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -119,7 +118,6 @@ func (r *repository) ListByOwner(ctx context.Context, owner string) ([]*dto, err
 }
 
 func (r *repository) ListByURL(ctx context.Context, url string) ([]*dto, error) {
-	fmt.Println(url)
 	col := r.collection()
 	iter := col.Where("url", "==", url).Documents(ctx)
 	defer iter.Stop()
@@ -133,8 +131,6 @@ func (r *repository) ListByURL(ctx context.Context, url string) ([]*dto, error) 
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed to iterate golinks")
 		}
-
-		fmt.Printf("%+v\n", s.Data())
 
 		var o dto
 		if err := s.DataTo(&o); err != nil {
