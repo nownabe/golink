@@ -31,12 +31,14 @@ func New(
 	golinkSvc golinkv1connect.GolinkServiceHandler,
 	port, pathPrefix string,
 	allowedOrigins []string,
+	interceptors []connect.Interceptor,
 ) API {
 	return &api{
 		golinkSvc:      golinkSvc,
 		port:           port,
 		pathPrefix:     pathPrefix,
 		allowedOrigins: allowedOrigins,
+		interceptors:   interceptors,
 	}
 }
 
@@ -46,6 +48,7 @@ type api struct {
 	port           string
 	pathPrefix     string
 	allowedOrigins []string
+	interceptors   []connect.Interceptor
 }
 
 func (a *api) Run() error {
@@ -53,7 +56,7 @@ func (a *api) Run() error {
 }
 
 func (a *api) serve() error {
-	interceptors := connect.WithInterceptors(newAuthorizer())
+	interceptors := connect.WithInterceptors(a.interceptors...)
 	path, handler := golinkv1connect.NewGolinkServiceHandler(a.golinkSvc, interceptors)
 
 	mux := http.NewServeMux()

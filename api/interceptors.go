@@ -2,12 +2,14 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/bufbuild/connect-go"
 )
 
 const (
+	googHeaderPrefix   = "accounts.google.com:"
 	headerUserEmail    = "X-Appengine-User-Email"
 	headerUserID       = "X-Appengine-User-Id"
 	headerTraceContext = "X-Cloud-Trace-Context"
@@ -20,15 +22,25 @@ const (
 
 // TODO ?
 
-func newAuthorizer() connect.UnaryInterceptorFunc {
+func NewAuthorizer() connect.UnaryInterceptorFunc {
 	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
 		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-			email := strings.Split(req.Header().Get(headerUserEmail), ":")[1]
+			email := strings.TrimPrefix(req.Header().Get(headerUserEmail), googHeaderPrefix)
 			ctx = WithUserEmail(ctx, email)
 
-			userID := strings.Split(req.Header().Get(headerUserID), ":")[1]
+			userID := strings.TrimPrefix(req.Header().Get(headerUserID), googHeaderPrefix)
 			ctx = WithUserID(ctx, userID)
 
+			return next(ctx, req)
+		})
+	})
+}
+
+func NewDummyUser(email, userID string) connect.UnaryInterceptorFunc {
+	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
+		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
+			req.Header().Set(headerUserEmail, fmt.Sprintf("accounts.google.com:%s", email))
+			req.Header().Set(headerUserID, fmt.Sprintf("accounts.google.com:%s", userID))
 			return next(ctx, req)
 		})
 	})

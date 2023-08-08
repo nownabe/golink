@@ -7,6 +7,7 @@ import (
 
 	"cloud.google.com/go/compute/metadata"
 	"cloud.google.com/go/firestore"
+	"github.com/bufbuild/connect-go"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
 
@@ -38,9 +39,17 @@ func main() {
 	}
 
 	repo := api.NewRepository(fsClient)
-
 	svc := api.NewGolinkService(repo)
-	if err := api.New(svc, port, "/api", origins).Run(); err != nil {
+	interceptors := []connect.Interceptor{
+		api.NewAuthorizer(),
+	}
+
+	if user := os.Getenv("USE_DUMMY_USER"); user != "" {
+		u := strings.Split(user, ":")
+		interceptors = append([]connect.Interceptor{api.NewDummyUser(u[0], u[1])}, interceptors...)
+	}
+
+	if err := api.New(svc, port, "/api", origins, interceptors).Run(); err != nil {
 		clog.AlertErr(ctx, errors.Wrap(err, "failed to run server"))
 		os.Exit(1)
 	}
