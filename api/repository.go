@@ -43,7 +43,7 @@ func (r *repository) Transaction(ctx context.Context, f func(ctx context.Context
 
 func (r *repository) Exists(ctx context.Context, tx *firestore.Transaction, name string) (bool, error) {
 	col := r.collection()
-	doc := col.Doc(name)
+	doc := col.Doc(nameToID(name))
 
 	s, err := tx.Get(doc)
 	if status.Code(err) == codes.NotFound {
@@ -58,7 +58,7 @@ func (r *repository) Exists(ctx context.Context, tx *firestore.Transaction, name
 
 func (r *repository) Get(ctx context.Context, tx *firestore.Transaction, name string) (*dto, error) {
 	col := r.collection()
-	doc := col.Doc(name)
+	doc := col.Doc(nameToID(name))
 
 	s, err := tx.Get(doc)
 	if status.Code(err) == codes.NotFound {
@@ -78,7 +78,7 @@ func (r *repository) Get(ctx context.Context, tx *firestore.Transaction, name st
 
 func (r *repository) Create(ctx context.Context, tx *firestore.Transaction, dto *dto) error {
 	col := r.collection()
-	doc := col.Doc(dto.Name)
+	doc := col.Doc(dto.ID())
 
 	dto.CreatedAt = time.Now()
 	dto.UpdatedAt = time.Now()

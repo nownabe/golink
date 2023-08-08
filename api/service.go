@@ -3,6 +3,8 @@ package api
 import (
 	"context"
 	"fmt"
+	"net/url"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -33,6 +35,14 @@ func (s *golinkService) CreateGolink(
 		err := errors.New("user email not found in context")
 		clog.Err(ctx, err)
 		return nil, errf(connect.CodeInternal, "internal error")
+	}
+
+	if !isValidName(req.Msg.Name) {
+		return nil, errf(connect.CodeInvalidArgument, "invalid name")
+	}
+
+	if !isValidURL(req.Msg.Url) {
+		return nil, errf(connect.CodeInvalidArgument, "invalid url")
 	}
 
 	o := &dto{
@@ -69,13 +79,7 @@ func (s *golinkService) CreateGolink(
 		return nil, errf(connect.CodeAlreadyExists, "go/%s already exists", req.Msg.Name)
 	}
 
-	res := connect.NewResponse(&golinkv1.CreateGolinkResponse{
-		Golink: &golinkv1.Golink{
-			Name:   req.Msg.Name,
-			Url:    req.Msg.Url,
-			Owners: []string{email},
-		},
-	})
+	res := connect.NewResponse(&golinkv1.CreateGolinkResponse{Golink: o.toProto()})
 
 	return res, nil
 }
@@ -190,4 +194,43 @@ func (s *golinkService) RemoveOwner(
 
 func errf(code connect.Code, format string, args ...any) error {
 	return connect.NewError(code, fmt.Errorf(format, args...))
+}
+
+func isValidName(name string) bool {
+	// Firestore limitations
+	// https://firebase.google.com/docs/firestore/quotas#collections_documents_and_fields
+	if name == "" {
+		return false
+	}
+	if len(name) > 1500 {
+		return false
+	}
+	if strings.Contains(name, "/") {
+		return false
+	}
+	if strings.HasPrefix(name, "__") || strings.HasSuffix(name, "__") {
+		return false
+	}
+	if name == "." || name == ".." {
+		return false
+	}
+
+	// Golink limitations
+	if strings.HasPrefix(name, "-") || strings.HasSuffix(name, "-") {
+		return false
+	}
+	if name == "_" || name == "api" || name == "c" {
+		return false
+	}
+
+	return true
+}
+
+func isValidURL(u string) bool {
+	url, err := url.Parse(u)
+	if err != nil {
+		return false
+	}
+
+	return url.Scheme == "http" || url.Scheme == "https"
 }

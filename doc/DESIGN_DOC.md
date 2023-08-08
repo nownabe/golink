@@ -71,6 +71,14 @@ message CreateGolinkResponse {
 `CreateGoink` creates a new golink by a name and a URL. If the given name is already taken, `CreateGolink` returns an `ALREADY_EXISTS` error.
 `CreateGolink` is used by both Console and Extension.
 
+Values of `name` must be valid. It follows [Firestore limitations](https://firebase.google.com/docs/firestore/quotas#collections_documents_and_fields) ans Golink rules:
+
+* name cannot start or end with `"-"`. (these names are reserved by Golink)
+* name cannot be `"api"` or `"c"`.
+* name cannot be `"_"`.
+
+Names are case insensitive.
+
 #### `GetGolink` method
 
 ```proto
@@ -188,6 +196,7 @@ There are only an object type, Golink. Golink documents are stored `golinks/` co
 // golinks/ collection
 {
   "linkname1": {
+    "name": "LinkName1",
     "url": "http://example.com/foo",
     "redirect_count": 10,
     "created_at": "...",
