@@ -20,7 +20,7 @@ func (o *dto) ID() string {
 	return nameToID(o.Name)
 }
 
-func (o *dto) toProto() *golinkv1.Golink {
+func (o *dto) ToProto() *golinkv1.Golink {
 	return &golinkv1.Golink{
 		Name:   o.Name,
 		Url:    o.URL,

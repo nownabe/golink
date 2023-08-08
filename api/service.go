@@ -79,7 +79,7 @@ func (s *golinkService) CreateGolink(
 		return nil, errf(connect.CodeAlreadyExists, "go/%s already exists", req.Msg.Name)
 	}
 
-	res := connect.NewResponse(&golinkv1.CreateGolinkResponse{Golink: o.toProto()})
+	res := connect.NewResponse(&golinkv1.CreateGolinkResponse{Golink: o.ToProto()})
 
 	return res, nil
 }
@@ -102,20 +102,27 @@ func (s *golinkService) ListGolinks(
 	ctx context.Context,
 	req *connect.Request[golinkv1.ListGolinksRequest],
 ) (*connect.Response[golinkv1.ListGolinksResponse], error) {
-	res := connect.NewResponse(&golinkv1.ListGolinksResponse{
-		Golinks: []*golinkv1.Golink{
-			{
-				Name:   "example1",
-				Url:    "https://link1.example.com/",
-				Owners: []string{"user@example.com"},
-			},
-			{
-				Name:   "example2",
-				Url:    "https://link2.example.com/",
-				Owners: []string{"user@example.com"},
-			},
-		},
-	})
+	email, ok := UserEmailFrom(ctx)
+	if !ok {
+		err := errors.New("user email not found in context")
+		clog.Err(ctx, err)
+		return nil, errf(connect.CodeInternal, "internal error")
+	}
+
+	dtos, err := s.repo.ListByOwner(ctx, email)
+	if err != nil {
+		err := errors.New("failed to list Golinks")
+		clog.Err(ctx, err)
+		return nil, errf(connect.CodeInternal, "internal error")
+	}
+
+	var golinks []*golinkv1.Golink
+	for _, dto := range dtos {
+		golinks = append(golinks, dto.ToProto())
+	}
+
+	res := connect.NewResponse(&golinkv1.ListGolinksResponse{Golinks: golinks})
+
 	return res, nil
 }
 

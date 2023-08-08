@@ -18,20 +18,31 @@ import (
 	"github.com/nownabe/golink/api/gen/golink/v1/golinkv1connect"
 )
 
-func newService() golinkv1connect.GolinkServiceHandler {
+type dto = api.DTO
+
+var fsClient *firestore.Client
+
+func TestMain(m *testing.M) {
+	clearFirestoreEmulator()
+
 	ctx := context.Background()
-	fsClient, err := firestore.NewClient(ctx, "expecting-emulator")
+	var err error
+	fsClient, err = firestore.NewClient(ctx, "emulator")
 	if err != nil {
 		panic(err)
 	}
 
-	repo := api.NewRepository(fsClient)
+	code := m.Run()
+	os.Exit(code)
+}
 
+func newService() golinkv1connect.GolinkServiceHandler {
+	repo := api.NewRepository(fsClient)
 	return api.NewGolinkService(repo)
 }
 
 func clearFirestoreEmulator() {
-	url := fmt.Sprintf("http://%s/emulator/v1/projects/expecting-emulator/databases/(default)/documents", os.Getenv("FIRESTORE_EMULATOR_HOST"))
+	url := fmt.Sprintf("http://%s/emulator/v1/projects/emulator/databases/(default)/documents", os.Getenv("FIRESTORE_EMULATOR_HOST"))
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
 		panic(err)
@@ -234,6 +245,8 @@ func TestService_CreateGolink_Validations(t *testing.T) {
 	for name, tt := range tests {
 		tt := tt
 		t.Run(name, func(t *testing.T) {
+			defer clearFirestoreEmulator()
+
 			req := &golinkv1.CreateGolinkRequest{
 				Name: tt.name,
 				Url:  tt.url,
@@ -249,6 +262,78 @@ func TestService_CreateGolink_Validations(t *testing.T) {
 				if err, ok := err.(*connect.Error); !ok || err.Code() != tt.wantCode {
 					t.Errorf("got %v, want %v", err, tt.wantCode)
 				}
+			}
+		})
+	}
+}
+
+func createGolink(o *dto) {
+	ctx := context.Background()
+	col := fsClient.Collection("golinks")
+	doc := col.Doc(o.ID())
+
+	if _, err := doc.Create(ctx, o); err != nil {
+		panic(err)
+	}
+}
+
+func TestService_ListGolinks(t *testing.T) {
+	defer clearFirestoreEmulator()
+
+	dtoOwned1 := &dto{
+		Name:   "link-owned-1",
+		URL:    "https://example.com",
+		Owners: []string{"user@example.com"},
+	}
+	dtoOwned2 := &dto{
+		Name:   "link-owned-2",
+		URL:    "https://example.com",
+		Owners: []string{"user@example.com", "other@example.com"},
+	}
+	dtoNotOwned := &dto{
+		Name:   "link-not-owned",
+		URL:    "https://example.com",
+		Owners: []string{"other@example.com"},
+	}
+
+	tests := map[string]struct {
+		golinks  []*dto
+		wantDTOs []*dto
+	}{
+		"no owned golinks": {
+			golinks:  []*dto{dtoNotOwned},
+			wantDTOs: []*dto{},
+		},
+		"all": {
+			golinks:  []*dto{dtoOwned1, dtoOwned2, dtoNotOwned},
+			wantDTOs: []*dto{dtoOwned1, dtoOwned2},
+		},
+	}
+
+	s := newService()
+	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+
+	for name, tt := range tests {
+		tt := tt
+		t.Run(name, func(t *testing.T) {
+			defer clearFirestoreEmulator()
+
+			for _, o := range tt.golinks {
+				createGolink(o)
+			}
+
+			got, err := s.ListGolinks(ctx, connect.NewRequest(&golinkv1.ListGolinksRequest{}))
+			if err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+
+			var want []*golinkv1.Golink
+			for _, o := range tt.wantDTOs {
+				want = append(want, o.ToProto())
+			}
+
+			if !cmp.Equal(got.Msg.Golinks, want, cmpOptions...) {
+				t.Errorf("unexpected response (-want +got): %v", cmp.Diff(want, got.Msg, cmpOptions...))
 			}
 		})
 	}

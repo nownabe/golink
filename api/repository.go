@@ -6,6 +6,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/nownabe/golink/go/errors"
+	"google.golang.org/api/iterator"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -19,7 +20,7 @@ type Repository interface {
 	Exists(ctx context.Context, tx *firestore.Transaction, name string) (bool, error)
 	Get(ctx context.Context, tx *firestore.Transaction, name string) (*dto, error)
 	Create(ctx context.Context, tx *firestore.Transaction, dto *dto) error
-	ListByOwner(ctx context.Context, tx *firestore.Transaction, owner string) ([]*dto, error)
+	ListByOwner(ctx context.Context, owner string) ([]*dto, error)
 	ListByURL(ctx context.Context, tx *firestore.Transaction, url string) ([]*dto, error)
 	Update(ctx context.Context, tx *firestore.Transaction, dto *dto) error
 	Delete(ctx context.Context, tx *firestore.Transaction, name string) error
@@ -90,8 +91,30 @@ func (r *repository) Create(ctx context.Context, tx *firestore.Transaction, dto 
 	return nil
 }
 
-func (r *repository) ListByOwner(ctx context.Context, tx *firestore.Transaction, owner string) ([]*dto, error) {
-	return nil, nil
+func (r *repository) ListByOwner(ctx context.Context, owner string) ([]*dto, error) {
+	col := r.collection()
+	iter := col.Where("owners", "array-contains", owner).Documents(ctx)
+	defer iter.Stop()
+
+	var dtos []*dto
+	for {
+		s, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, errors.Wrapf(err, "failed to iterate golinks")
+		}
+
+		var o dto
+		if err := s.DataTo(&o); err != nil {
+			return nil, errors.Wrapf(err, "failed to populate golinks")
+		}
+
+		dtos = append(dtos, &o)
+	}
+
+	return dtos, nil
 }
 
 func (r *repository) ListByURL(ctx context.Context, tx *firestore.Transaction, url string) ([]*dto, error) {
