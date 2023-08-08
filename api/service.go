@@ -120,7 +120,7 @@ func (s *golinkService) ListGolinks(
 		return nil, errf(connect.CodeInternal, "internal error")
 	}
 
-	var golinks []*golinkv1.Golink
+	golinks := []*golinkv1.Golink{}
 	for _, dto := range dtos {
 		golinks = append(golinks, dto.ToProto())
 	}
@@ -134,20 +134,20 @@ func (s *golinkService) ListGolinksByUrl(
 	ctx context.Context,
 	req *connect.Request[golinkv1.ListGolinksByUrlRequest],
 ) (*connect.Response[golinkv1.ListGolinksByUrlResponse], error) {
-	res := connect.NewResponse(&golinkv1.ListGolinksByUrlResponse{
-		Golinks: []*golinkv1.Golink{
-			{
-				Name:   "example1",
-				Url:    "https://link1.example.com/",
-				Owners: []string{"user@example.com"},
-			},
-			{
-				Name:   "example2",
-				Url:    "https://link2.example.com/",
-				Owners: []string{"user@example.com"},
-			},
-		},
-	})
+	dtos, err := s.repo.ListByURL(ctx, req.Msg.Url)
+	if err != nil {
+		err := errors.New("failed to list Golinks")
+		clog.Err(ctx, err)
+		return nil, errf(connect.CodeInternal, "internal error")
+	}
+
+	golinks := []*golinkv1.Golink{}
+	for _, dto := range dtos {
+		golinks = append(golinks, dto.ToProto())
+	}
+
+	res := connect.NewResponse(&golinkv1.ListGolinksByUrlResponse{Golinks: golinks})
+
 	return res, nil
 }
 

@@ -27,6 +27,7 @@ var cmpOptions = []cmp.Option{
 	cmpopts.IgnoreUnexported(golinkv1.CreateGolinkResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.GetGolinkResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.ListGolinksResponse{}),
+	cmpopts.IgnoreUnexported(golinkv1.ListGolinksByUrlResponse{}),
 }
 
 func TestMain(m *testing.M) {
@@ -358,11 +359,72 @@ func TestService_ListGolinks(t *testing.T) {
 				t.Errorf("unexpected error: %v", err)
 			}
 
-			var wantGolinks []*golinkv1.Golink
+			wantGolinks := []*golinkv1.Golink{}
 			for _, o := range tt.wantDTOs {
 				wantGolinks = append(wantGolinks, o.ToProto())
 			}
 			want := &golinkv1.ListGolinksResponse{Golinks: wantGolinks}
+
+			if !cmp.Equal(got.Msg, want, cmpOptions...) {
+				t.Errorf("unexpected response (-want +got): %v", cmp.Diff(want, got.Msg, cmpOptions...))
+			}
+		})
+	}
+}
+
+func TestService_ListGolinksByURL(t *testing.T) {
+	defer clearFirestoreEmulator()
+
+	o1 := &dto{
+		Name:   "o1",
+		URL:    "https://example.com/1",
+		Owners: []string{"user@example.com"},
+	}
+	o2 := &dto{
+		Name:   "o2",
+		URL:    "https://example.com/2",
+		Owners: []string{"user@example.com", "other@example.com"},
+	}
+	o3 := &dto{
+		Name:   "o3",
+		URL:    "https://example.com/1",
+		Owners: []string{"other@example.com"},
+	}
+	createGolink(o1)
+	createGolink(o2)
+	createGolink(o3)
+
+	tests := map[string]struct {
+		url      string
+		wantDTOs []*dto
+	}{
+		"two golinks": {
+			url:      "https://example.com/1",
+			wantDTOs: []*dto{o1, o3},
+		},
+		"no golinks": {
+			url:      "https://example.com/3",
+			wantDTOs: []*dto{},
+		},
+	}
+
+	s := newService()
+	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+
+	for name, tt := range tests {
+		tt := tt
+		t.Run(name, func(t *testing.T) {
+			req := &golinkv1.ListGolinksByUrlRequest{Url: tt.url}
+			got, err := s.ListGolinksByUrl(ctx, connect.NewRequest(req))
+			if err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+
+			wantGolinks := []*golinkv1.Golink{}
+			for _, o := range tt.wantDTOs {
+				wantGolinks = append(wantGolinks, o.ToProto())
+			}
+			want := &golinkv1.ListGolinksByUrlResponse{Golinks: wantGolinks}
 
 			if !cmp.Equal(got.Msg, want, cmpOptions...) {
 				t.Errorf("unexpected response (-want +got): %v", cmp.Diff(want, got.Msg, cmpOptions...))
