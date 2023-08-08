@@ -18,7 +18,7 @@ var errDocumentNotFound = errors.NewWithoutStack("not found")
 type Repository interface {
 	Transaction(ctx context.Context, f func(ctx context.Context, tx *firestore.Transaction) error) error
 	Exists(ctx context.Context, tx *firestore.Transaction, name string) (bool, error)
-	Get(ctx context.Context, tx *firestore.Transaction, name string) (*dto, error)
+	Get(ctx context.Context, name string) (*dto, error)
 	Create(ctx context.Context, tx *firestore.Transaction, dto *dto) error
 	ListByOwner(ctx context.Context, owner string) ([]*dto, error)
 	ListByURL(ctx context.Context, tx *firestore.Transaction, url string) ([]*dto, error)
@@ -57,11 +57,11 @@ func (r *repository) Exists(ctx context.Context, tx *firestore.Transaction, name
 	return s.Exists(), nil
 }
 
-func (r *repository) Get(ctx context.Context, tx *firestore.Transaction, name string) (*dto, error) {
+func (r *repository) Get(ctx context.Context, name string) (*dto, error) {
 	col := r.collection()
 	doc := col.Doc(nameToID(name))
 
-	s, err := tx.Get(doc)
+	s, err := doc.Get(ctx)
 	if status.Code(err) == codes.NotFound {
 		return nil, errors.Wrapf(errDocumentNotFound, "golinks/%s not found", name)
 	}

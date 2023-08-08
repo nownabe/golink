@@ -22,6 +22,13 @@ type dto = api.DTO
 
 var fsClient *firestore.Client
 
+var cmpOptions = []cmp.Option{
+	cmpopts.IgnoreUnexported(golinkv1.Golink{}),
+	cmpopts.IgnoreUnexported(golinkv1.CreateGolinkResponse{}),
+	cmpopts.IgnoreUnexported(golinkv1.GetGolinkResponse{}),
+	cmpopts.IgnoreUnexported(golinkv1.ListGolinksResponse{}),
+}
+
 func TestMain(m *testing.M) {
 	clearFirestoreEmulator()
 
@@ -54,9 +61,14 @@ func clearFirestoreEmulator() {
 	}
 }
 
-var cmpOptions = []cmp.Option{
-	cmpopts.IgnoreUnexported(golinkv1.Golink{}),
-	cmpopts.IgnoreUnexported(golinkv1.CreateGolinkResponse{}),
+func createGolink(o *dto) {
+	ctx := context.Background()
+	col := fsClient.Collection("golinks")
+	doc := col.Doc(o.ID())
+
+	if _, err := doc.Create(ctx, o); err != nil {
+		panic(err)
+	}
 }
 
 func TestService_CreateGolink_Success(t *testing.T) {
@@ -267,13 +279,32 @@ func TestService_CreateGolink_Validations(t *testing.T) {
 	}
 }
 
-func createGolink(o *dto) {
-	ctx := context.Background()
-	col := fsClient.Collection("golinks")
-	doc := col.Doc(o.ID())
+func TestService_GetGolink_Success(t *testing.T) {
+	defer clearFirestoreEmulator()
 
-	if _, err := doc.Create(ctx, o); err != nil {
-		panic(err)
+	o := &dto{
+		Name:   "link-name",
+		URL:    "https://example.com",
+		Owners: []string{"other@example.com"},
+	}
+	createGolink(o)
+
+	s := newService()
+	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+
+	req := &golinkv1.GetGolinkRequest{
+		Name: o.Name,
+	}
+
+	got, err := s.GetGolink(ctx, connect.NewRequest(req))
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	want := &golinkv1.GetGolinkResponse{Golink: o.ToProto()}
+
+	if !cmp.Equal(got.Msg, want, cmpOptions...) {
+		t.Errorf("unexpected response (-want +got): %v", cmp.Diff(want, got.Msg, cmpOptions...))
 	}
 }
 
@@ -327,12 +358,13 @@ func TestService_ListGolinks(t *testing.T) {
 				t.Errorf("unexpected error: %v", err)
 			}
 
-			var want []*golinkv1.Golink
+			var wantGolinks []*golinkv1.Golink
 			for _, o := range tt.wantDTOs {
-				want = append(want, o.ToProto())
+				wantGolinks = append(wantGolinks, o.ToProto())
 			}
+			want := &golinkv1.ListGolinksResponse{Golinks: wantGolinks}
 
-			if !cmp.Equal(got.Msg.Golinks, want, cmpOptions...) {
+			if !cmp.Equal(got.Msg, want, cmpOptions...) {
 				t.Errorf("unexpected response (-want +got): %v", cmp.Diff(want, got.Msg, cmpOptions...))
 			}
 		})

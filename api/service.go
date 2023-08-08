@@ -88,13 +88,17 @@ func (s *golinkService) GetGolink(
 	ctx context.Context,
 	req *connect.Request[golinkv1.GetGolinkRequest],
 ) (*connect.Response[golinkv1.GetGolinkResponse], error) {
-	res := connect.NewResponse(&golinkv1.GetGolinkResponse{
-		Golink: &golinkv1.Golink{
-			Name:   req.Msg.Name,
-			Url:    "https://example.com/",
-			Owners: []string{"myself@example.com", "other1@example.com"},
-		},
-	})
+	o, err := s.repo.Get(ctx, req.Msg.Name)
+	if err != nil {
+		if errors.Is(err, errDocumentNotFound) {
+			return nil, errf(connect.CodeNotFound, "go/%s not found", req.Msg.Name)
+		}
+		err := errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
+		clog.Err(ctx, err)
+		return nil, errf(connect.CodeInternal, "internal error")
+	}
+
+	res := connect.NewResponse(&golinkv1.GetGolinkResponse{Golink: o.ToProto()})
 	return res, nil
 }
 
