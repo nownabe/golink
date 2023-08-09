@@ -12,6 +12,8 @@ import (
 	"github.com/bufbuild/connect-go"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"github.com/nownabe/golink/api"
 	golinkv1 "github.com/nownabe/golink/api/gen/golink/v1"
@@ -28,6 +30,7 @@ var cmpOptions = []cmp.Option{
 	cmpopts.IgnoreUnexported(golinkv1.GetGolinkResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.ListGolinksResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.ListGolinksByUrlResponse{}),
+	cmpopts.IgnoreUnexported(golinkv1.UpdateGolinkResponse{}),
 }
 
 func TestMain(m *testing.M) {
@@ -70,6 +73,27 @@ func createGolink(o *dto) {
 	if _, err := doc.Create(ctx, o); err != nil {
 		panic(err)
 	}
+}
+
+func getGolink(name string) *dto {
+	ctx := context.Background()
+	col := fsClient.Collection("golinks")
+	doc := col.Doc(name)
+
+	snap, err := doc.Get(ctx)
+	if status.Code(err) == codes.NotFound {
+		return nil
+	}
+	if err != nil {
+		panic(err)
+	}
+
+	var o dto
+	if err := snap.DataTo(&o); err != nil {
+		panic(err)
+	}
+
+	return &o
 }
 
 func TestService_CreateGolink_Success(t *testing.T) {
@@ -446,5 +470,91 @@ func TestService_ListGolinksByURL(t *testing.T) {
 				t.Errorf("unexpected response (-want +got): %v", cmp.Diff(want, got.Msg, cmpOptions...))
 			}
 		})
+	}
+}
+
+func TestService_UpdateGolink_Success(t *testing.T) {
+	defer clearFirestoreEmulator()
+
+	o := &dto{
+		Name:   "link-name",
+		URL:    "https://example.com",
+		Owners: []string{"user@example.com"},
+	}
+	createGolink(o)
+
+	s := newService()
+	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+
+	req := &golinkv1.UpdateGolinkRequest{
+		Name: o.Name,
+		Url:  "https://example.com/updated",
+	}
+
+	got, err := s.UpdateGolink(ctx, connect.NewRequest(req))
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	want := &golinkv1.UpdateGolinkResponse{Golink: o.ToProto()}
+	want.Golink.Url = "https://example.com/updated"
+
+	if !cmp.Equal(got.Msg, want, cmpOptions...) {
+		t.Errorf("unexpected response (-want +got): %v", cmp.Diff(want, got.Msg, cmpOptions...))
+	}
+
+	gotSaved := getGolink(o.Name)
+	if gotSaved == nil {
+		t.Fatalf("golink not saved")
+	}
+
+	wantSaved := &dto{
+		Name:   o.Name,
+		URL:    "https://example.com/updated",
+		Owners: []string{"user@example.com"},
+	}
+	if !cmp.Equal(wantSaved, gotSaved, cmpOptions...) {
+		t.Errorf("unexpected saved golink (-want +got): %v", cmp.Diff(wantSaved, gotSaved, cmpOptions...))
+	}
+}
+
+func TestService_UpdateGolink_PermissionDenied(t *testing.T) {
+	defer clearFirestoreEmulator()
+
+	o := &dto{
+		Name:   "link-name",
+		URL:    "https://example.com",
+		Owners: []string{"other@example.com"},
+	}
+	createGolink(o)
+
+	s := newService()
+	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+
+	req := &golinkv1.UpdateGolinkRequest{
+		Name: o.Name,
+		Url:  "https://example.com/updated",
+	}
+
+	_, err := s.UpdateGolink(ctx, connect.NewRequest(req))
+	if err, ok := err.(*connect.Error); !ok || err.Code() != connect.CodePermissionDenied {
+		t.Errorf("got %v, want %v", err, connect.CodePermissionDenied)
+	}
+}
+
+func TestService_UpdateGolink_NotFound(t *testing.T) {
+	defer clearFirestoreEmulator()
+
+	s := newService()
+	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+
+	req := &golinkv1.UpdateGolinkRequest{
+		Name: "link-name",
+		Url:  "https://example.com/updated",
+	}
+
+	_, err := s.UpdateGolink(ctx, connect.NewRequest(req))
+	if err, ok := err.(*connect.Error); !ok || err.Code() != connect.CodeNotFound {
+		t.Errorf("got %v, want %v", err, connect.CodeNotFound)
 	}
 }

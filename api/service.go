@@ -11,6 +11,7 @@ import (
 	"github.com/bufbuild/connect-go"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
+	"golang.org/x/exp/slices"
 
 	golinkv1 "github.com/nownabe/golink/api/gen/golink/v1"
 	"github.com/nownabe/golink/api/gen/golink/v1/golinkv1connect"
@@ -155,13 +156,54 @@ func (s *golinkService) UpdateGolink(
 	ctx context.Context,
 	req *connect.Request[golinkv1.UpdateGolinkRequest],
 ) (*connect.Response[golinkv1.UpdateGolinkResponse], error) {
-	time.Sleep(1 * time.Second)
-	res := connect.NewResponse(&golinkv1.UpdateGolinkResponse{
-		Golink: &golinkv1.Golink{
-			Name: req.Msg.Name,
-			Url:  req.Msg.Url,
-		},
+	email, ok := UserEmailFrom(ctx)
+	if !ok {
+		err := errors.New("user email not found in context")
+		clog.Err(ctx, err)
+		return nil, errf(connect.CodeInternal, "internal error")
+	}
+
+	var o *dto
+
+	err := s.repo.Transaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
+		var err error
+		o, err = s.repo.TxGet(ctx, tx, req.Msg.Name)
+		if err != nil {
+			if errors.Is(err, errDocumentNotFound) {
+				return errf(connect.CodeNotFound, "go/%s not found", req.Msg.Name)
+			} else {
+				return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
+			}
+		}
+
+		if !slices.Contains(o.Owners, email) {
+			return errf(connect.CodePermissionDenied, "permission denied")
+		}
+
+		if !isValidURL(req.Msg.Url) {
+			return errf(connect.CodeInvalidArgument, "invalid url")
+		}
+
+		o.URL = req.Msg.Url
+
+		if err := s.repo.Update(ctx, tx, o); err != nil {
+			return errors.Wrapf(err, "failed to update Golink(name=%s)", req.Msg.Name)
+		}
+
+		return nil
 	})
+
+	if connect.CodeOf(err) != connect.CodeUnknown {
+		return nil, err
+	}
+	if err != nil {
+		err := errors.Wrapf(err, "update transaction failed: Golink(name=%s)", req.Msg.Name)
+		clog.Err(ctx, err)
+		return nil, errf(connect.CodeInternal, "internal error")
+	}
+
+	res := connect.NewResponse(&golinkv1.UpdateGolinkResponse{Golink: o.ToProto()})
+
 	return res, nil
 }
 

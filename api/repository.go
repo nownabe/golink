@@ -15,10 +15,12 @@ const collectionName = "golinks"
 
 var errDocumentNotFound = errors.NewWithoutStack("not found")
 
+// TODO: Add Tx prefix
 type Repository interface {
 	Transaction(ctx context.Context, f func(ctx context.Context, tx *firestore.Transaction) error) error
 	Exists(ctx context.Context, tx *firestore.Transaction, name string) (bool, error)
 	Get(ctx context.Context, name string) (*dto, error)
+	TxGet(ctx context.Context, tx *firestore.Transaction, name string) (*dto, error)
 	Create(ctx context.Context, tx *firestore.Transaction, dto *dto) error
 	ListByOwner(ctx context.Context, owner string) ([]*dto, error)
 	ListByURL(ctx context.Context, url string) ([]*dto, error)
@@ -62,6 +64,26 @@ func (r *repository) Get(ctx context.Context, name string) (*dto, error) {
 	doc := col.Doc(nameToID(name))
 
 	s, err := doc.Get(ctx)
+	if status.Code(err) == codes.NotFound {
+		return nil, errors.Wrapf(errDocumentNotFound, "golinks/%s not found", name)
+	}
+	if err != nil {
+		return nil, errors.Wrapf(err, "failed to get golinks/%s", name)
+	}
+
+	var o dto
+	if err := s.DataTo(&o); err != nil {
+		return nil, errors.Wrapf(err, "failed to populate golinks/%s", name)
+	}
+
+	return &o, nil
+}
+
+func (r *repository) TxGet(ctx context.Context, tx *firestore.Transaction, name string) (*dto, error) {
+	col := r.collection()
+	doc := col.Doc(nameToID(name))
+
+	s, err := tx.Get(doc)
 	if status.Code(err) == codes.NotFound {
 		return nil, errors.Wrapf(errDocumentNotFound, "golinks/%s not found", name)
 	}
@@ -144,6 +166,18 @@ func (r *repository) ListByURL(ctx context.Context, url string) ([]*dto, error) 
 }
 
 func (r *repository) Update(ctx context.Context, tx *firestore.Transaction, dto *dto) error {
+	col := r.collection()
+	doc := col.Doc(dto.ID())
+
+	dto.UpdatedAt = time.Now()
+
+	if err := tx.Update(doc, []firestore.Update{
+		{Path: "url", Value: dto.URL},
+		{Path: "updatedAt", Value: dto.UpdatedAt},
+	}); err != nil {
+		return errors.Wrapf(err, "failed to update golinks/%s", dto.Name)
+	}
+
 	return nil
 }
 
