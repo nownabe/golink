@@ -18,16 +18,16 @@ var errDocumentNotFound = errors.NewWithoutStack("not found")
 // TODO: Add Tx prefix
 type Repository interface {
 	Transaction(ctx context.Context, f func(ctx context.Context, tx *firestore.Transaction) error) error
-	Exists(ctx context.Context, tx *firestore.Transaction, name string) (bool, error)
+	TxExists(ctx context.Context, tx *firestore.Transaction, name string) (bool, error)
 	Get(ctx context.Context, name string) (*dto, error)
 	TxGet(ctx context.Context, tx *firestore.Transaction, name string) (*dto, error)
-	Create(ctx context.Context, tx *firestore.Transaction, dto *dto) error
+	TxCreate(ctx context.Context, tx *firestore.Transaction, dto *dto) error
 	ListByOwner(ctx context.Context, owner string) ([]*dto, error)
 	ListByURL(ctx context.Context, url string) ([]*dto, error)
-	Update(ctx context.Context, tx *firestore.Transaction, dto *dto) error
-	Delete(ctx context.Context, tx *firestore.Transaction, name string) error
-	AddOwner(ctx context.Context, tx *firestore.Transaction, name string, owner string) error
-	RemoveOwner(ctx context.Context, tx *firestore.Transaction, name string, owner string) error
+	TxUpdate(ctx context.Context, tx *firestore.Transaction, dto *dto) error
+	TxDelete(ctx context.Context, tx *firestore.Transaction, name string) error
+	TxAddOwner(ctx context.Context, tx *firestore.Transaction, name string, owner string) error
+	TxRemoveOwner(ctx context.Context, tx *firestore.Transaction, name string, owner string) error
 }
 
 func NewRepository(c *firestore.Client) Repository {
@@ -44,7 +44,7 @@ func (r *repository) Transaction(ctx context.Context, f func(ctx context.Context
 	return r.firestore.RunTransaction(ctx, f)
 }
 
-func (r *repository) Exists(ctx context.Context, tx *firestore.Transaction, name string) (bool, error) {
+func (r *repository) TxExists(ctx context.Context, tx *firestore.Transaction, name string) (bool, error) {
 	col := r.collection()
 	doc := col.Doc(nameToID(name))
 
@@ -99,7 +99,7 @@ func (r *repository) TxGet(ctx context.Context, tx *firestore.Transaction, name 
 	return &o, nil
 }
 
-func (r *repository) Create(ctx context.Context, tx *firestore.Transaction, dto *dto) error {
+func (r *repository) TxCreate(ctx context.Context, tx *firestore.Transaction, dto *dto) error {
 	col := r.collection()
 	doc := col.Doc(dto.ID())
 
@@ -165,7 +165,7 @@ func (r *repository) ListByURL(ctx context.Context, url string) ([]*dto, error) 
 	return dtos, nil
 }
 
-func (r *repository) Update(ctx context.Context, tx *firestore.Transaction, dto *dto) error {
+func (r *repository) TxUpdate(ctx context.Context, tx *firestore.Transaction, dto *dto) error {
 	col := r.collection()
 	doc := col.Doc(dto.ID())
 
@@ -181,15 +181,15 @@ func (r *repository) Update(ctx context.Context, tx *firestore.Transaction, dto 
 	return nil
 }
 
-func (r *repository) Delete(ctx context.Context, tx *firestore.Transaction, name string) error {
+func (r *repository) TxDelete(ctx context.Context, tx *firestore.Transaction, name string) error {
 	return nil
 }
 
-func (r *repository) AddOwner(ctx context.Context, tx *firestore.Transaction, name string, owner string) error {
+func (r *repository) TxAddOwner(ctx context.Context, tx *firestore.Transaction, name string, owner string) error {
 	return nil
 }
 
-func (r *repository) RemoveOwner(ctx context.Context, tx *firestore.Transaction, name string, owner string) error {
+func (r *repository) TxRemoveOwner(ctx context.Context, tx *firestore.Transaction, name string, owner string) error {
 	return nil
 }
 

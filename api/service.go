@@ -55,7 +55,7 @@ func (s *golinkService) CreateGolink(
 	var exists bool
 
 	err := s.repo.Transaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
-		e, err := s.repo.Exists(ctx, tx, req.Msg.Name)
+		e, err := s.repo.TxExists(ctx, tx, req.Msg.Name)
 		if err != nil {
 			return errors.Wrapf(err, "s.repo.Exists: name=%s", req.Msg.Name)
 		}
@@ -65,7 +65,7 @@ func (s *golinkService) CreateGolink(
 			return nil
 		}
 
-		if err := s.repo.Create(ctx, tx, o); err != nil {
+		if err := s.repo.TxCreate(ctx, tx, o); err != nil {
 			return errors.Wrapf(err, "failed to create Golink(name=%s)", req.Msg.Name)
 		}
 
@@ -186,7 +186,7 @@ func (s *golinkService) UpdateGolink(
 
 		o.URL = req.Msg.Url
 
-		if err := s.repo.Update(ctx, tx, o); err != nil {
+		if err := s.repo.TxUpdate(ctx, tx, o); err != nil {
 			return errors.Wrapf(err, "failed to update Golink(name=%s)", req.Msg.Name)
 		}
 
