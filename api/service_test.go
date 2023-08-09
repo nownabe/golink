@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"cloud.google.com/go/firestore"
 	"github.com/bufbuild/connect-go"
@@ -25,6 +26,7 @@ type dto = api.DTO
 var fsClient *firestore.Client
 
 var cmpOptions = []cmp.Option{
+	cmpopts.IgnoreTypes(time.Time{}),
 	cmpopts.IgnoreUnexported(golinkv1.Golink{}),
 	cmpopts.IgnoreUnexported(golinkv1.CreateGolinkResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.GetGolinkResponse{}),
