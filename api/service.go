@@ -52,8 +52,6 @@ func (s *golinkService) CreateGolink(
 		Owners: []string{email},
 	}
 
-	var exists bool
-
 	err := s.repo.Transaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
 		e, err := s.repo.TxExists(ctx, tx, req.Msg.Name)
 		if err != nil {
@@ -61,8 +59,7 @@ func (s *golinkService) CreateGolink(
 		}
 
 		if e {
-			exists = true
-			return nil
+			return errf(connect.CodeAlreadyExists, "go/%s already exists", req.Msg.Name)
 		}
 
 		if err := s.repo.TxCreate(ctx, tx, o); err != nil {
@@ -71,13 +68,13 @@ func (s *golinkService) CreateGolink(
 
 		return nil
 	})
+
+	if connect.CodeOf(err) != connect.CodeUnknown {
+		return nil, err
+	}
 	if err != nil {
 		clog.Err(ctx, err)
 		return nil, errf(connect.CodeInternal, "internal error")
-	}
-
-	if exists {
-		return nil, errf(connect.CodeAlreadyExists, "go/%s already exists", req.Msg.Name)
 	}
 
 	res := connect.NewResponse(&golinkv1.CreateGolinkResponse{Golink: o.ToProto()})
