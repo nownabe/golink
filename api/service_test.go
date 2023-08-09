@@ -309,6 +309,22 @@ func TestService_GetGolink_Success(t *testing.T) {
 	}
 }
 
+func TestService_GetGolink_NotFound(t *testing.T) {
+	defer clearFirestoreEmulator()
+
+	s := newService()
+	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+
+	req := &golinkv1.GetGolinkRequest{
+		Name: "link-name",
+	}
+
+	_, err := s.GetGolink(ctx, connect.NewRequest(req))
+	if err == nil {
+		t.Errorf("error expected")
+	}
+}
+
 func TestService_ListGolinks(t *testing.T) {
 	defer clearFirestoreEmulator()
 
