@@ -1,6 +1,7 @@
 package errors
 
 import (
+	"errors"
 	"fmt"
 	"runtime/debug"
 
@@ -46,25 +47,7 @@ func Wrapf(err error, format string, args ...any) error {
 }
 
 func Is(err error, target error) bool {
-	if err == nil && target == nil {
-		return true
-	}
-
-	for {
-		if err == nil {
-			return false
-		}
-
-		if err == target {
-			return true
-		}
-
-		if w, ok := err.(*wrapped); ok {
-			err = w.err
-		} else {
-			return false
-		}
-	}
+	return errors.Is(err, target)
 }
 
 type wrapped struct {
@@ -79,6 +62,10 @@ func (w *wrapped) Error() string {
 		return w.msg
 	}
 	return w.msg + w.err.Error()
+}
+
+func (w *wrapped) Unwrap() error {
+	return w.err
 }
 
 func (w *wrapped) ErrorContext() *clog.ErrorContext {
