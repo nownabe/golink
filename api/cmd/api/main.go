@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	// TODO: Configure clog
+	clog.SetDefault(clog.New(os.Stdout, clog.LevelInfo))
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -29,8 +29,10 @@ func main() {
 		clog.AlertErr(ctx, err)
 		os.Exit(1)
 	}
+	clog.Infof(ctx, "Project ID: %s", projectID)
 
 	origins := strings.Split(os.Getenv("ALLOWED_ORIGINS"), ",")
+	clog.Infof(ctx, "Allowed origins: %v", origins)
 
 	fsClient, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
@@ -62,7 +64,6 @@ func getProjectID(ctx context.Context) (string, error) {
 	}
 
 	// Get project ID from metadata server
-	clog.Infof(ctx, "GCE_METADATA_HOST=%s", os.Getenv("GCE_METADATA_HOST"))
 	os.Setenv("GCE_METADATA_HOST", "metadata.google.internal")
 	projectID, err := metadata.ProjectID()
 	if err != nil {
