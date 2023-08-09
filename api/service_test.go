@@ -34,6 +34,7 @@ var cmpOptions = []cmp.Option{
 	cmpopts.IgnoreUnexported(golinkv1.ListGolinksByUrlResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.UpdateGolinkResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.AddOwnerResponse{}),
+	cmpopts.IgnoreUnexported(golinkv1.RemoveOwnerResponse{}),
 }
 
 func TestMain(m *testing.M) {
@@ -695,7 +696,92 @@ func TestService_AddOwner(t *testing.T) {
 			}
 
 			saved := getGolink(o.Name)
-			if !cmp.Equal(wantDTO, saved) {
+			if !cmp.Equal(wantDTO, saved, cmpOptions...) {
+				t.Errorf("save failed (-want +got): %v", cmp.Diff(wantDTO, saved))
+			}
+		})
+	}
+}
+
+func TestService_RemoveOwner(t *testing.T) {
+	noErr := connect.Code(0)
+
+	tests := map[string]struct {
+		originalOwners []string
+		ownerToRemove  string
+		wantOwners     []string
+		wantErr        connect.Code
+	}{
+		"success": {
+			originalOwners: []string{"user@example.com", "other@example.com"},
+			ownerToRemove:  "other@example.com",
+			wantOwners:     []string{"user@example.com"},
+			wantErr:        noErr,
+		},
+		"only one user remains": {
+			originalOwners: []string{"user@example.com"},
+			ownerToRemove:  "user@example.com",
+			wantOwners:     nil,
+			wantErr:        connect.CodeInvalidArgument,
+		},
+		"owner not found": {
+			originalOwners: []string{"user@example.com"},
+			ownerToRemove:  "other@example.com",
+			wantOwners:     nil,
+			wantErr:        connect.CodeInvalidArgument,
+		},
+		"permission denied": {
+			originalOwners: []string{"other@example.com"},
+			ownerToRemove:  "user@example.com",
+			wantOwners:     nil,
+			wantErr:        connect.CodePermissionDenied,
+		},
+	}
+
+	s := newService()
+	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+
+	for name, tt := range tests {
+		tt := tt
+		t.Run(name, func(t *testing.T) {
+			defer clearFirestoreEmulator()
+
+			o := &dto{
+				Name:   "link-name",
+				URL:    "https://example.com",
+				Owners: tt.originalOwners,
+			}
+			createGolink(o)
+
+			req := &golinkv1.RemoveOwnerRequest{Name: o.Name, Owner: tt.ownerToRemove}
+
+			got, err := s.RemoveOwner(ctx, connect.NewRequest(req))
+
+			if tt.wantErr != noErr {
+				if err, ok := err.(*connect.Error); !ok || err.Code() != tt.wantErr {
+					t.Errorf("err got %v, want %v", err, tt.wantErr)
+				}
+				return
+			}
+
+			if err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+
+			wantDTO := &dto{
+				Name:   o.Name,
+				URL:    o.URL,
+				Owners: tt.wantOwners,
+			}
+
+			want := &golinkv1.RemoveOwnerResponse{Golink: wantDTO.ToProto()}
+
+			if !cmp.Equal(want, got.Msg, cmpOptions...) {
+				t.Errorf("unexpected response (-want +got): %v", cmp.Diff(want, got.Msg, cmpOptions...))
+			}
+
+			saved := getGolink(o.Name)
+			if !cmp.Equal(wantDTO, saved, cmpOptions...) {
 				t.Errorf("save failed (-want +got): %v", cmp.Diff(wantDTO, saved))
 			}
 		})

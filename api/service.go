@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
-	"time"
 
 	"cloud.google.com/go/firestore"
 	"github.com/bufbuild/connect-go"
@@ -307,14 +306,57 @@ func (s *golinkService) RemoveOwner(
 	ctx context.Context,
 	req *connect.Request[golinkv1.RemoveOwnerRequest],
 ) (*connect.Response[golinkv1.RemoveOwnerResponse], error) {
-	time.Sleep(1 * time.Second)
-	res := connect.NewResponse(&golinkv1.RemoveOwnerResponse{
-		Golink: &golinkv1.Golink{
-			Name:   req.Msg.Name,
-			Url:    "https://link1.example.com/",
-			Owners: []string{"user@example.com"},
-		},
+	email, ok := UserEmailFrom(ctx)
+	if !ok {
+		err := errors.New("user email not found in context")
+		clog.Err(ctx, err)
+		return nil, errf(connect.CodeInternal, "internal error")
+	}
+
+	var o *dto
+
+	err := s.repo.Transaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
+		var err error
+		o, err = s.repo.TxGet(ctx, tx, req.Msg.Name)
+		if err != nil {
+			if errors.Is(err, errDocumentNotFound) {
+				return errf(connect.CodeNotFound, "go/%s not found", req.Msg.Name)
+			} else {
+				return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
+			}
+		}
+
+		if !slices.Contains(o.Owners, email) {
+			return errf(connect.CodePermissionDenied, "permission denied")
+		}
+
+		if !slices.Contains(o.Owners, req.Msg.Owner) {
+			return errf(connect.CodeInvalidArgument, "owner not found")
+		}
+
+		if len(o.Owners) == 1 {
+			return errf(connect.CodeInvalidArgument, "cannot remove last owner")
+		}
+
+		if err := s.repo.TxRemoveOwner(ctx, tx, req.Msg.Name, req.Msg.Owner); err != nil {
+			return errors.Wrapf(err, "failed to remove owner: Golink(name=%s), owner=%s", req.Msg.Name, req.Msg.Owner)
+		}
+
+		return nil
 	})
+
+	if connect.CodeOf(err) != connect.CodeUnknown {
+		return nil, err
+	}
+	if err != nil {
+		err := errors.Wrapf(err, "remove owner transaction failed: Golink(name=%s)", req.Msg.Name)
+		clog.Err(ctx, err)
+		return nil, errf(connect.CodeInternal, "internal error")
+	}
+
+	o.Owners = slices.DeleteFunc(o.Owners, func(owner string) bool { return owner == req.Msg.Owner })
+	res := connect.NewResponse(&golinkv1.RemoveOwnerResponse{Golink: o.ToProto()})
+
 	return res, nil
 }
 

@@ -207,6 +207,16 @@ func (r *repository) TxAddOwner(ctx context.Context, tx *firestore.Transaction, 
 }
 
 func (r *repository) TxRemoveOwner(ctx context.Context, tx *firestore.Transaction, name string, owner string) error {
+	col := r.collection()
+	doc := col.Doc(nameToID(name))
+
+	if err := tx.Update(doc, []firestore.Update{
+		{Path: "owners", Value: firestore.ArrayRemove(owner)},
+		{Path: "updated_at", Value: time.Now()},
+	}); err != nil {
+		return errors.Wrapf(err, "failed to update golinks/%s", nameToID(name))
+	}
+
 	return nil
 }
 
