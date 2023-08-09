@@ -558,3 +558,64 @@ func TestService_UpdateGolink_NotFound(t *testing.T) {
 		t.Errorf("got %v, want %v", err, connect.CodeNotFound)
 	}
 }
+
+func TestService_DeleteGolink_Success(t *testing.T) {
+	defer clearFirestoreEmulator()
+
+	o := &dto{
+		Name:   "link-name",
+		URL:    "https://example.com",
+		Owners: []string{"user@example.com"},
+	}
+	createGolink(o)
+
+	s := newService()
+	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+
+	req := &golinkv1.DeleteGolinkRequest{Name: o.Name}
+
+	_, err := s.DeleteGolink(ctx, connect.NewRequest(req))
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	saved := getGolink(o.Name)
+	if saved != nil {
+		t.Errorf("golink should be deleted")
+	}
+}
+
+func TestService_DeleteGolink_PermissionDenied(t *testing.T) {
+	defer clearFirestoreEmulator()
+
+	o := &dto{
+		Name:   "link-name",
+		URL:    "https://example.com",
+		Owners: []string{"other@example.com"},
+	}
+	createGolink(o)
+
+	s := newService()
+	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+
+	req := &golinkv1.DeleteGolinkRequest{Name: o.Name}
+
+	_, err := s.DeleteGolink(ctx, connect.NewRequest(req))
+	if err, ok := err.(*connect.Error); !ok || err.Code() != connect.CodePermissionDenied {
+		t.Errorf("got %v, want %v", err, connect.CodePermissionDenied)
+	}
+}
+
+func TestService_DeleteGolink_NotFound(t *testing.T) {
+	defer clearFirestoreEmulator()
+
+	s := newService()
+	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+
+	req := &golinkv1.DeleteGolinkRequest{Name: "link-name"}
+
+	_, err := s.DeleteGolink(ctx, connect.NewRequest(req))
+	if err, ok := err.(*connect.Error); !ok || err.Code() != connect.CodeNotFound {
+		t.Errorf("got %v, want %v", err, connect.CodeNotFound)
+	}
+}

@@ -182,6 +182,13 @@ func (r *repository) TxUpdate(ctx context.Context, tx *firestore.Transaction, dt
 }
 
 func (r *repository) TxDelete(ctx context.Context, tx *firestore.Transaction, name string) error {
+	col := r.collection()
+	doc := col.Doc(nameToID(name))
+
+	if err := tx.Delete(doc); err != nil {
+		return errors.Wrapf(err, "failed to delete golinks/%s", name)
+	}
+
 	return nil
 }
 

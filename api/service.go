@@ -208,6 +208,43 @@ func (s *golinkService) DeleteGolink(
 	ctx context.Context,
 	req *connect.Request[golinkv1.DeleteGolinkRequest],
 ) (*connect.Response[golinkv1.DeleteGolinkResponse], error) {
+	email, ok := UserEmailFrom(ctx)
+	if !ok {
+		err := errors.New("user email not found in context")
+		clog.Err(ctx, err)
+		return nil, errf(connect.CodeInternal, "internal error")
+	}
+
+	err := s.repo.Transaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
+		o, err := s.repo.TxGet(ctx, tx, req.Msg.Name)
+		if err != nil {
+			if errors.Is(err, errDocumentNotFound) {
+				return errf(connect.CodeNotFound, "go/%s not found", req.Msg.Name)
+			} else {
+				return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
+			}
+		}
+
+		if !slices.Contains(o.Owners, email) {
+			return errf(connect.CodePermissionDenied, "permission denied")
+		}
+
+		if err := s.repo.TxDelete(ctx, tx, req.Msg.Name); err != nil {
+			return errors.Wrapf(err, "failed to delete Golink(name=%s)", req.Msg.Name)
+		}
+
+		return nil
+	})
+
+	if connect.CodeOf(err) != connect.CodeUnknown {
+		return nil, err
+	}
+	if err != nil {
+		err := errors.Wrapf(err, "delete transaction failed: Golink(name=%s)", req.Msg.Name)
+		clog.Err(ctx, err)
+		return nil, errf(connect.CodeInternal, "internal error")
+	}
+
 	res := connect.NewResponse(&golinkv1.DeleteGolinkResponse{})
 	return res, nil
 }
