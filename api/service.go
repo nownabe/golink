@@ -253,14 +253,53 @@ func (s *golinkService) AddOwner(
 	ctx context.Context,
 	req *connect.Request[golinkv1.AddOwnerRequest],
 ) (*connect.Response[golinkv1.AddOwnerResponse], error) {
-	time.Sleep(1 * time.Second)
-	res := connect.NewResponse(&golinkv1.AddOwnerResponse{
-		Golink: &golinkv1.Golink{
-			Name:   req.Msg.Name,
-			Url:    "https://link1.example.com/",
-			Owners: []string{"user@example.com"},
-		},
+	email, ok := UserEmailFrom(ctx)
+	if !ok {
+		err := errors.New("user email not found in context")
+		clog.Err(ctx, err)
+		return nil, errf(connect.CodeInternal, "internal error")
+	}
+
+	var o *dto
+
+	err := s.repo.Transaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
+		var err error
+		o, err = s.repo.TxGet(ctx, tx, req.Msg.Name)
+		if err != nil {
+			if errors.Is(err, errDocumentNotFound) {
+				return errf(connect.CodeNotFound, "go/%s not found", req.Msg.Name)
+			} else {
+				return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
+			}
+		}
+
+		if !slices.Contains(o.Owners, email) {
+			return errf(connect.CodePermissionDenied, "permission denied")
+		}
+
+		if slices.Contains(o.Owners, req.Msg.Owner) {
+			return errf(connect.CodeInvalidArgument, "owner already exists")
+		}
+
+		if err := s.repo.TxAddOwner(ctx, tx, req.Msg.Name, req.Msg.Owner); err != nil {
+			return errors.Wrapf(err, "failed to add owner: Golink(name=%s), owner=%s", req.Msg.Name, req.Msg.Owner)
+		}
+
+		return nil
 	})
+
+	if connect.CodeOf(err) != connect.CodeUnknown {
+		return nil, err
+	}
+	if err != nil {
+		err := errors.Wrapf(err, "delete transaction failed: Golink(name=%s)", req.Msg.Name)
+		clog.Err(ctx, err)
+		return nil, errf(connect.CodeInternal, "internal error")
+	}
+
+	o.Owners = append(o.Owners, req.Msg.Owner)
+	res := connect.NewResponse(&golinkv1.AddOwnerResponse{Golink: o.ToProto()})
+
 	return res, nil
 }
 

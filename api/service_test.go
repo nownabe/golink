@@ -31,6 +31,7 @@ var cmpOptions = []cmp.Option{
 	cmpopts.IgnoreUnexported(golinkv1.ListGolinksResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.ListGolinksByUrlResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.UpdateGolinkResponse{}),
+	cmpopts.IgnoreUnexported(golinkv1.AddOwnerResponse{}),
 }
 
 func TestMain(m *testing.M) {
@@ -617,5 +618,84 @@ func TestService_DeleteGolink_NotFound(t *testing.T) {
 	_, err := s.DeleteGolink(ctx, connect.NewRequest(req))
 	if err, ok := err.(*connect.Error); !ok || err.Code() != connect.CodeNotFound {
 		t.Errorf("got %v, want %v", err, connect.CodeNotFound)
+	}
+}
+
+func TestService_AddOwner(t *testing.T) {
+	noErr := connect.Code(0)
+
+	tests := map[string]struct {
+		originalOwners []string
+		ownerToAdd     string
+		wantOwners     []string
+		wantErr        connect.Code
+	}{
+		"add owner": {
+			originalOwners: []string{"user@example.com"},
+			ownerToAdd:     "other@example.com",
+			wantOwners:     []string{"user@example.com", "other@example.com"},
+			wantErr:        noErr,
+		},
+		"add owner when already exists": {
+			originalOwners: []string{"user@example.com", "other@example.com"},
+			ownerToAdd:     "other@example.com",
+			wantOwners:     nil,
+			wantErr:        connect.CodeInvalidArgument,
+		},
+		"permission denied": {
+			originalOwners: []string{"other@example.com"},
+			ownerToAdd:     "user@example.com",
+			wantOwners:     nil,
+			wantErr:        connect.CodePermissionDenied,
+		},
+	}
+
+	s := newService()
+	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+
+	for name, tt := range tests {
+		tt := tt
+		t.Run(name, func(t *testing.T) {
+			defer clearFirestoreEmulator()
+
+			o := &dto{
+				Name:   "link-name",
+				URL:    "https://example.com",
+				Owners: tt.originalOwners,
+			}
+			createGolink(o)
+
+			req := &golinkv1.AddOwnerRequest{Name: o.Name, Owner: tt.ownerToAdd}
+
+			got, err := s.AddOwner(ctx, connect.NewRequest(req))
+
+			if tt.wantErr != noErr {
+				if err, ok := err.(*connect.Error); !ok || err.Code() != tt.wantErr {
+					t.Errorf("err got %v, want %v", err, tt.wantErr)
+				}
+				return
+			}
+
+			if err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+
+			wantDTO := &dto{
+				Name:   o.Name,
+				URL:    o.URL,
+				Owners: tt.wantOwners,
+			}
+
+			want := &golinkv1.AddOwnerResponse{Golink: wantDTO.ToProto()}
+
+			if !cmp.Equal(want, got.Msg, cmpOptions...) {
+				t.Errorf("unexpected response (-want +got): %v", cmp.Diff(want, got.Msg, cmpOptions...))
+			}
+
+			saved := getGolink(o.Name)
+			if !cmp.Equal(wantDTO, saved) {
+				t.Errorf("save failed (-want +got): %v", cmp.Diff(wantDTO, saved))
+			}
+		})
 	}
 }
