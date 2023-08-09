@@ -173,7 +173,7 @@ func (r *repository) TxUpdate(ctx context.Context, tx *firestore.Transaction, dt
 
 	if err := tx.Update(doc, []firestore.Update{
 		{Path: "url", Value: dto.URL},
-		{Path: "updatedAt", Value: dto.UpdatedAt},
+		{Path: "updated_at", Value: dto.UpdatedAt},
 	}); err != nil {
 		return errors.Wrapf(err, "failed to update golinks/%s", dto.Name)
 	}
@@ -198,7 +198,7 @@ func (r *repository) TxAddOwner(ctx context.Context, tx *firestore.Transaction, 
 
 	if err := tx.Update(doc, []firestore.Update{
 		{Path: "owners", Value: firestore.ArrayUnion(owner)},
-		{Path: "updatedAt", Value: time.Now()},
+		{Path: "updated_at", Value: time.Now()},
 	}); err != nil {
 		return errors.Wrapf(err, "failed to update golinks/%s", nameToID(name))
 	}
