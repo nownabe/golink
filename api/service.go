@@ -292,7 +292,7 @@ func (s *golinkService) AddOwner(
 		return nil, err
 	}
 	if err != nil {
-		err := errors.Wrapf(err, "delete transaction failed: Golink(name=%s)", req.Msg.Name)
+		err := errors.Wrapf(err, "add owner transaction failed: Golink(name=%s)", req.Msg.Name)
 		clog.Err(ctx, err)
 		return nil, errf(connect.CodeInternal, "internal error")
 	}
