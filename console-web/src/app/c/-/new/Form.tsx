@@ -48,7 +48,7 @@ export default function Form() {
         setCreating(false);
       }
     })();
-  }, [nameRef, urlRef, setCreating, setError]);
+  }, [nameRef, urlRef, setCreating, setError, router]);
 
   return (
     <Grid container spacing={2}>

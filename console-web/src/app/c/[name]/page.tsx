@@ -14,10 +14,7 @@ type Props = {
   };
 };
 
-export async function generateMetadata(
-  { params }: Props,
-  _parent?: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `go/${params.name} | Golink`,
   };
