@@ -2,12 +2,14 @@ package redirector
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/nownabe/golink/go/clog"
+	"github.com/nownabe/golink/go/errors"
 )
 
 const (
@@ -27,11 +29,11 @@ func New(port string, h http.Handler) *Redirector {
 	}
 }
 
-func (r *Redirector) Run() error {
-	return r.serve()
+func (r *Redirector) Run(ctx context.Context) error {
+	return r.serve(ctx)
 }
 
-func (r Redirector) serve() error {
+func (r Redirector) serve(ctx context.Context) error {
 	s := &http.Server{
 		Addr:              ":" + r.port,
 		Handler:           r.handler,
@@ -45,32 +47,27 @@ func (r Redirector) serve() error {
 		signal.Notify(ch, syscall.SIGTERM, syscall.SIGINT)
 
 		sig := <-ch
-		log.Print(sig)
-
-		// TODO: log: info: received signal and terminating
+		clog.Noticef(ctx, "received signal %v and terminating", sig)
 
 		ctx, cancel := context.WithTimeout(context.Background(), shutdownTimeoutSeconds*time.Second)
 		defer cancel()
 
 		if err := s.Shutdown(ctx); err != nil {
-			// TODO: log: err: failed to shutdown gracefully
-			log.Print(err)
+			err := errors.Wrap(err, "failed to shutdown gracefully") // TODO:
+			clog.Err(ctx, err)
 		}
 
-		// TODO: log: info: completed shutdown gracefully
-
+		clog.Notice(ctx, "completed shutdown gracefully")
 		close(idleConnsClosed)
 	}()
 
-	// TODO: log: info: started
+	clog.Notice(ctx, "starting to listen and serve")
 
 	if err := s.ListenAndServe(); err != http.ErrServerClosed {
-		// TODO: log: fatal: failed to listen and serve
-		return err
+		return errors.Wrap(err, "failed to listen and serve")
 	}
 
 	<-idleConnsClosed
 
-	// TODO: log: info: bye
 	return nil
 }

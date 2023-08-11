@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+
+	"github.com/nownabe/golink/go/clog"
+	"github.com/nownabe/golink/go/errors"
 )
 
 // Middleware is a middleware.
@@ -38,20 +41,21 @@ func (h *redirectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	path := strings.Split(strings.TrimLeft(r.URL.Path, "/"), "/")
 
-	if len(path) < 1 {
-		http.Error(w, "invalid request", http.StatusBadRequest)
-		return
-	}
-
 	if path[0] == "" {
-		http.Error(w, "invalid request", http.StatusBadRequest)
+		http.Redirect(w, r, "/c/", http.StatusMovedPermanently)
 		return
 	}
 
 	url, err := h.repo.GetURLAndUpdateStats(ctx, path[0])
-	// TODO: If no existence, redirect to /c/name
 	if err != nil {
-		// TODO: log: error: failed to get url
+		if errors.Is(err, errDocumentNotFound) {
+			http.Redirect(w, r, fmt.Sprintf("/c/%s", path[0]), http.StatusTemporaryRedirect)
+			return
+		}
+
+		err := errors.Wrapf(err, "failed to get url: %s", path[0])
+		clog.Err(ctx, err)
+
 		http.Error(w, "internal server error", http.StatusInternalServerError)
 		return
 	}
