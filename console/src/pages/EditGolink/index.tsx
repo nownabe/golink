@@ -1,11 +1,13 @@
 import {
   Await,
+  Link,
   LoaderFunctionArgs,
   defer,
   useLoaderData,
   useNavigate,
 } from "react-router-dom";
 import { Suspense } from "react";
+import { Helmet } from "react-helmet";
 import { Typography, Divider } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Code, ConnectError } from "@bufbuild/connect";
@@ -33,6 +35,7 @@ export async function editGolinkLoader({ params }: LoaderFunctionArgs) {
   return defer({ name, golink });
 }
 
+// TODO: Make title a link
 // TODO: Make it type safe (react-router-dom is not type safe now)
 export default function EditGolink() {
   const navigate = useNavigate();
@@ -41,33 +44,38 @@ export default function EditGolink() {
   >;
 
   return (
-    <Grid container spacing={2}>
-      <Grid xs={12}>
-        <Typography variant="h5" component="h2">
-          go/{name}
-        </Typography>
+    <>
+      <Helmet>
+        <title>go/{name} | Golink</title>
+      </Helmet>
+      <Grid container spacing={2}>
+        <Grid xs={12}>
+          <Typography variant="h5" component="h2">
+            go/{name}
+          </Typography>
+        </Grid>
+
+        <Suspense fallback={<CircularProgress />}>
+          <Await resolve={golink}>
+            {(golink: Golink | null) => {
+              if (!golink) {
+                navigate(`/-/new?name=${name}`);
+                return null;
+              }
+
+              return (
+                <>
+                  <UpdateForm golink={golink} />
+                  <Grid xs={12}>
+                    <Divider />
+                  </Grid>
+                  <Owners golink={golink} />
+                </>
+              );
+            }}
+          </Await>
+        </Suspense>
       </Grid>
-
-      <Suspense fallback={<CircularProgress />}>
-        <Await resolve={golink}>
-          {(golink: Golink | null) => {
-            if (!golink) {
-              navigate(`/-/new?name=${name}`);
-              return null;
-            }
-
-            return (
-              <>
-                <UpdateForm golink={golink} />
-                <Grid xs={12}>
-                  <Divider />
-                </Grid>
-                <Owners golink={golink} />
-              </>
-            );
-          }}
-        </Await>
-      </Suspense>
-    </Grid>
+    </>
   );
 }
