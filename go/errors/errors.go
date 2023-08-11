@@ -61,7 +61,7 @@ func (w *wrapped) Error() string {
 	if w.err == nil {
 		return w.msg
 	}
-	return w.msg + w.err.Error()
+	return w.msg + ": " + w.err.Error()
 }
 
 func (w *wrapped) Unwrap() error {
