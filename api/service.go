@@ -112,7 +112,7 @@ func (s *golinkService) ListGolinks(
 
 	dtos, err := s.repo.ListByOwner(ctx, email)
 	if err != nil {
-		err := errors.New("failed to list Golinks")
+		err := errors.Wrap(err, "failed to list Golinks")
 		clog.Err(ctx, err)
 		return nil, errf(connect.CodeInternal, "internal error")
 	}
