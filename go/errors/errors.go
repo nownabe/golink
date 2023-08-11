@@ -73,7 +73,7 @@ func (w *wrapped) ErrorContext() *clog.ErrorContext {
 }
 
 func (w *wrapped) Stack() []byte {
-	if w.stack == nil {
+	if w.stack != nil {
 		return w.stack
 	}
 
