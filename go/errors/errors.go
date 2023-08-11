@@ -24,6 +24,10 @@ func NewWithoutStack(msg string) error {
 	}
 }
 
+func Errorf(format string, args ...any) error {
+	return New(fmt.Sprintf(format, args...))
+}
+
 func Wrap(err error, msg string) error {
 	if w, ok := err.(*wrapped); ok {
 		if w.hasStack() {
