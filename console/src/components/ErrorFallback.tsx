@@ -7,7 +7,7 @@ export default function ErrorFallback({ error }: FallbackProps) {
   const [open, setOpen] = useState(true);
   const onClose = useCallback(() => setOpen(false), [setOpen]);
 
-  console.log(error);
+  console.error(error);
 
   return (
     <Snackbar open={open} severity="error" onClose={onClose}>
