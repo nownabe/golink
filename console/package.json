@@ -10,10 +10,7 @@
   "packageManager": "pnpm@8.6.12",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "start": "",
-    "lint": "",
-    "deploy": ""
+    "build": "vite build --outDir ../redirector/console"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^4.32.5",
