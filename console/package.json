@@ -9,7 +9,7 @@
   },
   "packageManager": "pnpm@8.6.12",
   "scripts": {
-    "dev": "vite",
+    "dev": "VITE_API_ENDPOINT='http://localhost:8081/api' vite",
     "build": "vite build --outDir ../redirector/console"
   },
   "devDependencies": {
