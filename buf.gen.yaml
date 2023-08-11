@@ -19,8 +19,8 @@ plugins:
     out: extension/gen
     opt: target=ts
   - plugin: buf.build/bufbuild/es
-    out: console-web/src/gen
+    out: console/src/gen
     opt: target=ts
   - plugin: buf.build/bufbuild/connect-es
-    out: console-web/src/gen
+    out: console/src/gen
     opt: target=ts
