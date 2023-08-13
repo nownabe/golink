@@ -24,17 +24,29 @@ import (
 func main() {
 	clog.SetDefault(clog.New(os.Stdout, clog.LevelInfo))
 
+	ctx := context.Background()
+
+	a, err := buildAPI(ctx)
+	if err != nil {
+		clog.AlertErr(ctx, errors.Wrap(err, "failed to build API"))
+		os.Exit(1)
+	}
+
+	if err := a.Run(ctx); err != nil {
+		clog.AlertErr(ctx, errors.Wrap(err, "failed to run server"))
+		os.Exit(1)
+	}
+}
+
+func buildAPI(ctx context.Context) (api.API, error) {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 
-	ctx := context.Background()
-
 	projectID, err := getProjectID(ctx)
 	if err != nil {
-		clog.AlertErr(ctx, err)
-		os.Exit(1)
+		return nil, errors.Wrap(err, "failed to get project ID")
 	}
 	clog.Infof(ctx, "Project ID: %s", projectID)
 	clog.SetContextHandler(projectID)
@@ -44,14 +56,12 @@ func main() {
 
 	fsClient, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
-		clog.AlertErr(ctx, errors.Wrap(err, "failed to create Firestore client"))
-		os.Exit(1)
+		return nil, errors.Wrap(err, "failed to create Firestore client")
 	}
 
 	tracer, err := getTracer(ctx, projectID, "golink-api")
 	if err != nil {
-		clog.AlertErr(ctx, errors.Wrap(err, "failed to get tracer"))
-		os.Exit(1)
+		return nil, errors.Wrap(err, "failed to get tracer")
 	}
 
 	repo := api.NewRepository(fsClient)
@@ -76,10 +86,7 @@ func main() {
 		apiInterceptors = append([]connect.Interceptor{interceptors.NewDummyUser(u[0], u[1])}, apiInterceptors...)
 	}
 
-	if err := api.New(svc, port, "/api", origins, apiInterceptors, debug).Run(ctx); err != nil {
-		clog.AlertErr(ctx, errors.Wrap(err, "failed to run server"))
-		os.Exit(1)
-	}
+	return api.New(svc, port, "/api", origins, apiInterceptors, debug), nil
 }
 
 func getProjectID(ctx context.Context) (string, error) {
