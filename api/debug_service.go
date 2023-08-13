@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/bufbuild/connect-go"
-	"github.com/nownabe/golink/go/clog"
 
 	golinkv1 "github.com/nownabe/golink/api/gen/golink/v1"
 )
@@ -28,6 +27,4 @@ func debug2(ctx context.Context, req *connect.Request[golinkv1.DebugRequest]) {
 }
 
 func debug3(ctx context.Context, req *connect.Request[golinkv1.DebugRequest]) {
-	reqID := req.Header().Get(headerRequestID)
-	clog.Infof(ctx, "request_id=%s", reqID)
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/bufbuild/connect-go"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
+	"github.com/nownabe/golink/go/interceptors"
 
 	"github.com/nownabe/golink/api"
 )
@@ -42,12 +43,12 @@ func main() {
 
 	repo := api.NewRepository(fsClient)
 	svc := api.NewGolinkService(repo)
-	interceptors := []connect.Interceptor{
+	apiInterceptors := []connect.Interceptor{
 		// outermost
-		api.NewRecoverer(),
-		api.NewRequestID(),
-		api.NewAuthorizer(),
-		api.NewLogger(),
+		interceptors.NewRecoverer(),
+		interceptors.NewRequestID(),
+		interceptors.NewAuthorizer(),
+		interceptors.NewLogger(),
 		// innermost
 	}
 
@@ -58,10 +59,10 @@ func main() {
 
 	if user := os.Getenv("USE_DUMMY_USER"); user != "" {
 		u := strings.Split(user, ":")
-		interceptors = append([]connect.Interceptor{api.NewDummyUser(u[0], u[1])}, interceptors...)
+		apiInterceptors = append([]connect.Interceptor{interceptors.NewDummyUser(u[0], u[1])}, apiInterceptors...)
 	}
 
-	if err := api.New(svc, port, "/api", origins, interceptors, debug).Run(ctx); err != nil {
+	if err := api.New(svc, port, "/api", origins, apiInterceptors, debug).Run(ctx); err != nil {
 		clog.AlertErr(ctx, errors.Wrap(err, "failed to run server"))
 		os.Exit(1)
 	}

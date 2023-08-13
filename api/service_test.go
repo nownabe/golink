@@ -13,6 +13,7 @@ import (
 	"github.com/bufbuild/connect-go"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
+	"github.com/nownabe/golink/go/golinkcontext"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -116,7 +117,7 @@ func TestService_CreateGolink_Success(t *testing.T) {
 		},
 	}
 
-	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 	s := newService()
 	got, err := s.CreateGolink(ctx, connect.NewRequest(req))
 	if err != nil {
@@ -136,7 +137,7 @@ func TestService_CreateGolink_AlreadyExists(t *testing.T) {
 		Url:  "https://example.com",
 	}
 
-	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 	s := newService()
 
 	_, err := s.CreateGolink(ctx, connect.NewRequest(req))
@@ -281,7 +282,7 @@ func TestService_CreateGolink_Validations(t *testing.T) {
 	defer clearFirestoreEmulator()
 
 	s := newService()
-	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	for name, tt := range tests {
 		tt := tt
@@ -319,7 +320,7 @@ func TestService_GetGolink_Success(t *testing.T) {
 	createGolink(o)
 
 	s := newService()
-	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	req := &golinkv1.GetGolinkRequest{
 		Name: o.Name,
@@ -341,7 +342,7 @@ func TestService_GetGolink_NotFound(t *testing.T) {
 	defer clearFirestoreEmulator()
 
 	s := newService()
-	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	req := &golinkv1.GetGolinkRequest{
 		Name: "link-name",
@@ -387,7 +388,7 @@ func TestService_ListGolinks(t *testing.T) {
 	}
 
 	s := newService()
-	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	for name, tt := range tests {
 		tt := tt
@@ -453,7 +454,7 @@ func TestService_ListGolinksByURL(t *testing.T) {
 	}
 
 	s := newService()
-	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	for name, tt := range tests {
 		tt := tt
@@ -488,7 +489,7 @@ func TestService_UpdateGolink_Success(t *testing.T) {
 	createGolink(o)
 
 	s := newService()
-	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	req := &golinkv1.UpdateGolinkRequest{
 		Name: o.Name,
@@ -533,7 +534,7 @@ func TestService_UpdateGolink_PermissionDenied(t *testing.T) {
 	createGolink(o)
 
 	s := newService()
-	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	req := &golinkv1.UpdateGolinkRequest{
 		Name: o.Name,
@@ -550,7 +551,7 @@ func TestService_UpdateGolink_NotFound(t *testing.T) {
 	defer clearFirestoreEmulator()
 
 	s := newService()
-	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	req := &golinkv1.UpdateGolinkRequest{
 		Name: "link-name",
@@ -574,7 +575,7 @@ func TestService_DeleteGolink_Success(t *testing.T) {
 	createGolink(o)
 
 	s := newService()
-	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	req := &golinkv1.DeleteGolinkRequest{Name: o.Name}
 
@@ -600,7 +601,7 @@ func TestService_DeleteGolink_PermissionDenied(t *testing.T) {
 	createGolink(o)
 
 	s := newService()
-	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	req := &golinkv1.DeleteGolinkRequest{Name: o.Name}
 
@@ -614,7 +615,7 @@ func TestService_DeleteGolink_NotFound(t *testing.T) {
 	defer clearFirestoreEmulator()
 
 	s := newService()
-	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	req := &golinkv1.DeleteGolinkRequest{Name: "link-name"}
 
@@ -654,7 +655,7 @@ func TestService_AddOwner(t *testing.T) {
 	}
 
 	s := newService()
-	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	for name, tt := range tests {
 		tt := tt
@@ -739,7 +740,7 @@ func TestService_RemoveOwner(t *testing.T) {
 	}
 
 	s := newService()
-	ctx := api.WithUserEmail(context.Background(), "user@example.com")
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	for name, tt := range tests {
 		tt := tt

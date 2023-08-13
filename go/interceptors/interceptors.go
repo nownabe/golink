@@ -1,4 +1,4 @@
-package api
+package interceptors
 
 import (
 	"bufio"
@@ -12,9 +12,11 @@ import (
 	"time"
 
 	"github.com/bufbuild/connect-go"
+
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/clog/clogcontext"
 	"github.com/nownabe/golink/go/errors"
+	"github.com/nownabe/golink/go/golinkcontext"
 )
 
 const (
@@ -34,10 +36,10 @@ func NewAuthorizer() connect.UnaryInterceptorFunc {
 	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
 		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			email := strings.TrimPrefix(req.Header().Get(headerUserEmail), googHeaderPrefix)
-			ctx = WithUserEmail(ctx, email)
+			ctx = golinkcontext.WithUserEmail(ctx, email)
 
 			userID := strings.TrimPrefix(req.Header().Get(headerUserID), googHeaderPrefix)
-			ctx = WithUserID(ctx, userID)
+			ctx = golinkcontext.WithUserID(ctx, userID)
 
 			return next(ctx, req)
 		})

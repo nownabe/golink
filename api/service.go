@@ -10,6 +10,7 @@ import (
 	"github.com/bufbuild/connect-go"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
+	"github.com/nownabe/golink/go/golinkcontext"
 	"golang.org/x/exp/slices"
 
 	golinkv1 "github.com/nownabe/golink/api/gen/golink/v1"
@@ -30,7 +31,7 @@ func (s *golinkService) CreateGolink(
 	ctx context.Context,
 	req *connect.Request[golinkv1.CreateGolinkRequest],
 ) (*connect.Response[golinkv1.CreateGolinkResponse], error) {
-	email, ok := UserEmailFrom(ctx)
+	email, ok := golinkcontext.UserEmailFrom(ctx)
 	if !ok {
 		err := errors.New("user email not found in context")
 		clog.Err(ctx, err)
@@ -103,7 +104,7 @@ func (s *golinkService) ListGolinks(
 	ctx context.Context,
 	req *connect.Request[golinkv1.ListGolinksRequest],
 ) (*connect.Response[golinkv1.ListGolinksResponse], error) {
-	email, ok := UserEmailFrom(ctx)
+	email, ok := golinkcontext.UserEmailFrom(ctx)
 	if !ok {
 		err := errors.New("user email not found in context")
 		clog.Err(ctx, err)
@@ -152,7 +153,7 @@ func (s *golinkService) UpdateGolink(
 	ctx context.Context,
 	req *connect.Request[golinkv1.UpdateGolinkRequest],
 ) (*connect.Response[golinkv1.UpdateGolinkResponse], error) {
-	email, ok := UserEmailFrom(ctx)
+	email, ok := golinkcontext.UserEmailFrom(ctx)
 	if !ok {
 		err := errors.New("user email not found in context")
 		clog.Err(ctx, err)
@@ -207,7 +208,7 @@ func (s *golinkService) DeleteGolink(
 	ctx context.Context,
 	req *connect.Request[golinkv1.DeleteGolinkRequest],
 ) (*connect.Response[golinkv1.DeleteGolinkResponse], error) {
-	email, ok := UserEmailFrom(ctx)
+	email, ok := golinkcontext.UserEmailFrom(ctx)
 	if !ok {
 		err := errors.New("user email not found in context")
 		clog.Err(ctx, err)
@@ -252,7 +253,7 @@ func (s *golinkService) AddOwner(
 	ctx context.Context,
 	req *connect.Request[golinkv1.AddOwnerRequest],
 ) (*connect.Response[golinkv1.AddOwnerResponse], error) {
-	email, ok := UserEmailFrom(ctx)
+	email, ok := golinkcontext.UserEmailFrom(ctx)
 	if !ok {
 		err := errors.New("user email not found in context")
 		clog.Err(ctx, err)
@@ -306,7 +307,7 @@ func (s *golinkService) RemoveOwner(
 	ctx context.Context,
 	req *connect.Request[golinkv1.RemoveOwnerRequest],
 ) (*connect.Response[golinkv1.RemoveOwnerResponse], error) {
-	email, ok := UserEmailFrom(ctx)
+	email, ok := golinkcontext.UserEmailFrom(ctx)
 	if !ok {
 		err := errors.New("user email not found in context")
 		clog.Err(ctx, err)
