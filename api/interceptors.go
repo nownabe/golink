@@ -47,15 +47,17 @@ func NewDummyUser(email, userID string) connect.UnaryInterceptorFunc {
 	})
 }
 
+// https://github.com/golang/go/issues/25448
 func NewRecoverer() connect.UnaryInterceptorFunc {
 	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
 		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (_ connect.AnyResponse, retErr error) {
+			panicked := true
 			defer func() {
-				if r := recover(); r != nil {
+				if panicked {
+					r := recover()
 					if r == http.ErrAbortHandler {
 						panic(r)
 					}
-
 					err, ok := r.(error)
 					if !ok {
 						err = errors.Errorf("%v", r)
@@ -67,6 +69,7 @@ func NewRecoverer() connect.UnaryInterceptorFunc {
 				}
 			}()
 			res, err := next(ctx, req)
+			panicked = false
 			return res, err
 		})
 	})
