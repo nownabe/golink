@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package golink.v1;
+
+service DebugService {
+  rpc Debug(DebugRequest) returns (DebugResponse) {}
+}
+
+message DebugRequest {}
+
+message DebugResponse {}
