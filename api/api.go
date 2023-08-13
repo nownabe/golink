@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"strings"
 	"syscall"
 	"time"
 
@@ -61,7 +60,8 @@ func (a *api) buildServer() *http.Server {
 	path, handler := golinkv1connect.NewGolinkServiceHandler(a.golinkSvc, interceptors)
 
 	mux := http.NewServeMux()
-	mux.Handle(a.pathPrefix+path, a.trimPrefix(handler))
+	// https://connectrpc.com/docs/go/routing#prefixing-routes
+	mux.Handle(a.pathPrefix+path, http.StripPrefix(a.pathPrefix, handler))
 	mux.HandleFunc(a.pathPrefix+"/healthz", a.healthz)
 	mux.HandleFunc("/", http.NotFound)
 
@@ -113,18 +113,6 @@ func (a *api) serve(ctx context.Context) error {
 func (a *api) healthz(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte("ok"))
-}
-
-// connect-go doesn't support path prefix.
-// So we need to trim it.
-// See: https://github.com/bufbuild/connect-go/blob/843d045a5a76ee6236ecd5f05320f58446afec26/cmd/protoc-gen-connect-go/main.go#L215
-func (a *api) trimPrefix(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		originalPath := r.URL.Path
-		r.URL.Path = strings.TrimPrefix(r.URL.Path, a.pathPrefix)
-		h.ServeHTTP(w, r)
-		r.URL.Path = originalPath
-	})
 }
 
 func (a *api) cors(h http.Handler) http.Handler {
