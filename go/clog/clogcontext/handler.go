@@ -2,6 +2,7 @@ package clogcontext
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"go.opentelemetry.io/otel/trace"
@@ -14,12 +15,16 @@ const (
 	labelsKey = "logging.googleapis.com/labels"
 )
 
-func NewHandler(h slog.Handler) slog.Handler {
-	return &handler{h}
+func NewHandler(h slog.Handler, projectID string) slog.Handler {
+	return &handler{
+		Handler:   h,
+		projectID: projectID,
+	}
 }
 
 type handler struct {
 	slog.Handler
+	projectID string
 }
 
 func (h *handler) Enabled(ctx context.Context, l slog.Level) bool {
@@ -32,7 +37,7 @@ func (h *handler) Handle(ctx context.Context, r slog.Record) error {
 	}
 
 	if spanCtx := trace.SpanContextFromContext(ctx); spanCtx.IsValid() {
-		r.AddAttrs(slog.String(traceKey, spanCtx.TraceID().String()))
+		r.AddAttrs(slog.String(traceKey, fmt.Sprintf("projects/%s/traces/%s", h.projectID, spanCtx.TraceID())))
 		r.AddAttrs(slog.String(spanIDKey, spanCtx.SpanID().String()))
 	}
 
@@ -49,9 +54,15 @@ func (h *handler) Handle(ctx context.Context, r slog.Record) error {
 }
 
 func (h *handler) WithAttrs(attrs []slog.Attr) slog.Handler {
-	return &handler{h.Handler.WithAttrs(attrs)}
+	return &handler{
+		Handler:   h.Handler.WithAttrs(attrs),
+		projectID: h.projectID,
+	}
 }
 
 func (h *handler) WithGroup(name string) slog.Handler {
-	return &handler{h.Handler.WithGroup(name)}
+	return &handler{
+		Handler:   h.Handler.WithGroup(name),
+		projectID: h.projectID,
+	}
 }
