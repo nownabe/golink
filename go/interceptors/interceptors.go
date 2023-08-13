@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/bufbuild/connect-go"
+	"go.opentelemetry.io/otel/trace"
 
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/clog/clogcontext"
@@ -26,11 +27,6 @@ const (
 	headerTraceContext = "X-Cloud-Trace-Context"
 	headerRequestID    = "X-Request-Id"
 )
-
-/*
-"Traceparent":[]string{"00-6dc654ab15a4edc4f222de83a6b5b861-a057c88a1ebcb8e1-00"},
-"X-Cloud-Trace-Context":[]string{"6dc654ab15a4edc4f222de83a6b5b861/11553923864589023457"},
-*/
 
 func NewAuthorizer() connect.UnaryInterceptorFunc {
 	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
@@ -129,6 +125,16 @@ func NewLogger() connect.UnaryInterceptorFunc {
 	})
 }
 
+func WithTracer(tracer trace.Tracer) connect.UnaryInterceptorFunc {
+	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
+		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
+			ctx, span := tracer.Start(ctx, req.Spec().Procedure)
+			defer span.End()
+			return next(ctx, req)
+		})
+	})
+}
+
 const (
 	headerContentLength = "Content-Length"
 	headerUserAgent     = "User-Agent"
@@ -151,8 +157,6 @@ func getRemoteIP(req connect.AnyRequest) string {
 
 	return ""
 }
-
-// TODO: trace
 
 var randomReaderPool = sync.Pool{New: func() interface{} {
 	return bufio.NewReader(rand.Reader)
