@@ -99,8 +99,6 @@ func NewLogger() connect.UnaryInterceptorFunc {
 			start := time.Now()
 			res, err := next(ctx, req)
 
-			time.Sleep(1 * time.Second)
-
 			r := &clog.HTTPRequest{
 				RequestMethod:                  req.HTTPMethod(),
 				RequestURL:                     req.Spec().Procedure,
