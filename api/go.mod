@@ -8,7 +8,7 @@ require (
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v1.18.0
 	github.com/bufbuild/connect-go v1.10.0
 	github.com/google/go-cmp v0.5.9
-	github.com/nownabe/golink/go v0.0.0-20230813113638-0d179c237fbb
+	github.com/nownabe/golink/go v0.0.0-20230813130953-285a04faa098
 	github.com/rs/cors v1.9.0
 	go.opentelemetry.io/contrib/detectors/gcp v1.17.0
 	go.opentelemetry.io/otel v1.16.0

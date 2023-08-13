@@ -37,6 +37,7 @@ func main() {
 		os.Exit(1)
 	}
 	clog.Infof(ctx, "Project ID: %s", projectID)
+	clog.SetContextHandler(projectID)
 
 	origins := strings.Split(os.Getenv("ALLOWED_ORIGINS"), ",")
 	clog.Infof(ctx, "Allowed origins: %v", origins)
