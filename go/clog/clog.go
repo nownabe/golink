@@ -8,6 +8,8 @@ import (
 	"sync/atomic"
 
 	"golang.org/x/exp/slog"
+
+	"github.com/nownabe/golink/go/clog/clogcontext"
 )
 
 var defaultLogger atomic.Value
@@ -34,7 +36,7 @@ func New(w io.Writer, l slog.Level, opts ...option) *Logger {
 			return a
 		},
 	})
-	h := slog.Handler(&sourceHandler{&otelTraceHandler{jh}})
+	h := clogcontext.NewHandler(&sourceHandler{&otelTraceHandler{jh}})
 
 	for _, opt := range opts {
 		h = opt(h)

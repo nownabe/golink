@@ -12,6 +12,7 @@ import (
 
 	"github.com/bufbuild/connect-go"
 	"github.com/nownabe/golink/go/clog"
+	"github.com/nownabe/golink/go/clog/clogcontext"
 	"github.com/nownabe/golink/go/errors"
 )
 
@@ -88,7 +89,7 @@ func NewRequestID() connect.UnaryInterceptorFunc {
 				reqID = randomString(64)
 			}
 			req.Header().Set(headerRequestID, reqID)
-			return next(ctx, req)
+			return next(clogcontext.WithRequestID(ctx, reqID), req)
 		})
 	})
 }
