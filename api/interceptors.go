@@ -1,10 +1,14 @@
 package api
 
 import (
+	"bufio"
 	"context"
+	"crypto/rand"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
+	"sync"
 
 	"github.com/bufbuild/connect-go"
 	"github.com/nownabe/golink/go/clog"
@@ -16,6 +20,7 @@ const (
 	headerUserEmail    = "X-Appengine-User-Email"
 	headerUserID       = "X-Appengine-User-Id"
 	headerTraceContext = "X-Cloud-Trace-Context"
+	headerRequestID    = "X-Request-Id"
 )
 
 /*
@@ -75,6 +80,56 @@ func NewRecoverer() connect.UnaryInterceptorFunc {
 	})
 }
 
+func NewRequestID() connect.UnaryInterceptorFunc {
+	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
+		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
+			reqID := req.Header().Get(headerRequestID)
+			if reqID == "" {
+				reqID = randomString(64)
+			}
+			req.Header().Set(headerRequestID, reqID)
+			return next(ctx, req)
+		})
+	})
+}
+
 // TODO: request log
-// TODO: request id
 // TODO: trace
+
+var randomReaderPool = sync.Pool{New: func() interface{} {
+	return bufio.NewReader(rand.Reader)
+}}
+
+const (
+	randomStringAlphabet    = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	randomStringAlphabetLen = 62
+	randomStringMaxByte     = 255 - (256 % randomStringAlphabetLen)
+)
+
+func randomString(length uint8) string {
+	reader := randomReaderPool.Get().(*bufio.Reader)
+	defer randomReaderPool.Put(reader)
+
+	b := make([]byte, length)
+	r := make([]byte, length+(length/4))
+	var i uint8 = 0
+
+	for {
+		_, err := io.ReadFull(reader, r)
+		if err != nil {
+			err := errors.Wrap(err, "failed to read random bytes")
+			clog.AlertErr(context.Background(), err)
+			panic("unexpected error in randomString")
+		}
+		for _, rb := range r {
+			if rb > randomStringMaxByte {
+				continue
+			}
+			b[i] = randomStringAlphabet[rb%randomStringAlphabetLen]
+			i++
+			if i == length {
+				return string(b)
+			}
+		}
+	}
+}

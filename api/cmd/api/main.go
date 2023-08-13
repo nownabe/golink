@@ -45,6 +45,7 @@ func main() {
 	interceptors := []connect.Interceptor{
 		// outermost
 		api.NewRecoverer(),
+		api.NewRequestID(),
 		api.NewAuthorizer(),
 		// innermost
 	}

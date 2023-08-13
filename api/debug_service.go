@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/bufbuild/connect-go"
+	"github.com/nownabe/golink/go/clog"
 
 	golinkv1 "github.com/nownabe/golink/api/gen/golink/v1"
 )
@@ -14,18 +15,19 @@ func (s *debugService) Debug(
 	ctx context.Context,
 	req *connect.Request[golinkv1.DebugRequest],
 ) (*connect.Response[golinkv1.DebugResponse], error) {
-	debug1(ctx)
+	debug1(ctx, req)
 	return connect.NewResponse(&golinkv1.DebugResponse{}), nil
 }
 
-func debug1(ctx context.Context) {
-	debug2(ctx)
+func debug1(ctx context.Context, req *connect.Request[golinkv1.DebugRequest]) {
+	debug2(ctx, req)
 }
 
-func debug2(ctx context.Context) {
-	debug3(ctx)
+func debug2(ctx context.Context, req *connect.Request[golinkv1.DebugRequest]) {
+	debug3(ctx, req)
 }
 
-func debug3(ctx context.Context) {
-	panic("in debug")
+func debug3(ctx context.Context, req *connect.Request[golinkv1.DebugRequest]) {
+	reqID := req.Header().Get(headerRequestID)
+	clog.Infof(ctx, "request_id=%s", reqID)
 }
