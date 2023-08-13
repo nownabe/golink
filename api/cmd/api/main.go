@@ -43,6 +43,8 @@ func main() {
 	repo := api.NewRepository(fsClient)
 	svc := api.NewGolinkService(repo)
 	interceptors := []connect.Interceptor{
+		// outermost
+		api.NewRecoverer(),
 		api.NewAuthorizer(),
 		// innermost
 	}

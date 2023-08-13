@@ -3,9 +3,12 @@ package api
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/bufbuild/connect-go"
+	"github.com/nownabe/golink/go/clog"
+	"github.com/nownabe/golink/go/errors"
 )
 
 const (
@@ -19,8 +22,6 @@ const (
 "Traceparent":[]string{"00-6dc654ab15a4edc4f222de83a6b5b861-a057c88a1ebcb8e1-00"},
 "X-Cloud-Trace-Context":[]string{"6dc654ab15a4edc4f222de83a6b5b861/11553923864589023457"},
 */
-
-// TODO ?
 
 func NewAuthorizer() connect.UnaryInterceptorFunc {
 	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
@@ -46,7 +47,31 @@ func NewDummyUser(email, userID string) connect.UnaryInterceptorFunc {
 	})
 }
 
+func NewRecoverer() connect.UnaryInterceptorFunc {
+	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
+		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (_ connect.AnyResponse, retErr error) {
+			defer func() {
+				if r := recover(); r != nil {
+					if r == http.ErrAbortHandler {
+						panic(r)
+					}
+
+					err, ok := r.(error)
+					if !ok {
+						err = errors.Errorf("%v", r)
+					}
+					err = errors.Wrap(err, "recovering panic")
+					clog.AlertErr(ctx, err)
+
+					retErr = connect.NewError(http.StatusInternalServerError, errors.NewWithoutStack("internal error"))
+				}
+			}()
+			res, err := next(ctx, req)
+			return res, err
+		})
+	})
+}
+
 // TODO: request log
 // TODO: request id
-// TODO: recover
 // TODO: trace
