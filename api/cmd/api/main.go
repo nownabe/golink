@@ -47,6 +47,7 @@ func main() {
 		api.NewRecoverer(),
 		api.NewRequestID(),
 		api.NewAuthorizer(),
+		api.NewLogger(),
 		// innermost
 	}
 

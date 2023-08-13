@@ -2,7 +2,10 @@ package clog
 
 import (
 	"context"
+	"fmt"
 	"runtime"
+	"strconv"
+	"time"
 
 	"go.opentelemetry.io/otel/trace"
 	"golang.org/x/exp/slog"
@@ -31,11 +34,11 @@ type HTTPRequest struct {
 	RemoteIP                       string
 	ServerIP                       string
 	Referer                        string
-	Latency                        string
+	Latency                        time.Duration
 	CacheLookup                    bool
 	CacheHit                       bool
 	CacheValidatedWithOriginServer bool
-	CacheFillBytes                 string
+	CacheFillBytes                 int64
 	Protocol                       string
 }
 
@@ -50,11 +53,11 @@ func (r *HTTPRequest) LogValue() slog.Value {
 		slog.String("remoteIp", r.RemoteIP),
 		slog.String("serverIp", r.ServerIP),
 		slog.String("referer", r.Referer),
-		slog.String("latency", r.Latency),
+		slog.String("latency", fmt.Sprintf("%.9fs", r.Latency.Seconds())),
 		slog.Bool("cacheLookup", r.CacheLookup),
 		slog.Bool("cacheHit", r.CacheHit),
 		slog.Bool("cacheValidatedWithOriginServer", r.CacheValidatedWithOriginServer),
-		slog.String("cacheFillBytes", r.CacheFillBytes),
+		slog.String("cacheFillBytes", strconv.FormatInt(r.CacheFillBytes, 10)),
 		slog.String("protocol", r.Protocol),
 	)
 }

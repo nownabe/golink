@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/bufbuild/connect-go"
 	"github.com/nownabe/golink/go/clog"
@@ -94,7 +95,61 @@ func NewRequestID() connect.UnaryInterceptorFunc {
 	})
 }
 
-// TODO: request log
+func NewLogger() connect.UnaryInterceptorFunc {
+	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
+		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
+			start := time.Now()
+			res, err := next(ctx, req)
+
+			time.Sleep(1 * time.Second)
+
+			r := &clog.HTTPRequest{
+				RequestMethod:                  req.HTTPMethod(),
+				RequestURL:                     req.Spec().Procedure,
+				RequestSize:                    req.Header().Get(headerContentLength),
+				Status:                         "",
+				ResponseSize:                   "",
+				UserAgent:                      req.Header().Get(headerUserAgent),
+				RemoteIP:                       getRemoteIP(req),
+				ServerIP:                       "",
+				Referer:                        req.Header().Get(headerReferer),
+				Latency:                        time.Since(start),
+				CacheLookup:                    false,
+				CacheHit:                       false,
+				CacheValidatedWithOriginServer: false,
+				CacheFillBytes:                 0,
+				Protocol:                       req.Peer().Protocol,
+			}
+			clog.InfoHTTPRequest(ctx, req.Spec().Procedure, r)
+
+			return res, err
+		})
+	})
+}
+
+const (
+	headerContentLength = "Content-Length"
+	headerUserAgent     = "User-Agent"
+	headerUserIP        = "X-Appengine-User-Ip"
+	headerForwardedFor  = "X-Forwarded-For"
+	headerRealIP        = "X-Real-Ip"
+	headerReferer       = "Referer"
+)
+
+func getRemoteIP(req connect.AnyRequest) string {
+	if ip := req.Header().Get(headerForwardedFor); ip != "" {
+		return ip
+	}
+	if ip := req.Header().Get(headerUserIP); ip != "" {
+		return ip
+	}
+	if ip := req.Header().Get(headerRealIP); ip != "" {
+		return ip
+	}
+
+	return ""
+}
+
 // TODO: trace
 
 var randomReaderPool = sync.Pool{New: func() interface{} {

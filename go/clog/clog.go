@@ -128,3 +128,7 @@ func AlertErr(ctx context.Context, err error) {
 func EmergencyErr(ctx context.Context, err error) {
 	Default().err(ctx, LevelEmergency, err)
 }
+
+func InfoHTTPRequest(ctx context.Context, msg string, req *HTTPRequest) {
+	Default().Log(ctx, LevelInfo, msg, httpRequestKey, req)
+}

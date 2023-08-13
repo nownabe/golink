@@ -114,3 +114,7 @@ func (l *Logger) err(ctx context.Context, lv slog.Level, err error) {
 
 	l.LogAttrs(ctx, lv, err.Error(), attrs...)
 }
+
+func (l *Logger) InfoHTTPRequest(ctx context.Context, msg string, req *HTTPRequest) {
+	l.Log(ctx, LevelInfo, msg, httpRequestKey, req)
+}
