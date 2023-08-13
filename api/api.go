@@ -55,7 +55,7 @@ func (a *api) Run() error {
 	return a.serve()
 }
 
-func (a *api) serve() error {
+func (a *api) buildServer() *http.Server {
 	interceptors := connect.WithInterceptors(a.interceptors...)
 	path, handler := golinkv1connect.NewGolinkServiceHandler(a.golinkSvc, interceptors)
 
@@ -71,6 +71,12 @@ func (a *api) serve() error {
 		ReadHeaderTimeout: readHeaderTimeoutSeconds * time.Second,
 	}
 
+	return h1s
+}
+
+func (a *api) serve() error {
+	s := a.buildServer()
+
 	idleConnsClosed := make(chan struct{})
 
 	go func() {
@@ -85,7 +91,7 @@ func (a *api) serve() error {
 		ctx, cancel := context.WithTimeout(context.Background(), shutdownTimeoutSeconds*time.Second)
 		defer cancel()
 
-		if err := h1s.Shutdown(ctx); err != nil {
+		if err := s.Shutdown(ctx); err != nil {
 			// TODO: log: err: failed to shutdown gracefully
 			log.Print(err)
 		}
@@ -97,7 +103,7 @@ func (a *api) serve() error {
 
 	// TODO: log: info: started
 
-	if err := h1s.ListenAndServe(); err != http.ErrServerClosed {
+	if err := s.ListenAndServe(); err != http.ErrServerClosed {
 		// TODO: log: fatal: failed to listen and serve
 		return err
 	}
