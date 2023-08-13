@@ -62,17 +62,6 @@ func (r *HTTPRequest) LogValue() slog.Value {
 	)
 }
 
-// TODO
-/*
-func WithHTTPRequest(r *HTTPRequest) *Logger {
-	return Default().With(httpRequestKey, r)
-}
-
-func WithInsertID(id string) *Logger {
-	return Default().With(insertIDKey, id)
-}
-*/
-
 // TODO: Labels
 
 type Operation struct {

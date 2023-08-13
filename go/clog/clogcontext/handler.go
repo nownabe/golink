@@ -2,6 +2,7 @@ package clogcontext
 
 import (
 	"context"
+	"sync"
 
 	"go.opentelemetry.io/otel/trace"
 	"golang.org/x/exp/slog"
@@ -10,6 +11,7 @@ import (
 const (
 	spanIDKey = "logging.googleapis.com/spanId"
 	traceKey  = "logging.googleapis.com/trace"
+	labelsKey = "logging.googleapis.com/labels"
 )
 
 func NewHandler(h slog.Handler) slog.Handler {
@@ -32,6 +34,15 @@ func (h *handler) Handle(ctx context.Context, r slog.Record) error {
 	if spanCtx := trace.SpanContextFromContext(ctx); spanCtx.IsValid() {
 		r.AddAttrs(slog.String(traceKey, spanCtx.TraceID().String()))
 		r.AddAttrs(slog.String(spanIDKey, spanCtx.SpanID().String()))
+	}
+
+	if m, ok := ctx.Value(keyLabels{}).(*sync.Map); ok {
+		var attrs []slog.Attr
+		m.Range(func(key, value any) bool {
+			attrs = append(attrs, slog.String(key.(string), value.(string)))
+			return true
+		})
+		r.AddAttrs(slog.Group(labelsKey, attrs))
 	}
 
 	return h.Handler.Handle(ctx, r)
