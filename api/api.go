@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -11,6 +10,8 @@ import (
 	"time"
 
 	"github.com/bufbuild/connect-go"
+	"github.com/nownabe/golink/go/clog"
+	"github.com/nownabe/golink/go/errors"
 	"github.com/rs/cors"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
@@ -24,7 +25,7 @@ const (
 )
 
 type API interface {
-	Run() error
+	Run(ctx context.Context) error
 }
 
 func New(
@@ -51,8 +52,8 @@ type api struct {
 	interceptors   []connect.Interceptor
 }
 
-func (a *api) Run() error {
-	return a.serve()
+func (a *api) Run(ctx context.Context) error {
+	return a.serve(ctx)
 }
 
 func (a *api) buildServer() *http.Server {
@@ -74,7 +75,7 @@ func (a *api) buildServer() *http.Server {
 	return h1s
 }
 
-func (a *api) serve() error {
+func (a *api) serve(ctx context.Context) error {
 	s := a.buildServer()
 
 	idleConnsClosed := make(chan struct{})
@@ -84,33 +85,28 @@ func (a *api) serve() error {
 		signal.Notify(ch, syscall.SIGTERM, syscall.SIGINT)
 
 		sig := <-ch
-		log.Print(sig)
-
-		// TODO: log: info: received signal and terminating
+		clog.Noticef(ctx, "received signal %s and terminating", sig)
 
 		ctx, cancel := context.WithTimeout(context.Background(), shutdownTimeoutSeconds*time.Second)
 		defer cancel()
 
 		if err := s.Shutdown(ctx); err != nil {
-			// TODO: log: err: failed to shutdown gracefully
-			log.Print(err)
+			err := errors.Wrap(err, "failed to shutdown gracefully")
+			clog.Err(ctx, err)
 		}
 
-		// TODO: log: info: completed shutdown gracefully
-
+		clog.Notice(ctx, "completed shutdown gracefully")
 		close(idleConnsClosed)
 	}()
 
-	// TODO: log: info: started
+	clog.Notice(ctx, "starting to listen and serve")
 
 	if err := s.ListenAndServe(); err != http.ErrServerClosed {
-		// TODO: log: fatal: failed to listen and serve
-		return err
+		return errors.Wrap(err, "failed to listen and serve")
 	}
 
 	<-idleConnsClosed
 
-	// TODO: log: info: bye
 	return nil
 }
 

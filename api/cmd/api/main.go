@@ -51,7 +51,7 @@ func main() {
 		interceptors = append([]connect.Interceptor{api.NewDummyUser(u[0], u[1])}, interceptors...)
 	}
 
-	if err := api.New(svc, port, "/api", origins, interceptors).Run(); err != nil {
+	if err := api.New(svc, port, "/api", origins, interceptors).Run(ctx); err != nil {
 		clog.AlertErr(ctx, errors.Wrap(err, "failed to run server"))
 		os.Exit(1)
 	}
