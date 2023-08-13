@@ -26,6 +26,12 @@ func SetDefault(l *Logger) {
 	defaultLogger.Store(l)
 }
 
+func SetContextHandler(projectID string) {
+	l := Default()
+	h := clogcontext.NewHandler(l.Handler(), projectID)
+	SetDefault(&Logger{slog.New(h)})
+}
+
 func New(w io.Writer, l slog.Level, opts ...option) *Logger {
 	jh := slog.NewJSONHandler(w, &slog.HandlerOptions{
 		Level: l,
@@ -36,7 +42,7 @@ func New(w io.Writer, l slog.Level, opts ...option) *Logger {
 			return a
 		},
 	})
-	h := clogcontext.NewHandler(&sourceHandler{&otelTraceHandler{jh}})
+	h := slog.Handler(&sourceHandler{&otelTraceHandler{jh}})
 
 	for _, opt := range opts {
 		h = opt(h)
