@@ -7,7 +7,6 @@ import (
 	"strconv"
 	"time"
 
-	"go.opentelemetry.io/otel/trace"
 	"golang.org/x/exp/slog"
 )
 
@@ -130,24 +129,6 @@ func (h *sourceHandler) Handle(ctx context.Context, r slog.Record) error {
 			}
 		}
 	*/
-
-	return h.Handler.Handle(ctx, r)
-}
-
-type otelTraceHandler struct {
-	slog.Handler
-}
-
-func (h *otelTraceHandler) Handle(ctx context.Context, r slog.Record) error {
-	spanCtx := trace.SpanContextFromContext(ctx)
-
-	if spanCtx.HasTraceID() {
-		r.AddAttrs(slog.String(traceKey, spanCtx.TraceID().String()))
-	}
-
-	if spanCtx.HasSpanID() {
-		r.AddAttrs(slog.String(spanIDKey, spanCtx.SpanID().String()))
-	}
 
 	return h.Handler.Handle(ctx, r)
 }

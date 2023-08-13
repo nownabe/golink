@@ -42,7 +42,7 @@ func New(w io.Writer, l slog.Level, opts ...option) *Logger {
 			return a
 		},
 	})
-	h := slog.Handler(&sourceHandler{&otelTraceHandler{jh}})
+	h := slog.Handler(&sourceHandler{jh})
 
 	for _, opt := range opts {
 		h = opt(h)
