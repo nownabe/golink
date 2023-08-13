@@ -57,11 +57,13 @@ func (a *api) Run(ctx context.Context) error {
 
 func (a *api) buildServer() *http.Server {
 	interceptors := connect.WithInterceptors(a.interceptors...)
-	path, handler := golinkv1connect.NewGolinkServiceHandler(a.golinkSvc, interceptors)
+
+	grpcHandler := http.NewServeMux()
+	grpcHandler.Handle(golinkv1connect.NewGolinkServiceHandler(a.golinkSvc, interceptors))
 
 	mux := http.NewServeMux()
 	// https://connectrpc.com/docs/go/routing#prefixing-routes
-	mux.Handle(a.pathPrefix+path, http.StripPrefix(a.pathPrefix, handler))
+	mux.Handle(a.pathPrefix+"/", http.StripPrefix(a.pathPrefix, grpcHandler))
 	mux.HandleFunc(a.pathPrefix+"/healthz", a.healthz)
 	mux.HandleFunc("/", http.NotFound)
 
