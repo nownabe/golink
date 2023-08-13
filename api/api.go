@@ -32,6 +32,7 @@ func New(
 	port, pathPrefix string,
 	allowedOrigins []string,
 	interceptors []connect.Interceptor,
+	debug bool,
 ) API {
 	return &api{
 		golinkSvc:      golinkSvc,
@@ -39,6 +40,7 @@ func New(
 		pathPrefix:     pathPrefix,
 		allowedOrigins: allowedOrigins,
 		interceptors:   interceptors,
+		debug:          debug,
 	}
 }
 
@@ -49,6 +51,7 @@ type api struct {
 	pathPrefix     string
 	allowedOrigins []string
 	interceptors   []connect.Interceptor
+	debug          bool
 }
 
 func (a *api) Run(ctx context.Context) error {
@@ -60,6 +63,10 @@ func (a *api) buildServer() *http.Server {
 
 	grpcHandler := http.NewServeMux()
 	grpcHandler.Handle(golinkv1connect.NewGolinkServiceHandler(a.golinkSvc, interceptors))
+
+	if a.debug {
+		grpcHandler.Handle(golinkv1connect.NewDebugServiceHandler(&debugService{}, interceptors))
+	}
 
 	mux := http.NewServeMux()
 	// https://connectrpc.com/docs/go/routing#prefixing-routes
