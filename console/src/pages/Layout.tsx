@@ -1,5 +1,5 @@
-import React from "react";
-import { Outlet, Link } from "react-router-dom";
+import React, { Suspense } from "react";
+import { Outlet, Link, defer, useLoaderData, Await } from "react-router-dom";
 import { Box } from "@mui/material";
 import {
   AppBar,
@@ -27,11 +27,20 @@ import "@fontsource/roboto/700.css";
 
 import ThemeRegistry from "@/components/ThemeRegistry";
 import LinkComponent from "@/components/LinkComponent";
+import client from "@/client";
 
 const drawerWidth = 240;
 
+export async function layoutLoader() {
+  const email = (async () => {
+    const resp = await client.getMe({});
+    return resp.email;
+  })();
+  return defer({ email });
+}
+
 export default function Layout() {
-  const email = "";
+  const { email } = useLoaderData() as ReturnType<typeof layoutLoader>;
 
   return (
     <ThemeRegistry>
@@ -63,7 +72,9 @@ export default function Layout() {
               </Typography>
             </Link>
             <Typography variant="body1" component="span">
-              {email}
+              <Suspense fallback="">
+                <Await resolve={email}>{(email: string) => email}</Await>
+              </Suspense>
             </Typography>
           </Toolbar>
         </AppBar>

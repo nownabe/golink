@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import Layout from "./pages/Layout";
+import Layout, { layoutLoader } from "./pages/Layout";
 import Home from "./pages/Home";
 import MyGolinks, { myGolinksLoader } from "./pages/MyGolinks";
 import NewGolink, { newGolinkLoader } from "./pages/NewGolink";
@@ -12,6 +12,8 @@ const router = createBrowserRouter(
     {
       path: "/",
       element: <Layout />,
+      loader: layoutLoader,
+      errorElement: <ErrorDialog />,
       children: [
         {
           index: true,
