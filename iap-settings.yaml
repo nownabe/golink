@@ -1,0 +1,3 @@
+accessSettings:
+  corsSettings:
+    allowHttpOptions: true
