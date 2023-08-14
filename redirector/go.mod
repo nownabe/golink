@@ -5,6 +5,7 @@ go 1.20
 require (
 	cloud.google.com/go/compute/metadata v0.2.3
 	cloud.google.com/go/firestore v1.12.0
+	github.com/nownabe/golink/go v0.0.0-20230814035337-5b67ef87285c
 	google.golang.org/grpc v1.55.0
 )
 
@@ -19,7 +20,10 @@ require (
 	github.com/googleapis/enterprise-certificate-proxy v0.2.3 // indirect
 	github.com/googleapis/gax-go/v2 v2.11.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
+	go.opentelemetry.io/otel v1.16.0 // indirect
+	go.opentelemetry.io/otel/trace v1.16.0 // indirect
 	golang.org/x/crypto v0.11.0 // indirect
+	golang.org/x/exp v0.0.0-20230809094429-853ea248256d // indirect
 	golang.org/x/net v0.12.0 // indirect
 	golang.org/x/oauth2 v0.8.0 // indirect
 	golang.org/x/sync v0.2.0 // indirect
