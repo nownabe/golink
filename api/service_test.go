@@ -36,6 +36,7 @@ var cmpOptions = []cmp.Option{
 	cmpopts.IgnoreUnexported(golinkv1.UpdateGolinkResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.AddOwnerResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.RemoveOwnerResponse{}),
+	cmpopts.IgnoreUnexported(golinkv1.GetMeResponse{}),
 }
 
 func TestMain(m *testing.M) {
@@ -786,5 +787,25 @@ func TestService_RemoveOwner(t *testing.T) {
 				t.Errorf("save failed (-want +got): %v", cmp.Diff(wantDTO, saved))
 			}
 		})
+	}
+}
+
+func TestService_GetMe_Success(t *testing.T) {
+	defer clearFirestoreEmulator()
+
+	s := newService()
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
+
+	req := &golinkv1.GetMeRequest{}
+
+	got, err := s.GetMe(ctx, connect.NewRequest(req))
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+
+	want := &golinkv1.GetMeResponse{Email: "user@example.com"}
+
+	if !cmp.Equal(want, got.Msg, cmpOptions...) {
+		t.Errorf("unexpected response (-want +got): %v", cmp.Diff(want, got.Msg, cmpOptions...))
 	}
 }

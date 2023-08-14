@@ -11,6 +11,8 @@ service GolinkService {
   rpc DeleteGolink(DeleteGolinkRequest) returns (DeleteGolinkResponse) {}
   rpc AddOwner(AddOwnerRequest) returns (AddOwnerResponse) {}
   rpc RemoveOwner(RemoveOwnerRequest) returns (RemoveOwnerResponse) {}
+
+  rpc GetMe(GetMeRequest) returns (GetMeResponse) {}
 }
 
 message Golink {
@@ -65,8 +67,7 @@ message DeleteGolinkRequest {
   string name = 1;
 }
 
-message DeleteGolinkResponse {
-}
+message DeleteGolinkResponse {}
 
 message AddOwnerRequest {
   string name = 1;
@@ -84,4 +85,11 @@ message RemoveOwnerRequest {
 
 message RemoveOwnerResponse {
   Golink golink = 1;
+}
+
+message GetMeRequest {}
+
+message GetMeResponse {
+  string email = 1;
+  bool is_admin = 2;
 }

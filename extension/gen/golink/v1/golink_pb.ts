@@ -669,3 +669,77 @@ export class RemoveOwnerResponse extends Message<RemoveOwnerResponse> {
   }
 }
 
+/**
+ * @generated from message golink.v1.GetMeRequest
+ */
+export class GetMeRequest extends Message<GetMeRequest> {
+  constructor(data?: PartialMessage<GetMeRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "golink.v1.GetMeRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetMeRequest {
+    return new GetMeRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetMeRequest {
+    return new GetMeRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetMeRequest {
+    return new GetMeRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetMeRequest | PlainMessage<GetMeRequest> | undefined, b: GetMeRequest | PlainMessage<GetMeRequest> | undefined): boolean {
+    return proto3.util.equals(GetMeRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message golink.v1.GetMeResponse
+ */
+export class GetMeResponse extends Message<GetMeResponse> {
+  /**
+   * @generated from field: string email = 1;
+   */
+  email = "";
+
+  /**
+   * @generated from field: bool is_admin = 2;
+   */
+  isAdmin = false;
+
+  constructor(data?: PartialMessage<GetMeResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "golink.v1.GetMeResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "email", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "is_admin", kind: "scalar", T: 8 /* ScalarType.BOOL */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): GetMeResponse {
+    return new GetMeResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): GetMeResponse {
+    return new GetMeResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): GetMeResponse {
+    return new GetMeResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: GetMeResponse | PlainMessage<GetMeResponse> | undefined, b: GetMeResponse | PlainMessage<GetMeResponse> | undefined): boolean {
+    return proto3.util.equals(GetMeResponse, a, b);
+  }
+}
+

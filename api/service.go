@@ -361,6 +361,21 @@ func (s *golinkService) RemoveOwner(
 	return res, nil
 }
 
+func (s *golinkService) GetMe(
+	ctx context.Context,
+	req *connect.Request[golinkv1.GetMeRequest],
+) (*connect.Response[golinkv1.GetMeResponse], error) {
+	email, ok := golinkcontext.UserEmailFrom(ctx)
+	if !ok {
+		err := errors.New("user email not found in context")
+		clog.Err(ctx, err)
+		return nil, errf(connect.CodeInternal, "internal error")
+	}
+
+	res := connect.NewResponse(&golinkv1.GetMeResponse{Email: email})
+	return res, nil
+}
+
 func errf(code connect.Code, format string, args ...any) error {
 	return connect.NewError(code, fmt.Errorf(format, args...))
 }

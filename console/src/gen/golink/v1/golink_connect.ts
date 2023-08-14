@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { AddOwnerRequest, AddOwnerResponse, CreateGolinkRequest, CreateGolinkResponse, DeleteGolinkRequest, DeleteGolinkResponse, GetGolinkRequest, GetGolinkResponse, ListGolinksByUrlRequest, ListGolinksByUrlResponse, ListGolinksRequest, ListGolinksResponse, RemoveOwnerRequest, RemoveOwnerResponse, UpdateGolinkRequest, UpdateGolinkResponse } from "./golink_pb.js";
+import { AddOwnerRequest, AddOwnerResponse, CreateGolinkRequest, CreateGolinkResponse, DeleteGolinkRequest, DeleteGolinkResponse, GetGolinkRequest, GetGolinkResponse, GetMeRequest, GetMeResponse, ListGolinksByUrlRequest, ListGolinksByUrlResponse, ListGolinksRequest, ListGolinksResponse, RemoveOwnerRequest, RemoveOwnerResponse, UpdateGolinkRequest, UpdateGolinkResponse } from "./golink_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -82,6 +82,15 @@ export const GolinkService = {
       name: "RemoveOwner",
       I: RemoveOwnerRequest,
       O: RemoveOwnerResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc golink.v1.GolinkService.GetMe
+     */
+    getMe: {
+      name: "GetMe",
+      I: GetMeRequest,
+      O: GetMeResponse,
       kind: MethodKind.Unary,
     },
   }
