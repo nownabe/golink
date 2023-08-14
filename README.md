@@ -90,9 +90,9 @@ Run the following command.
 
 ```shell
 gcloud iap settings set \
-	iap-settings.yaml \
-	--resource-type=app-engine \
-	--project="$(gcloud config get project)"
+  iap-settings.yaml \
+  --resource-type=app-engine \
+  --project="$(gcloud config get project)"
 ```
 
 #### Add Users
