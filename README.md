@@ -2,17 +2,17 @@
 
 **Golink: Custom URL Shortener & Redirect**
 
-Empower your web browsing experience with "Golink", a dynamic URL shortener. Turn lengthy URLs into crisp and memorable short links prefixed with "go/" for efficient sharing and organization.
+Empower your web browsing experience with "Golink", a dynamic URL shortener. Turn cumbersome URLs into crisp and memorable short links prefixed with "go/", ideal for streamlined sharing and organization.
 
 Key Features:
 
-1. **Simple URL Shortening**: Convert any web page's URL into a concise `go/{link_name}` format with a single click.
-2. **Instant Redirection**: Registered `go/{link_name}` URLs swiftly redirect to the original URLs, streamlining navigation.
-3. **Extension Popup Utility**: Instantly create short links for your current tab directly from the extension's popup interface.
-4. **Private Server Deployment**: To use this extension, deploy the server on Google Cloud, ensuring a personal touch to your shortened links.
-5. **Exclusive Access Control**: Grant access to specific users, ensuring that only those permitted can utilize your server.
-6. **Shareable Server Capability**: Share your server, and by extension, your shortened links with peers, colleagues, or team members.
-7. **Optimize Business Workflow**: Perfect for corporate settings, harness common short links to streamline work processes and boost operational efficiency.
+1. **Effortless URL Shortening**: Transform any webpage's URL into a concise `go/{link_name}` format with just a single click.
+2. **Instant Redirection**: Navigate swiftly with `go/{link_name}` URLs, which redirect seamlessly to the original web URLs.
+3. **Extension Popup Utility**: Generate short links for your active tab directly through the extension's popup interface.
+4. **Private Server Deployment**: For a tailored experience, deploy your server on Google Cloud. This ensures a unique identity for your shortened links.
+5. **Exclusive Access Control**: Designate access to chosen users or groups, ensuring that only those authorized can make use of your Golink server.
+6. **Collaborative Server Capability**: Share your Golink server—and consequently, your short links—with peers, colleagues, and team members. This fosters seamless collaboration, ensuring team members can easily access vital resources.
+7. **Optimize Business Workflow**: Perfect for corporate settings, leverage standardized short links to streamline work processes and enhance operational efficiency.
 
 Note:
 
@@ -22,11 +22,11 @@ For an optimal experience, users are required to deploy the associated server on
 
 ## Usage
 
-### General Users
+### For General Users
 
-1. Install [Golink Chrome Extension]()
-2. Right click on extension icon and open **Options**
-3. Enter the your Golink URL and click **Save** button
+1. Install the [Golink Chrome Extension]().
+2. Right-click the extension icon and select **Options**.
+3. Input your Golink URL and then click the **Save** button.
 
 ### Setup for Administrators
 
@@ -35,11 +35,15 @@ For an optimal experience, users are required to deploy the associated server on
 - New Google Cloud project
 - [gcloud](https://cloud.google.com/sdk/docs/install)
 
-You also need to run `gcloud auth login`.
+Additionally, you need to execute the following command:
+
+```shell
+gcloud auth login
+```
 
 #### Configure Your Project
 
-Set project ID
+Set your project ID:
 
 ```shell
 gcloud config set project <YOUR-PROJECT-ID>
@@ -47,20 +51,20 @@ gcloud config set project <YOUR-PROJECT-ID>
 
 #### Deploy Applications
 
-Clone this repository.
+Clone this repository:
 
 ```shell
 git clone https://github.com/nownabe/golink
 cd golink
 ```
 
-Run deploy script. `<REGION>` must be one of [App Engine regions](https://cloud.google.com/about/locations#region).
+Run the deploy script. Replace `<REGION>` with one of [App Engine regions](https://cloud.google.com/about/locations#region).
 
 ```shell
 ./deploy.sh <REGION>
 ```
 
-For example:
+For instance:
 
 ```shell
 ./deploy.sh us-central1
@@ -68,21 +72,27 @@ For example:
 
 #### Configure Identity-Aware Proxy
 
-Open [Google Cloud Console](https://console.cloud.google.com/apis/credentials/consent) and configure OAuth consent screen.
+Begin by accessing the [Google Cloud Console](https://console.cloud.google.com/apis/credentials/consent) to set up the OAuth consent screen.
 
-1. Choose user type. If you want to allow only members of your organization, choose `Internal`. Even if you choose `External`, any users cannot access your Golink until you explicitly allow them.
-2. **App information**
+1. Choose User Type.
+   - Opt for a user type based on your needs.
+     For exclusive access to members of your organization, select `Internal`.
+     Note: choosing `External` doesn't mean open access.
+     Users can't access your Golink unless you grant explicit permission.
+2. Enter App information
    - App name: `Golink`
-   - User support email: Your email or Google Group
-   - Developer contact information: Your email or other contacts
-   - Click **SAVE AND CONTINUE**
+   - User support email: Your email or a Google Group
+   - Developer contact information: Your email or alternate contact emails
+   - Finish by clicking **SAVE AND CONTINUE**
 3. You don't have to configure scopes.
 
-Go to [Identity-Aware Proxy](https://console.cloud.google.com/security/iap) and turn on IAP for App engine app. When you may see Error status, ignore it for now.
+Proceed to [Identity-Aware Proxy](https://console.cloud.google.com/security/iap).
+Turn on IAP for the App Engine app.
+If you encounter an error status before enabling, you can safely disregard it at this time.
 
 #### Add Users
 
-If you want to make Golink available for all employees, run this command:
+To make Golink accessible to all members of your organization, execute:
 
 ```shell
 gcloud iap web add-iam-policy-binding \
@@ -90,7 +100,7 @@ gcloud iap web add-iam-policy-binding \
   --member domain:<YOUR-COMPANY-DOMAIN>
 ```
 
-Instead, if you want allow each user to use Golink:
+If you prefer to grant access on an individual basis:
 
 ```shell
 gcloud iap web add-iam-policy-binding \
@@ -98,7 +108,7 @@ gcloud iap web add-iam-policy-binding \
   --member user:<EMAIL>
 ```
 
-You can also specify Google Group:
+You have the option to specify Google Groups too:
 
 ```shell
 gcloud iap web add-iam-policy-binding \
@@ -122,17 +132,19 @@ gcloud iap web add-iam-policy-binding \
   --member group:group1@your-company.example.com
 ```
 
-#### Get Your Golink URL
+#### Retrieve Your Golink URL
 
-You can see your Golink URL by this command.
+Determine your Golink URL with:
 
 ```shell
 echo "https://$(gcloud app describe --format "get(defaultHostname)")"
 ```
 
-Set the URL in Golink Chrome Extension Options and let's enjoy golinks!
+Then, enter this URL in Golink Chrome Extension Options. Enjoy using golinks!
 
 ## Alternatives
+
+Considering other options? Here are some similar platforms:
 
 - [GoLinks® | Knowledge Discovery & Link Management Platform](https://www.golinks.io/)
 - [Trotto - Open-Source Go Links](https://www.trot.to/)
