@@ -1,19 +1,16 @@
 package errors
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
-	"runtime/debug"
+	"runtime"
 
 	"github.com/nownabe/golink/go/clog"
 )
 
 func New(msg string) error {
-	return &wrapped{
-		err:   nil,
-		msg:   msg,
-		stack: debug.Stack(),
-	}
+	return newError(nil, msg)
 }
 
 func NewWithoutStack(msg string) error {
@@ -25,10 +22,26 @@ func NewWithoutStack(msg string) error {
 }
 
 func Errorf(format string, args ...any) error {
-	return New(fmt.Sprintf(format, args...))
+	return newError(nil, fmt.Sprintf(format, args...))
 }
 
 func Wrap(err error, msg string) error {
+	return wrap(err, msg)
+}
+
+func Wrapf(err error, format string, args ...any) error {
+	return wrap(err, fmt.Sprintf(format, args...))
+}
+
+func newError(err error, msg string) error {
+	return &wrapped{
+		err:   err,
+		msg:   msg,
+		stack: callers(),
+	}
+}
+
+func wrap(err error, msg string) error {
 	if w, ok := err.(*wrapped); ok {
 		if w.hasStack() {
 			return &wrapped{
@@ -42,12 +55,8 @@ func Wrap(err error, msg string) error {
 	return &wrapped{
 		err:   err,
 		msg:   msg,
-		stack: debug.Stack(),
+		stack: callers(),
 	}
-}
-
-func Wrapf(err error, format string, args ...any) error {
-	return Wrap(err, fmt.Sprintf(format, args...))
 }
 
 func Is(err error, target error) bool {
@@ -57,7 +66,7 @@ func Is(err error, target error) bool {
 type wrapped struct {
 	err     error
 	msg     string
-	stack   []byte
+	stack   []uintptr
 	context *clog.ErrorContext
 }
 
@@ -77,15 +86,35 @@ func (w *wrapped) ErrorContext() *clog.ErrorContext {
 }
 
 func (w *wrapped) Stack() []byte {
-	if w.stack != nil {
-		return w.stack
+	buf := bytes.Buffer{}
+	buf.WriteString(w.Error())
+	buf.WriteString("\n")
+	buf.Write(w.frames())
+	return buf.Bytes()
+}
+
+func (w *wrapped) frames() []byte {
+	if w.stack == nil {
+		if ww, ok := w.err.(*wrapped); ok {
+			return ww.frames()
+		}
+
+		return []byte{}
 	}
 
-	if ww, ok := w.err.(*wrapped); ok {
-		return ww.Stack()
+	buf := bytes.Buffer{}
+
+	frames := runtime.CallersFrames(w.stack)
+	for {
+		f, ok := frames.Next()
+		if !ok {
+			break
+		}
+		buf.WriteString(fmt.Sprintf("%s(...)\n", f.Function))
+		buf.WriteString(fmt.Sprintf("\t%s:%d\n", f.File, f.Line))
 	}
 
-	return []byte{}
+	return buf.Bytes()
 }
 
 func (w *wrapped) hasStack() bool {
@@ -93,4 +122,12 @@ func (w *wrapped) hasStack() bool {
 		return w.stack != nil || ww.hasStack()
 	}
 	return w.stack != nil
+}
+
+func callers() []uintptr {
+	const depth = 40
+	var pcs [depth]uintptr
+	// skip [runtime.Callers, this function, errors' unexported constructors, errors' exported custructors]
+	n := runtime.Callers(4, pcs[:])
+	return pcs[:n]
 }
