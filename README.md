@@ -123,3 +123,9 @@ gcloud iap web add-iam-policy-binding \
   --role roles/iap.httpsResourceAccessor \
   --member group:group1@your-company.example.com
 ```
+
+## Alternatives
+
+- [GoLinks® | Knowledge Discovery & Link Management Platform](https://www.golinks.io/)
+- [Trotto - Open-Source Go Links](https://www.trot.to/)
+- [tailscale/golink: A private shortlink service for tailnets](https://github.com/tailscale/golink)
