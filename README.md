@@ -78,10 +78,10 @@ Open [Google Cloud Console](https://console.cloud.google.com/apis/credentials/co
 
 1. Choose user type. If you want to allow only members of your organization, choose `Internal`. Even if you choose `External`, any users cannot access your Golink until you explicitly allow them.
 2. **App information**
-  - App name: `Golink`
-  - User support email: Your email or Google Group
-  - Developer contact information: Your email or other contacts
-  - Click **SAVE AND CONTINUE**
+    * App name: `Golink`
+    * User support email: Your email or Google Group
+    * Developer contact information: Your email or other contacts
+    * Click **SAVE AND CONTINUE**
 3. You don't have to configure scopes.
 
 Go to [Identity-Aware Proxy](https://console.cloud.google.com/security/iap) and Enable IAP for App engine app.
