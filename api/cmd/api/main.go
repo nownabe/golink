@@ -77,7 +77,7 @@ func buildAPI(ctx context.Context) (api.API, error) {
 	}
 
 	debug := false
-	if isDebug := os.Getenv("DEBUG"); isDebug == "true" {
+	if isDebug := strings.ToLower(os.Getenv("DEBUG")); isDebug == "true" {
 		debug = true
 	}
 
