@@ -1,5 +1,5 @@
-import React, { Suspense } from "react";
-import { Outlet, Link, defer, useLoaderData, Await } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Outlet, Link } from "react-router-dom";
 import { Box } from "@mui/material";
 import {
   AppBar,
@@ -29,22 +29,29 @@ import ThemeRegistry from "@/components/ThemeRegistry";
 import LinkComponent from "@/components/LinkComponent";
 import client from "@/client";
 import EmailContext from "@/EmailContext";
+import ErrorDialog from "@/components/ErrorDialog";
+import { ConnectError } from "@bufbuild/connect";
 
 const drawerWidth = 240;
 
-export async function layoutLoader() {
-  const email = (async () => {
-    const resp = await client.getMe({});
-    return resp.email;
-  })();
-  return defer({ email });
-}
-
 export default function Layout() {
+  const [error, setError] = React.useState<Error | null>(null);
   const [email, setEmail] = React.useState("");
-  const { email: deferredEmail } = useLoaderData() as ReturnType<
-    typeof layoutLoader
-  >;
+  useEffect(() => {
+    (async () => {
+      try {
+        const resp = await client.getMe({});
+        setEmail(resp.email);
+      } catch (e) {
+        const err = ConnectError.from(e);
+        setError(err);
+      }
+    })();
+  }, [setEmail]);
+
+  if (error) {
+    return <ErrorDialog error={error} />;
+  }
 
   return (
     <ThemeRegistry>
@@ -76,14 +83,7 @@ export default function Layout() {
               </Typography>
             </Link>
             <Typography variant="body1" component="span">
-              <Suspense fallback="">
-                <Await resolve={deferredEmail}>
-                  {(email: string) => {
-                    setEmail(email);
-                    return email;
-                  }}
-                </Await>
-              </Suspense>
+              {email}
             </Typography>
           </Toolbar>
         </AppBar>
