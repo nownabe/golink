@@ -88,7 +88,8 @@ func (w *wrapped) ErrorContext() *clog.ErrorContext {
 func (w *wrapped) Stack() []byte {
 	buf := bytes.Buffer{}
 	buf.WriteString(w.Error())
-	buf.WriteString("\n")
+	buf.WriteString("\n\n")
+	buf.WriteString("goroutine 999999 [running]:\n")
 	buf.Write(w.frames())
 	return buf.Bytes()
 }
