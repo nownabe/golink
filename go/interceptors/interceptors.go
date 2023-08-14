@@ -12,6 +12,8 @@ import (
 	"time"
 
 	"github.com/bufbuild/connect-go"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 
 	"github.com/nownabe/golink/go/clog"
@@ -123,11 +125,22 @@ func NewLogger() connect.UnaryInterceptorFunc {
 	})
 }
 
-func WithTracer(tracer trace.Tracer) connect.UnaryInterceptorFunc {
+func WithTracer() connect.UnaryInterceptorFunc {
+	propagator := otel.GetTextMapPropagator()
+	tracer := otel.GetTracerProvider().Tracer("golink-interceptor")
+
 	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
 		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
+			ctx = propagator.Extract(ctx, propagation.HeaderCarrier(req.Header()))
 			ctx, span := tracer.Start(ctx, req.Spec().Procedure)
 			defer span.End()
+
+			if spanCtx := trace.SpanContextFromContext(ctx); spanCtx.IsValid() {
+				clog.Warningf(ctx, "TraceID: %s", spanCtx.TraceID().String())
+				clog.Warning(ctx, fmt.Sprintf("projects/%s/traces/%s", "golink-test-394495", spanCtx.TraceID()))
+				clog.Warning(ctx, fmt.Sprintf("projects/%s/traces/%s", "golink-test-394495", spanCtx.TraceID().String()))
+			}
+
 			return next(ctx, req)
 		})
 	})
