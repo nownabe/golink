@@ -37,18 +37,12 @@ For an optimal experience, users are required to deploy the associated server on
 
 You also need to run `gcloud auth login`.
 
-#### Configure Your Preference
+#### Configure Your Project
 
 Set project ID
 
 ```shell
-gcloud config set project <your-project-id>
-```
-
-Set [region](https://cloud.google.com/about/locations#region)
-
-```shell
-gcloud config set compute/region <your-preferred-region> --quiet
+gcloud config set project <YOUR-PROJECT-ID>
 ```
 
 #### Deploy Applications
@@ -60,10 +54,10 @@ git clone https://github.com/nownabe/golink
 cd golink
 ```
 
-Run deploy script. `region` must be one of [App Engine regions](https://cloud.google.com/about/locations#region).
+Run deploy script. `<REGION>` must be one of [App Engine regions](https://cloud.google.com/about/locations#region).
 
 ```shell
-./deploy.sh <region>
+./deploy.sh <REGION>
 ```
 
 For example:
@@ -78,22 +72,15 @@ Open [Google Cloud Console](https://console.cloud.google.com/apis/credentials/co
 
 1. Choose user type. If you want to allow only members of your organization, choose `Internal`. Even if you choose `External`, any users cannot access your Golink until you explicitly allow them.
 2. **App information**
-    * App name: `Golink`
-    * User support email: Your email or Google Group
-    * Developer contact information: Your email or other contacts
-    * Click **SAVE AND CONTINUE**
+   - App name: `Golink`
+   - User support email: Your email or Google Group
+   - Developer contact information: Your email or other contacts
+   - Click **SAVE AND CONTINUE**
 3. You don't have to configure scopes.
 
-Go to [Identity-Aware Proxy](https://console.cloud.google.com/security/iap) and Enable IAP for App engine app.
+Go to [Identity-Aware Proxy](https://console.cloud.google.com/security/iap) and Enable IAP for App engine app. You may see Error status but don't care for now.
 
 Run the following command.
-
-```shell
-gcloud iap settings set \
-  iap-settings.yaml \
-  --resource-type=app-engine \
-  --project="$(gcloud config get project)"
-```
 
 #### Add Users
 
@@ -102,7 +89,7 @@ If you want to make Golink available for all employees, run this command:
 ```shell
 gcloud iap web add-iam-policy-binding \
   --role roles/iap.httpsResourceAccessor \
-  --member domain:<your-company.example.com>
+  --member domain:<YOUR-COMPANY-DOMAIN>
 ```
 
 Instead, if you want allow each user to use Golink:
@@ -110,7 +97,7 @@ Instead, if you want allow each user to use Golink:
 ```shell
 gcloud iap web add-iam-policy-binding \
   --role roles/iap.httpsResourceAccessor \
-  --member user:<user1@your-company.example.com>
+  --member user:<EMAIL>
 ```
 
 You can also specify Google Group:
@@ -118,5 +105,21 @@ You can also specify Google Group:
 ```shell
 gcloud iap web add-iam-policy-binding \
   --role roles/iap.httpsResourceAccessor \
-  --member group:<group1@your-company.example.com>
+  --member group:<EMAIL>
+```
+
+Examples:
+
+```shell
+gcloud iap web add-iam-policy-binding \
+  --role roles/iap.httpsResourceAccessor \
+  --member domain:your-company.example.com
+
+gcloud iap web add-iam-policy-binding \
+  --role roles/iap.httpsResourceAccessor \
+  --member user:user1@your-company.example.com
+
+gcloud iap web add-iam-policy-binding \
+  --role roles/iap.httpsResourceAccessor \
+  --member group:group1@your-company.example.com
 ```
