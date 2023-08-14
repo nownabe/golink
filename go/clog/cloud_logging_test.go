@@ -2,13 +2,13 @@ package clog_test
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"runtime"
 	"testing"
-
-	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
 
-func TestSourceHandler(t *testing.T) {
+func TestSourceHandler_Info(t *testing.T) {
 	t.Parallel()
 
 	l, w := newLogger()
@@ -33,26 +33,29 @@ func TestSourceHandler(t *testing.T) {
 	w.expect(t, want)
 }
 
-func TestOtelTraceHandler(t *testing.T) {
+func TestSourceHandler_Err(t *testing.T) {
 	t.Parallel()
 
 	l, w := newLogger()
-	tracer := sdktrace.NewTracerProvider().Tracer("test")
-
 	ctx := context.Background()
-	ctx, span := tracer.Start(ctx, "testspan")
-	defer span.End()
 
-	l.Info(ctx, "test")
+	pc, _, _, _ := runtime.Caller(0)
+	l.Err(ctx, errors.New("test"))
+
+	frame, _ := runtime.CallersFrames([]uintptr{pc}).Next()
 
 	want := expectation{
-		"time":                                  anyStringVal{},
-		"logging.googleapis.com/sourceLocation": nonNilVal{},
-		"severity":                              "INFO",
-		"message":                               "test",
-		"logging.googleapis.com/trace":          span.SpanContext().TraceID().String(),
-		"logging.googleapis.com/spanId":         span.SpanContext().SpanID().String(),
+		"time":     anyStringVal{},
+		"severity": "ERROR",
+		"message":  "test",
+		"logging.googleapis.com/sourceLocation": map[string]any{
+			"file":     frame.File,
+			"line":     float64(frame.Line + 1), // json.Unmarshal use float64 for any type
+			"function": frame.Function,
+		},
 	}
+
+	fmt.Println(w.String())
 
 	w.expect(t, want)
 }

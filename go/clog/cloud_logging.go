@@ -1,7 +1,6 @@
 package clog
 
 import (
-	"context"
 	"fmt"
 	"runtime"
 	"strconv"
@@ -86,49 +85,20 @@ func WithOperation(o *Operation) *Logger {
 }
 */
 
-type sourceHandler struct {
-	slog.Handler
-}
-
-func (h *sourceHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
-	return &sourceHandler{h.Handler.WithAttrs(attrs)}
-}
-
-func (h *sourceHandler) Handle(ctx context.Context, r slog.Record) error {
+func getSource(skip int) *slog.Source {
 	pcs := make([]uintptr, 1)
 
-	// skip [runtime.Callers, this function, slog.Logger.log, slog.Logger.Log, clog]
-	n := runtime.Callers(5, pcs)
+	n := runtime.Callers(skip, pcs)
 	if n == 0 {
 		return nil
 	}
 
 	fs := runtime.CallersFrames(pcs)
 	f, _ := fs.Next()
-	r.AddAttrs(slog.Any(sourceLocationKey, slog.Source{
+
+	return &slog.Source{
 		File:     f.File,
 		Line:     f.Line,
 		Function: f.Function,
-	}))
-
-	/*
-		for {
-			f, more := fs.Next()
-			fmt.Printf("%s %s:%d\n", f.Function, f.File, f.Line)
-
-			if !strings.Contains(f.File, "go/clog") {
-				r.AddAttrs(slog.Any(sourceLocationKey, slog.Source{
-					File:     f.File,
-					Line:     f.Line,
-					Function: f.Function,
-				}))
-			}
-
-			if !more {
-				break
-			}
-		}
-	*/
-
-	return h.Handler.Handle(ctx, r)
+	}
 }

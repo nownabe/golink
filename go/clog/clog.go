@@ -42,7 +42,7 @@ func New(w io.Writer, l slog.Level, opts ...option) *Logger {
 			return a
 		},
 	})
-	h := slog.Handler(&sourceHandler{jh})
+	h := slog.Handler(jh)
 
 	for _, opt := range opts {
 		h = opt(h)
@@ -52,67 +52,67 @@ func New(w io.Writer, l slog.Level, opts ...option) *Logger {
 }
 
 func Debug(ctx context.Context, msg string, args ...any) {
-	Default().Log(ctx, LevelDebug, msg, args...)
+	Default().log(ctx, LevelDebug, msg, args...)
 }
 
 func Debugf(ctx context.Context, format string, args ...any) {
-	Default().Log(ctx, LevelDebug, fmt.Sprintf(format, args...))
+	Default().log(ctx, LevelDebug, fmt.Sprintf(format, args...))
 }
 
 func Info(ctx context.Context, msg string, args ...any) {
-	Default().Log(ctx, LevelInfo, msg, args...)
+	Default().log(ctx, LevelInfo, msg, args...)
 }
 
 func Infof(ctx context.Context, format string, args ...any) {
-	Default().Log(ctx, LevelInfo, fmt.Sprintf(format, args...))
+	Default().log(ctx, LevelInfo, fmt.Sprintf(format, args...))
 }
 
 func Notice(ctx context.Context, msg string, args ...any) {
-	Default().Log(ctx, LevelNotice, msg, args...)
+	Default().log(ctx, LevelNotice, msg, args...)
 }
 
 func Noticef(ctx context.Context, format string, args ...any) {
-	Default().Log(ctx, LevelNotice, fmt.Sprintf(format, args...))
+	Default().log(ctx, LevelNotice, fmt.Sprintf(format, args...))
 }
 
 func Warning(ctx context.Context, msg string, args ...any) {
-	Default().Log(ctx, LevelWarning, msg, args...)
+	Default().log(ctx, LevelWarning, msg, args...)
 }
 
 func Warningf(ctx context.Context, format string, args ...any) {
-	Default().Log(ctx, LevelWarning, fmt.Sprintf(format, args...))
+	Default().log(ctx, LevelWarning, fmt.Sprintf(format, args...))
 }
 
 func Error(ctx context.Context, msg string, args ...any) {
-	Default().Log(ctx, LevelError, msg, args...)
+	Default().log(ctx, LevelError, msg, args...)
 }
 
 func Errorf(ctx context.Context, format string, args ...any) {
-	Default().Log(ctx, LevelError, fmt.Sprintf(format, args...))
+	Default().log(ctx, LevelError, fmt.Sprintf(format, args...))
 }
 
 func Critical(ctx context.Context, msg string, args ...any) {
-	Default().Log(ctx, LevelCritical, msg, args...)
+	Default().log(ctx, LevelCritical, msg, args...)
 }
 
 func Criticalf(ctx context.Context, format string, args ...any) {
-	Default().Log(ctx, LevelCritical, fmt.Sprintf(format, args...))
+	Default().log(ctx, LevelCritical, fmt.Sprintf(format, args...))
 }
 
 func Alert(ctx context.Context, msg string, args ...any) {
-	Default().Log(ctx, LevelAlert, msg, args...)
+	Default().log(ctx, LevelAlert, msg, args...)
 }
 
 func Alertf(ctx context.Context, format string, args ...any) {
-	Default().Log(ctx, LevelAlert, fmt.Sprintf(format, args...))
+	Default().log(ctx, LevelAlert, fmt.Sprintf(format, args...))
 }
 
 func Emergency(ctx context.Context, msg string, args ...any) {
-	Default().Log(ctx, LevelEmergency, msg, args...)
+	Default().log(ctx, LevelEmergency, msg, args...)
 }
 
 func Emergencyf(ctx context.Context, format string, args ...any) {
-	Default().Log(ctx, LevelEmergency, fmt.Sprintf(format, args...))
+	Default().log(ctx, LevelEmergency, fmt.Sprintf(format, args...))
 }
 
 func Err(ctx context.Context, err error) {
@@ -136,5 +136,5 @@ func EmergencyErr(ctx context.Context, err error) {
 }
 
 func InfoHTTPRequest(ctx context.Context, msg string, req *HTTPRequest) {
-	Default().Log(ctx, LevelInfo, msg, httpRequestKey, req)
+	Default().log(ctx, LevelInfo, msg, httpRequestKey, req)
 }
