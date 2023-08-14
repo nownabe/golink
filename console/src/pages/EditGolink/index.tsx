@@ -16,6 +16,7 @@ import client from "@/client";
 import { Golink } from "@/gen/golink/v1/golink_pb";
 import Owners from "./Owners";
 import UpdateForm from "./UpdateForm";
+import DeleteButton from "./DeleteButton";
 
 export async function editGolinkLoader({ params }: LoaderFunctionArgs) {
   const name = params.name;
@@ -69,6 +70,10 @@ export default function EditGolink() {
                     <Divider />
                   </Grid>
                   <Owners golink={golink} />
+                  <Grid xs={12}>
+                    <Divider />
+                  </Grid>
+                  <DeleteButton golink={golink} />
                 </>
               );
             }}

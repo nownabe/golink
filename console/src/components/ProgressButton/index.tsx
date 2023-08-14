@@ -1,8 +1,9 @@
-import { Box, Button, CircularProgress } from "@mui/material";
+import { Box, Button, ButtonProps, CircularProgress } from "@mui/material";
 
 type Props = {
   loading: boolean;
   disabled?: boolean;
+  color?: ButtonProps["color"];
   onClick: () => void;
   children: React.ReactNode;
 };
@@ -10,6 +11,7 @@ type Props = {
 export default function ProgressButton({
   loading,
   disabled,
+  color,
   onClick,
   children,
 }: Props) {
@@ -19,6 +21,7 @@ export default function ProgressButton({
         <Button
           variant="contained"
           disabled={loading || disabled}
+          color={color}
           onClick={onClick}
         >
           {children}

@@ -5,6 +5,7 @@ import client from "@/client";
 import { validateEmail, validateUrl } from "@/validator";
 import { Golink } from "@/gen/golink/v1/golink_pb";
 import EmailContext from "@/EmailContext";
+import { useNavigate } from "react-router-dom";
 
 export function useUrl(golink: Golink) {
   const email = useContext(EmailContext);
@@ -142,6 +143,47 @@ export function useOwners(golink: Golink) {
     onAddSuccessClose,
     addError,
     onAddErrorClose,
+    isOwner: golink.owners.includes(email),
+  };
+}
+
+export function useDeleteButton(golink: Golink) {
+  const navigate = useNavigate();
+  const email = useContext(EmailContext);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const deleteGolink = useCallback(() => {
+    (async () => {
+      setDeleting(true);
+      try {
+        await client.deleteGolink({ name: golink.name });
+        setOpenSuccess(true);
+        navigate("/-/");
+      } catch (e) {
+        const err = ConnectError.from(e);
+        console.error(err);
+        setError(err.message);
+      } finally {
+        setDeleting(false);
+      }
+    })();
+  }, [setDeleting, setOpenSuccess, setError, golink.name]);
+
+  const onSuccessClose = useCallback(
+    () => setOpenSuccess(false),
+    [setOpenSuccess]
+  );
+  const onErrorClose = useCallback(() => setError(null), [setError]);
+
+  return {
+    openSuccess,
+    error,
+    deleting,
+    deleteGolink,
+    onSuccessClose,
+    onErrorClose,
     isOwner: golink.owners.includes(email),
   };
 }
