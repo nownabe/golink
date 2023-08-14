@@ -78,9 +78,7 @@ Open [Google Cloud Console](https://console.cloud.google.com/apis/credentials/co
    - Click **SAVE AND CONTINUE**
 3. You don't have to configure scopes.
 
-Go to [Identity-Aware Proxy](https://console.cloud.google.com/security/iap) and Enable IAP for App engine app. You may see Error status but don't care for now.
-
-Run the following command.
+Go to [Identity-Aware Proxy](https://console.cloud.google.com/security/iap) and turn on IAP for App engine app. When you may see Error status, ignore it for now.
 
 #### Add Users
 
@@ -123,6 +121,16 @@ gcloud iap web add-iam-policy-binding \
   --role roles/iap.httpsResourceAccessor \
   --member group:group1@your-company.example.com
 ```
+
+#### Get Your Golink URL
+
+You can see your Golink URL by this command.
+
+```shell
+echo "https://$(gcloud app describe --format "get(defaultHostname)")"
+```
+
+Set the URL in Golink Chrome Extension Options and let's enjoy golinks!
 
 ## Alternatives
 
