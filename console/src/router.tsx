@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import MyGolinks, { myGolinksLoader } from "./pages/MyGolinks";
 import NewGolink, { newGolinkLoader } from "./pages/NewGolink";
 import EditGolink, { editGolinkLoader } from "./pages/EditGolink";
-import ErrorDialog from "./components/ErrorDialog";
+import RouterErrorDialog from "./components/RouterErrorDialog";
 
 const router = createBrowserRouter(
   [
@@ -23,19 +23,19 @@ const router = createBrowserRouter(
           path: "/-/",
           element: <MyGolinks />,
           loader: myGolinksLoader,
-          errorElement: <ErrorDialog />,
+          errorElement: <RouterErrorDialog />,
         },
         {
           path: "/-/new",
           element: <NewGolink />,
           loader: newGolinkLoader,
-          errorElement: <ErrorDialog />,
+          errorElement: <RouterErrorDialog />,
         },
         {
           path: "/:name",
           element: <EditGolink />,
           loader: editGolinkLoader,
-          errorElement: <ErrorDialog />,
+          errorElement: <RouterErrorDialog />,
         },
       ],
     },
