@@ -26,6 +26,7 @@ export default function Owners({ golink }: Props) {
     onAddSuccessClose,
     addError,
     onAddErrorClose,
+    isOwner,
   } = useOwners(golink);
 
   return (
@@ -41,7 +42,9 @@ export default function Owners({ golink }: Props) {
             <Chip
               key={owner}
               label={owner}
-              onDelete={owners.length !== 1 ? removeOwner(owner) : undefined}
+              onDelete={
+                owners.length !== 1 && isOwner ? removeOwner(owner) : undefined
+              }
             />
           ))}
           <Snackbar
@@ -71,10 +74,11 @@ export default function Owners({ golink }: Props) {
           inputRef={addRef}
           fullWidth
           placeholder="new-owner@example.com"
+          disabled={!isOwner}
         />
       </Grid>
       <Grid xs={2}>
-        <ProgressButton loading={adding} onClick={addOwner}>
+        <ProgressButton loading={adding} onClick={addOwner} disabled={!isOwner}>
           Add Owner
         </ProgressButton>
       </Grid>

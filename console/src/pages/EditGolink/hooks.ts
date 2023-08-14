@@ -1,11 +1,13 @@
 import { ConnectError } from "@bufbuild/connect";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useContext, useRef, useState } from "react";
 
 import client from "@/client";
 import { validateEmail, validateUrl } from "@/validator";
 import { Golink } from "@/gen/golink/v1/golink_pb";
+import EmailContext from "@/EmailContext";
 
-export function useUrl(name: string) {
+export function useUrl(golink: Golink) {
+  const email = useContext(EmailContext);
   const ref = useRef<HTMLInputElement>(null);
 
   const [openSuccess, setOpenSuccess] = useState(false);
@@ -26,7 +28,7 @@ export function useUrl(name: string) {
       setUpdating(true);
       try {
         await client.updateGolink({
-          name: name,
+          name: golink.name,
           url: ref.current.value,
         });
         setOpenSuccess(true);
@@ -38,7 +40,7 @@ export function useUrl(name: string) {
         setUpdating(false);
       }
     })();
-  }, [name, ref, setOpenSuccess, setUpdating, setError]);
+  }, [golink.name, ref, setOpenSuccess, setUpdating, setError]);
 
   const onSuccessClose = useCallback(
     () => setOpenSuccess(false),
@@ -54,10 +56,12 @@ export function useUrl(name: string) {
     onUrlUpdateSuccessClose: onSuccessClose,
     urlUpdateError: error,
     onUrlUpdateErrorClose: onErrorClose,
+    isOwner: golink.owners.includes(email),
   };
 }
 
 export function useOwners(golink: Golink) {
+  const email = useContext(EmailContext);
   const [owners, setOwners] = useState<string[]>(golink.owners);
   const [openRemoveSuccess, setOpenRemoveSuccess] = useState(false);
   const [removeError, setRemoveError] = useState<string | null>(null);
@@ -138,5 +142,6 @@ export function useOwners(golink: Golink) {
     onAddSuccessClose,
     addError,
     onAddErrorClose,
+    isOwner: golink.owners.includes(email),
   };
 }

@@ -28,6 +28,7 @@ import "@fontsource/roboto/700.css";
 import ThemeRegistry from "@/components/ThemeRegistry";
 import LinkComponent from "@/components/LinkComponent";
 import client from "@/client";
+import EmailContext from "@/EmailContext";
 
 const drawerWidth = 240;
 
@@ -40,7 +41,10 @@ export async function layoutLoader() {
 }
 
 export default function Layout() {
-  const { email } = useLoaderData() as ReturnType<typeof layoutLoader>;
+  const [email, setEmail] = React.useState("");
+  const { email: deferredEmail } = useLoaderData() as ReturnType<
+    typeof layoutLoader
+  >;
 
   return (
     <ThemeRegistry>
@@ -73,7 +77,12 @@ export default function Layout() {
             </Link>
             <Typography variant="body1" component="span">
               <Suspense fallback="">
-                <Await resolve={email}>{(email: string) => email}</Await>
+                <Await resolve={deferredEmail}>
+                  {(email: string) => {
+                    setEmail(email);
+                    return email;
+                  }}
+                </Await>
               </Suspense>
             </Typography>
           </Toolbar>
@@ -114,7 +123,9 @@ export default function Layout() {
         <Box sx={{ flexGrow: 1 }}>
           <Toolbar />
           <Box component="main" sx={{ p: 2 }}>
-            <Outlet />
+            <EmailContext.Provider value={email}>
+              <Outlet />
+            </EmailContext.Provider>
           </Box>
         </Box>
       </Box>
