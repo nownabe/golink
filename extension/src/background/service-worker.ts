@@ -3,8 +3,8 @@ const golinkUrlKey = "golinkUrl";
 async function updateRedirectRule(url: string) {
   const ruleId = 1;
 
+  console.log(`Updating redirect rule to ${url}`);
   const host = new URL(url).host;
-  console.log(`Updating redirect rule to ${host}`);
 
   const redirectRule = {
     id: ruleId,
@@ -40,6 +40,7 @@ async function initialize() {
       namespace: string,
     ) => {
       if (namespace === "sync" && golinkUrlKey in changes) {
+        console.log("Golink URL changed", changes[golinkUrlKey].newValue);
         await updateRedirectRule(changes[golinkUrlKey].newValue);
       }
     },
