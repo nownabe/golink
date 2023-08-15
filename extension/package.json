@@ -8,9 +8,9 @@
     "build:options": "parcel build --public-url ./ --no-content-hash src/options/options.html",
     "build:release:clean": "rm -rf dist",
     "build:release:icons": "cp -r icons dist/",
-    "build:release:manifest": "cp manifest.prod.json dist/manifest.json",
-    "build:release:zip": "cd dist && zip ../extension.zip *",
-    "build:release": "npm run build:release:clean && npm run build && npm run build:release:manifest && npm run build:release:zip",
+    "build:release:manifest": "cp manifest.release.json dist/manifest.json",
+    "build:release:zip": "cd dist && zip ../extension.zip * icons/*",
+    "build:release": "npm run build:release:clean && npm run build && npm run build:release:icons && npm run build:release:manifest && npm run build:release:zip",
     "check": "tsc --noEmit"
   },
   "devDependencies": {
