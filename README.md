@@ -24,7 +24,7 @@ For an optimal experience, users are required to deploy the associated server on
 
 ### For General Users
 
-1. Install the [Golink Chrome Extension]().
+1. Install the [Golink Chrome Extension](https://chrome.google.com/webstore/detail/golink/clecngohjeflemkblbfdfbjkjnigbjok).
 2. Right-click the extension icon and select **Options**.
 3. Input your Golink URL and then click the **Save** button.
 
