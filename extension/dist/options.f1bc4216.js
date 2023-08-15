@@ -1,2 +1,0 @@
-const e="golinkUrl";async function t(){let t=document.getElementById("option-url").value;await chrome.storage.sync.set({[e]:t}),alert("Saved!")}async function n(){let t=(await chrome.storage.sync.get(e))[e],n=document.getElementById("option-url");n&&(n.value=t??"")}document.addEventListener("DOMContentLoaded",n),document.getElementById("save")?.addEventListener("click",t);
-//# sourceMappingURL=options.f1bc4216.js.map
