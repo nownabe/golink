@@ -2,11 +2,15 @@
   "scripts": {
     "start:popup": "parcel --dist-dir .dist/ src/popup/popup.html",
     "start:options": "parcel --dist-dir .dist/ src/options/options.html",
-    "build": "npm run build:background && npm run build:popup && npm run build:options && npm run build:zip",
+    "build": "npm run build:background && npm run build:popup && npm run build:options",
     "build:background": "parcel build src/background/service-worker.ts",
     "build:popup": "parcel build --public-url ./ --no-content-hash src/popup/popup.html",
     "build:options": "parcel build --public-url ./ --no-content-hash src/options/options.html",
-    "build:zip": "zip extension.zip dist/* icons/* manifest.json",
+    "build:release:clean": "rm -rf dist",
+    "build:release:icons": "cp -r icons dist/",
+    "build:release:manifest": "cp manifest.prod.json dist/manifest.json",
+    "build:release:zip": "cd dist && zip ../extension.zip *",
+    "build:release": "npm run build:release:clean && npm run build && npm run build:release:manifest && npm run build:release:zip",
     "check": "tsc --noEmit"
   },
   "devDependencies": {

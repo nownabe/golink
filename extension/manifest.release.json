@@ -1,22 +1,27 @@
 {
   "manifest_version": 3,
-  "name": "Golink (dev)",
+  "name": "Golink",
   "version": "0.0.3",
 
   "action": {
-    "default_popup": "dist/popup.html"
+    "default_popup": "popup.html"
   },
   "description": "Self-hosted URL shortener. Redirect go/* to registered URLs.",
-  "icons": {},
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
 
   "author": {
     "email": "contact@nerdpup.dev"
   },
 
   "background": {
-    "service_worker": "dist/service-worker.js"
+    "service_worker": "service-worker.js"
   },
   "host_permissions": ["http://go/*", "https://go/*"],
-  "options_page": "dist/options.html",
+  "options_page": "options.html",
   "permissions": ["declarativeNetRequest", "storage", "tabs"]
 }
