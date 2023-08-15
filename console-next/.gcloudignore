@@ -1,7 +1,0 @@
-node_modules
-.env.local
-.eslintrc.json
-.gcloudignore
-.gitignore
-README.md
-app.yaml
