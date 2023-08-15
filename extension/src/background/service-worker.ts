@@ -60,4 +60,15 @@ async function initialize() {
   console.log("Initialized");
 }
 
-chrome.runtime.onInstalled.addListener(initialize);
+async function onInstalled() {
+  console.log("onInstalled");
+  await initialize();
+}
+
+async function onStartup() {
+  console.log("onStartup");
+  await initialize();
+}
+
+chrome.runtime.onInstalled.addListener(onInstalled);
+chrome.runtime.onStartup.addListener(onStartup);
