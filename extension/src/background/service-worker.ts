@@ -27,9 +27,12 @@ async function updateRedirectRule(url: string) {
   };
 
   await chrome.declarativeNetRequest.updateDynamicRules(updateRuleOptions);
+  console.log("Updated redirect rule");
 }
 
 async function initialize() {
+  console.log("Initializing");
+
   const url = (await chrome.storage.sync.get(golinkUrlKey))[golinkUrlKey];
 
   await updateRedirectRule(url);
@@ -37,14 +40,16 @@ async function initialize() {
   chrome.storage.onChanged.addListener(
     async (
       changes: { [key: string]: chrome.storage.StorageChange },
-      namespace: string,
+      namespace: string
     ) => {
       if (namespace === "sync" && golinkUrlKey in changes) {
         console.log("Golink URL changed", changes[golinkUrlKey].newValue);
         await updateRedirectRule(changes[golinkUrlKey].newValue);
       }
-    },
+    }
   );
+
+  console.log("Initialized");
 }
 
 chrome.runtime.onInstalled.addListener(initialize);
