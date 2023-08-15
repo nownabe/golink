@@ -49,6 +49,7 @@ async function initialize() {
       changes: { [key: string]: chrome.storage.StorageChange },
       namespace: string
     ) => {
+      console.log("storage.onChanged", changes, namespace);
       if (namespace === "sync" && golinkUrlKey in changes) {
         console.log("Golink URL changed", changes[golinkUrlKey].newValue);
         await updateRedirectRule(changes[golinkUrlKey].newValue);
