@@ -18,4 +18,5 @@ handlers:
     redirect_http_response_code: 301
 main: ./cmd/api
 service: api
-# TODO: Set ALLOWED_ORIGINS env
+env_variables:
+  ALLOWED_ORIGINS: chrome-extension://clecngohjeflemkblbfdfbjkjnigbjok
