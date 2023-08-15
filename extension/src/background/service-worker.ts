@@ -4,7 +4,14 @@ async function updateRedirectRule(url: string) {
   const ruleId = 1;
 
   console.log(`Updating redirect rule to ${url}`);
-  const host = new URL(url).host;
+  let host;
+  try {
+    host = new URL(url).host;
+  } catch (e) {
+    console.log("Invalid URL:", url);
+    console.log(e);
+    return;
+  }
 
   const redirectRule = {
     id: ruleId,
