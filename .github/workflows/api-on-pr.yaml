@@ -2,8 +2,8 @@ name: api on pr
 
 on:
   pull_request:
-    paths: []
-      #- api/**
+    paths:
+      - api/**
 
 jobs:
   test:
