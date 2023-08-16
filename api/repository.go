@@ -39,7 +39,10 @@ type repository struct {
 	firestore *firestore.Client
 }
 
-func (r *repository) Transaction(ctx context.Context, f func(ctx context.Context, tx *firestore.Transaction) error) error {
+func (r *repository) Transaction(
+	ctx context.Context,
+	f func(ctx context.Context, tx *firestore.Transaction) error,
+) error {
 	return r.firestore.RunTransaction(ctx, f)
 }
 
