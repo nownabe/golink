@@ -1,0 +1,57 @@
+run:
+  skip-files:
+    - ".*/gen/.*\\.pb\\.go$"
+    - ".*/gen/.*\\.connect\\.go$"
+output:
+  format: colored-line-number
+linters-settings:
+  revive:
+    rules:
+      - name: var-naming
+        arguments:
+          - ["ListGolinksByUrl"]
+          - []
+linters:
+  enable-all: true
+  disable:
+    # Temporarily disabled linters
+    - wsl
+    - wrapcheck
+    - ireturn
+    - lll
+    - revive
+    - bodyclose
+    - contextcheck
+    - cyclop
+    - errorlint
+    - exhaustruct
+    - goerr113
+    - gomnd
+    - interfacebloat
+    - stylecheck
+
+    # Unpreferred linters
+    - depguard
+    - nlreturn
+    - paralleltest
+    - varnamelen
+
+    # Deprecated linters
+    - deadcode
+    - exhaustivestruct
+    - ifshort
+    - interfacer
+    - golint
+    - maligned
+    - nosnakecase
+    - varcheck
+    - scopelint
+    - structcheck
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - dupl
+        - exhaustruct
+        - funlen
+        - gochecknoglobals
