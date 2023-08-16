@@ -58,7 +58,8 @@ func newService() golinkv1connect.GolinkServiceHandler {
 }
 
 func clearFirestoreEmulator() {
-	url := fmt.Sprintf("http://%s/emulator/v1/projects/emulator/databases/(default)/documents", os.Getenv("FIRESTORE_EMULATOR_HOST"))
+	url := fmt.Sprintf("http://%s/emulator/v1/projects/emulator/databases/(default)/documents",
+		os.Getenv("FIRESTORE_EMULATOR_HOST"))
 	req, err := http.NewRequestWithContext(context.Background(), http.MethodDelete, url, nil)
 	if err != nil {
 		panic(err)
