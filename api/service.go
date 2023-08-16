@@ -8,13 +8,12 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/bufbuild/connect-go"
+	golinkv1 "github.com/nownabe/golink/api/gen/golink/v1"
+	"github.com/nownabe/golink/api/gen/golink/v1/golinkv1connect"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
 	"github.com/nownabe/golink/go/golinkcontext"
 	"golang.org/x/exp/slices"
-
-	golinkv1 "github.com/nownabe/golink/api/gen/golink/v1"
-	"github.com/nownabe/golink/api/gen/golink/v1/golinkv1connect"
 )
 
 func NewGolinkService(repo Repository) golinkv1connect.GolinkServiceHandler {
@@ -102,7 +101,7 @@ func (s *golinkService) GetGolink(
 
 func (s *golinkService) ListGolinks(
 	ctx context.Context,
-	req *connect.Request[golinkv1.ListGolinksRequest],
+	_ *connect.Request[golinkv1.ListGolinksRequest],
 ) (*connect.Response[golinkv1.ListGolinksResponse], error) {
 	email, ok := golinkcontext.UserEmailFrom(ctx)
 	if !ok {
@@ -168,9 +167,8 @@ func (s *golinkService) UpdateGolink(
 		if err != nil {
 			if errors.Is(err, errDocumentNotFound) {
 				return errf(connect.CodeNotFound, "go/%s not found", req.Msg.Name)
-			} else {
-				return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
 			}
+			return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
 		}
 
 		if !slices.Contains(o.Owners, email) {
@@ -220,9 +218,8 @@ func (s *golinkService) DeleteGolink(
 		if err != nil {
 			if errors.Is(err, errDocumentNotFound) {
 				return errf(connect.CodeNotFound, "go/%s not found", req.Msg.Name)
-			} else {
-				return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
 			}
+			return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
 		}
 
 		if !slices.Contains(o.Owners, email) {
@@ -268,9 +265,8 @@ func (s *golinkService) AddOwner(
 		if err != nil {
 			if errors.Is(err, errDocumentNotFound) {
 				return errf(connect.CodeNotFound, "go/%s not found", req.Msg.Name)
-			} else {
-				return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
 			}
+			return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
 		}
 
 		if !slices.Contains(o.Owners, email) {
@@ -322,9 +318,8 @@ func (s *golinkService) RemoveOwner(
 		if err != nil {
 			if errors.Is(err, errDocumentNotFound) {
 				return errf(connect.CodeNotFound, "go/%s not found", req.Msg.Name)
-			} else {
-				return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
 			}
+			return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
 		}
 
 		if !slices.Contains(o.Owners, email) {
@@ -363,7 +358,7 @@ func (s *golinkService) RemoveOwner(
 
 func (s *golinkService) GetMe(
 	ctx context.Context,
-	req *connect.Request[golinkv1.GetMeRequest],
+	_ *connect.Request[golinkv1.GetMeRequest],
 ) (*connect.Response[golinkv1.GetMeResponse], error) {
 	email, ok := golinkcontext.UserEmailFrom(ctx)
 	if !ok {

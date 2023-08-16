@@ -15,7 +15,6 @@ const collectionName = "golinks"
 
 var errDocumentNotFound = errors.NewWithoutStack("not found")
 
-// TODO: Add Tx prefix
 type Repository interface {
 	Transaction(ctx context.Context, f func(ctx context.Context, tx *firestore.Transaction) error) error
 	TxExists(ctx context.Context, tx *firestore.Transaction, name string) (bool, error)
@@ -67,10 +66,10 @@ func (r *repository) Get(ctx context.Context, name string) (*dto, error) {
 	if status.Code(err) == codes.NotFound {
 		return nil, errors.Wrapf(errDocumentNotFound, "%s not found", doc.Path)
 	}
+
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get %s", doc.Path)
 	}
-
 	var o dto
 	if err := s.DataTo(&o); err != nil {
 		return nil, errors.Wrapf(err, "failed to populate %s", doc.Path)
@@ -85,7 +84,6 @@ func (r *repository) TxGet(ctx context.Context, tx *firestore.Transaction, name 
 
 	s, err := tx.Get(doc)
 	if status.Code(err) == codes.NotFound {
-		// TODO: use doc path
 		return nil, errors.Wrapf(errDocumentNotFound, "%s not found", doc.Path)
 	}
 	if err != nil {
