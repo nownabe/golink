@@ -13,13 +13,12 @@ import (
 	"github.com/bufbuild/connect-go"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"github.com/nownabe/golink/go/golinkcontext"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	"github.com/nownabe/golink/api"
 	golinkv1 "github.com/nownabe/golink/api/gen/golink/v1"
 	"github.com/nownabe/golink/api/gen/golink/v1/golinkv1connect"
+	"github.com/nownabe/golink/go/golinkcontext"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type dto = api.DTO
@@ -60,7 +59,7 @@ func newService() golinkv1connect.GolinkServiceHandler {
 
 func clearFirestoreEmulator() {
 	url := fmt.Sprintf("http://%s/emulator/v1/projects/emulator/databases/(default)/documents", os.Getenv("FIRESTORE_EMULATOR_HOST"))
-	req, err := http.NewRequest("DELETE", url, nil)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodDelete, url, nil)
 	if err != nil {
 		panic(err)
 	}

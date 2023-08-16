@@ -9,13 +9,12 @@ import (
 	"time"
 
 	"github.com/bufbuild/connect-go"
+	"github.com/nownabe/golink/api/gen/golink/v1/golinkv1connect"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
 	"github.com/rs/cors"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
-
-	"github.com/nownabe/golink/api/gen/golink/v1/golinkv1connect"
 )
 
 const (
@@ -119,7 +118,7 @@ func (a *api) serve(ctx context.Context) error {
 	return nil
 }
 
-func (a *api) healthz(w http.ResponseWriter, r *http.Request) {
+func (a *api) healthz(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte("ok"))
 }

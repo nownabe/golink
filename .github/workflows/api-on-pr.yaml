@@ -1,0 +1,52 @@
+name: api on pr
+
+on:
+  pull_request:
+    paths: []
+      #- api/**
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./api
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v4
+        with:
+          go-version: "1.20"
+      - run: go mod download
+      - name: Firestore Emulator
+        run: docker run -d -p 9000:9000 gcr.io/google.com/cloudsdktool/cloud-sdk:emulators gcloud emulators firestore start --host-port=0.0.0.0:9000
+      - run: go build -v ./...
+      - run: go test -v -vet=all -race ./...
+        env:
+          FIRESTORE_EMULATOR_HOST: "localhost:9000"
+
+  golangci-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v4
+        with:
+          go-version: "1.20"
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          working-directory: ./api
+          version: v1.53.3
+          args: --config ../.golangci.yaml
+
+  reviewdog-golangci-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: golangci-lint
+        uses: reviewdog/action-golangci-lint@v2
+        with:
+          workdir: ./api
+          fail_on_error: true
+          go_version: "1.20"
+          golangci_lint_version: v1.53.3
+          golangci_lint_flags: -c ../.golangci.yaml
