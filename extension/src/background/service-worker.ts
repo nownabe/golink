@@ -37,6 +37,12 @@ async function updateRedirectRule(url: string) {
   console.log("Updated redirect rule");
 }
 
+async function saveGolinkUrl(url: string) {
+  console.log("Saving golink URL", url);
+  await chrome.storage.sync.set({ [golinkUrlKey]: url });
+  console.log("Saved golink URL");
+}
+
 async function initialize() {
   console.log("Initializing");
 
@@ -56,6 +62,17 @@ async function initialize() {
       }
     }
   );
+
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log("[runtime.onMessage] received message", request, sender);
+    (async () => {
+      if (request.type === "saveGolinkUrl") {
+        await saveGolinkUrl(request.url);
+        sendResponse({ success: true });
+      }
+      console.log("[runtime.onMessage] saved Golink URL successfully");
+    })();
+  });
 
   console.log("Initialized");
 }
