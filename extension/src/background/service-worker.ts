@@ -70,9 +70,12 @@ async function initialize() {
     (async () => {
       if (request.type === "saveGolinkUrl") {
         await saveGolinkUrl(request.url);
+        console.log("[runtime.onMessage] saved Golink URL successfully");
+        await updateRedirectRule(request.url);
+        console.log("[runtime.onMessage] updated redirect rule successfully");
         sendResponse({ success: true });
+        console.log("[runtime.onMessage] sent response");
       }
-      console.log("[runtime.onMessage] saved Golink URL successfully");
     })();
   });
 
