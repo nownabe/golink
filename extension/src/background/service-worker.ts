@@ -51,15 +51,17 @@ async function initialize() {
   await updateRedirectRule(url);
 
   chrome.storage.onChanged.addListener(
-    async (
+    (
       changes: { [key: string]: chrome.storage.StorageChange },
       namespace: string
     ) => {
       console.log("storage.onChanged", changes, namespace);
-      if (namespace === "sync" && golinkUrlKey in changes) {
-        console.log("Golink URL changed", changes[golinkUrlKey].newValue);
-        await updateRedirectRule(changes[golinkUrlKey].newValue);
-      }
+      (async () => {
+        if (namespace === "sync" && golinkUrlKey in changes) {
+          console.log("Golink URL changed", changes[golinkUrlKey].newValue);
+          await updateRedirectRule(changes[golinkUrlKey].newValue);
+        }
+      })();
     }
   );
 
@@ -77,14 +79,18 @@ async function initialize() {
   console.log("Initialized");
 }
 
-async function onInstalled() {
+function onInstalled() {
   console.log("onInstalled");
-  await initialize();
+  (async () => {
+    await initialize();
+  })();
 }
 
-async function onStartup() {
+function onStartup() {
   console.log("onStartup");
-  await initialize();
+  (async () => {
+    await initialize();
+  })();
 }
 
 chrome.runtime.onInstalled.addListener(onInstalled);
