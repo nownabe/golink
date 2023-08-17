@@ -37,6 +37,12 @@ async function updateRedirectRule(url: string) {
   console.log("Updated redirect rule");
 }
 
+async function saveGolinkUrl(url: string) {
+  console.log("Saving golink URL", url);
+  await chrome.storage.sync.set({ [golinkUrlKey]: url });
+  console.log("Saved golink URL");
+}
+
 async function initialize() {
   console.log("Initializing");
 
@@ -45,29 +51,49 @@ async function initialize() {
   await updateRedirectRule(url);
 
   chrome.storage.onChanged.addListener(
-    async (
+    (
       changes: { [key: string]: chrome.storage.StorageChange },
       namespace: string
     ) => {
       console.log("storage.onChanged", changes, namespace);
-      if (namespace === "sync" && golinkUrlKey in changes) {
-        console.log("Golink URL changed", changes[golinkUrlKey].newValue);
-        await updateRedirectRule(changes[golinkUrlKey].newValue);
-      }
+      (async () => {
+        if (namespace === "sync" && golinkUrlKey in changes) {
+          console.log("Golink URL changed", changes[golinkUrlKey].newValue);
+          await updateRedirectRule(changes[golinkUrlKey].newValue);
+        }
+      })();
     }
   );
+
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log("[runtime.onMessage] received message", request, sender);
+    (async () => {
+      if (request.type === "saveGolinkUrl") {
+        await saveGolinkUrl(request.url);
+        console.log("[runtime.onMessage] saved Golink URL successfully");
+        await updateRedirectRule(request.url);
+        console.log("[runtime.onMessage] updated redirect rule successfully");
+        sendResponse({ success: true });
+        console.log("[runtime.onMessage] sent response");
+      }
+    })();
+  });
 
   console.log("Initialized");
 }
 
-async function onInstalled() {
+function onInstalled() {
   console.log("onInstalled");
-  await initialize();
+  (async () => {
+    await initialize();
+  })();
 }
 
-async function onStartup() {
+function onStartup() {
   console.log("onStartup");
-  await initialize();
+  (async () => {
+    await initialize();
+  })();
 }
 
 chrome.runtime.onInstalled.addListener(onInstalled);
