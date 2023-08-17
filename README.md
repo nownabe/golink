@@ -20,6 +20,15 @@ For an optimal experience, users are required to deploy the associated server on
 
 **Make your URLs not just shorter, but smarter with Golink.**
 
+## Golink Origin
+
+Golink originated from Google's internal short links.
+If you are curious about history of go/, dive into the stories on these websites:
+
+- [Golink: A private shortlink service for tailnets | Hacker News](https://news.ycombinator.com/item?id=33978767)
+- [The GoLinks® Blog - The History of Go Links](https://www.golinks.com/blog/go-links-history/)
+- [The Go Links Origin Story: Q&A with Benjamin Staffin · Trotto go links](https://www.trot.to/blog/2020/07/09/go-links-origin-story)
+
 ## Usage
 
 ### For General Users
