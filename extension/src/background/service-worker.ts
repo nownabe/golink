@@ -3,7 +3,7 @@ const golinkUrlKey = "golinkUrl";
 async function updateRedirectRule(url: string) {
   const ruleId = 1;
 
-  console.log(`Updating redirect rule to ${url}`);
+  console.log(`[updateRedirectRule] updating redirect rule to ${url}`);
   let host;
   try {
     host = new URL(url).host;
@@ -34,13 +34,11 @@ async function updateRedirectRule(url: string) {
   };
 
   await chrome.declarativeNetRequest.updateDynamicRules(updateRuleOptions);
-  console.log("Updated redirect rule");
+  console.log("[updateRedirectRule] updated redirect rule");
 }
 
 async function saveGolinkUrl(url: string) {
-  console.log("Saving golink URL", url);
   await chrome.storage.sync.set({ [golinkUrlKey]: url });
-  console.log("Saved golink URL");
 }
 
 async function initialize() {
@@ -55,11 +53,12 @@ async function initialize() {
       changes: { [key: string]: chrome.storage.StorageChange },
       namespace: string
     ) => {
-      console.log("storage.onChanged", changes, namespace);
       (async () => {
         if (namespace === "sync" && golinkUrlKey in changes) {
-          console.log("Golink URL changed", changes[golinkUrlKey].newValue);
-          await updateRedirectRule(changes[golinkUrlKey].newValue);
+          console.log(
+            "[storage.onChanged] Golink URL changed",
+            changes[golinkUrlKey].newValue
+          );
         }
       })();
     }
@@ -70,7 +69,10 @@ async function initialize() {
     (async () => {
       if (request.type === "saveGolinkUrl") {
         await saveGolinkUrl(request.url);
-        console.log("[runtime.onMessage] saved Golink URL successfully");
+        console.log(
+          "[runtime.onMessage] saved Golink URL successfully",
+          request.url
+        );
         await updateRedirectRule(request.url);
         console.log("[runtime.onMessage] updated redirect rule successfully");
         sendResponse({ success: true });
