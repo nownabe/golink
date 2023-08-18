@@ -1,24 +1,8 @@
 # Golink (go/link)
 
-**Golink: Custom URL Shortener & Redirect**
+A URL shortener for creating concise, memorable short links, suitable for organization-scoped use, such as in companies or schools.
 
-Empower your web browsing experience with "Golink", a dynamic URL shortener. Turn cumbersome URLs into crisp and memorable short links prefixed with "go/", ideal for streamlined sharing and organization.
-
-Key Features:
-
-1. **Effortless URL Shortening**: Transform any webpage's URL into a concise `go/{link_name}` format with just a single click.
-2. **Instant Redirection**: Navigate swiftly with `go/{link_name}` URLs, which redirect seamlessly to the original web URLs.
-3. **Extension Popup Utility**: Generate short links for your active tab directly through the extension's popup interface.
-4. **Private Server Deployment**: For a tailored experience, deploy your server on Google Cloud. This ensures a unique identity for your shortened links.
-5. **Exclusive Access Control**: Designate access to chosen users or groups, ensuring that only those authorized can make use of your Golink server.
-6. **Collaborative Server Capability**: Share your Golink server—and consequently, your short links—with peers, colleagues, and team members. This fosters seamless collaboration, ensuring team members can easily access vital resources.
-7. **Optimize Business Workflow**: Perfect for corporate settings, leverage standardized short links to streamline work processes and enhance operational efficiency.
-
-Note:
-
-For an optimal experience, users are required to deploy the associated server on Google Cloud. Detailed guidelines are below.
-
-**Make your URLs not just shorter, but smarter with Golink.**
+https://github.com/nownabe/golink/assets/1286807/9337f9f8-b3de-40bd-879c-f21b8d441604
 
 ## Golink Origin
 
