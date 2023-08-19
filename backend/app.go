@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
+	"github.com/nownabe/golink/backend/middleware"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
 	"github.com/rs/cors"
@@ -69,9 +70,11 @@ func (a *app) serve(ctx context.Context) error {
 	mux.Handle("/", a.redirectHandler)
 
 	h2s := &http2.Server{}
+	h := middleware.NewRecoverer()(a.cors(h2c.NewHandler(mux, h2s)))
+
 	s := &http.Server{
 		Addr:              ":" + a.port,
-		Handler:           a.cors(h2c.NewHandler(mux, h2s)),
+		Handler:           h,
 		ReadHeaderTimeout: readHeaderTimeoutSeconds * time.Second,
 	}
 
