@@ -31,6 +31,7 @@ linters:
 
     # Unpreferred linters
     - depguard
+    - gochecknoglobals
     - nlreturn
     - paralleltest
     - varnamelen
@@ -53,4 +54,4 @@ issues:
         - dupl
         - exhaustruct
         - funlen
-        - gochecknoglobals
+        - testpackage

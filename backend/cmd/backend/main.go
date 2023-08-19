@@ -8,6 +8,7 @@ import (
 	"cloud.google.com/go/compute/metadata"
 	"cloud.google.com/go/firestore"
 	texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
+	"github.com/nownabe/golink/backend"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
 	"go.opentelemetry.io/contrib/detectors/gcp"
@@ -16,8 +17,6 @@ import (
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
-
-	"github.com/nownabe/golink/backend"
 )
 
 func main() {
@@ -42,7 +41,7 @@ func buildApp(ctx context.Context) (backend.App, error) {
 		port = "8080"
 	}
 
-	projectID, err := getProjectID(ctx)
+	projectID, err := getProjectID()
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get project ID")
 	}
@@ -71,7 +70,7 @@ func buildApp(ctx context.Context) (backend.App, error) {
 	return backend.New(port, origins, "/api", "/c/", fsClient, debug, dummyUser), nil
 }
 
-func getProjectID(ctx context.Context) (string, error) {
+func getProjectID() (string, error) {
 	projectID := os.Getenv("PROJECT_ID")
 	if projectID != "" {
 		return projectID, nil

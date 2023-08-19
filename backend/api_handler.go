@@ -6,7 +6,6 @@ import (
 
 	"github.com/bufbuild/connect-go"
 	"github.com/nownabe/golink/backend/gen/golink/v1/golinkv1connect"
-
 	"github.com/nownabe/golink/backend/interceptor"
 )
 
