@@ -8,11 +8,9 @@ import (
 	"cloud.google.com/go/compute/metadata"
 	"cloud.google.com/go/firestore"
 	texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
-	"github.com/bufbuild/connect-go"
 	"github.com/nownabe/golink/api"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
-	"github.com/nownabe/golink/go/interceptors"
 	"go.opentelemetry.io/contrib/detectors/gcp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
@@ -63,29 +61,18 @@ func buildAPI(ctx context.Context) (api.API, error) {
 		return nil, errors.Wrap(err, "failed to get tracer")
 	}
 
-	repo := api.NewRepository(fsClient)
-	svc := api.NewGolinkService(repo)
-	apiInterceptors := []connect.Interceptor{
-		// outermost
-		interceptors.NewRecoverer(),
-		interceptors.WithTracer(),
-		interceptors.NewRequestID(),
-		interceptors.NewAuthorizer(),
-		interceptors.NewLogger(),
-		// innermost
-	}
-
 	debug := false
 	if isDebug := strings.ToLower(os.Getenv("DEBUG")); isDebug == "true" {
 		debug = true
 	}
 
-	if user := os.Getenv("USE_DUMMY_USER"); user != "" {
-		u := strings.Split(user, ":")
-		apiInterceptors = append([]connect.Interceptor{interceptors.NewDummyUser(u[0], u[1])}, apiInterceptors...)
+	cfg := &api.APIConfig{
+		Prefix:    "/api",
+		Debug:     debug,
+		DummyUser: os.Getenv("USE_DUMMY_USER"),
 	}
 
-	return api.New(svc, port, "/api", origins, apiInterceptors, debug), nil
+	return api.New(port, origins, cfg, fsClient), nil
 }
 
 func getProjectID() (string, error) {

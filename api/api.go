@@ -8,8 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/bufbuild/connect-go"
-	"github.com/nownabe/golink/api/gen/golink/v1/golinkv1connect"
+	"cloud.google.com/go/firestore"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
 	"github.com/rs/cors"
@@ -27,30 +26,25 @@ type API interface {
 }
 
 func New(
-	golinkSvc golinkv1connect.GolinkServiceHandler,
-	port, pathPrefix string,
+	port string,
 	allowedOrigins []string,
-	interceptors []connect.Interceptor,
-	debug bool,
+	cfg *APIConfig,
+	fs *firestore.Client,
 ) API {
+	repo := NewRepository(fs)
 	return &api{
-		golinkSvc:      golinkSvc,
 		port:           port,
-		pathPrefix:     pathPrefix,
 		allowedOrigins: allowedOrigins,
-		interceptors:   interceptors,
-		debug:          debug,
+		cfg:            cfg,
+		repo:           repo,
 	}
 }
 
 type api struct {
-	golinkSvc golinkv1connect.GolinkServiceHandler
-
 	port           string
-	pathPrefix     string
 	allowedOrigins []string
-	interceptors   []connect.Interceptor
-	debug          bool
+	cfg            *APIConfig
+	repo           Repository
 }
 
 func (a *api) Run(ctx context.Context) error {
@@ -58,25 +52,12 @@ func (a *api) Run(ctx context.Context) error {
 }
 
 func (a *api) buildServer() *http.Server {
-	interceptors := connect.WithInterceptors(a.interceptors...)
-
-	grpcHandler := http.NewServeMux()
-	grpcHandler.Handle(golinkv1connect.NewGolinkServiceHandler(a.golinkSvc, interceptors))
-
-	if a.debug {
-		grpcHandler.Handle(golinkv1connect.NewDebugServiceHandler(&debugService{}, interceptors))
-	}
-
-	mux := http.NewServeMux()
-	// https://connectrpc.com/docs/go/routing#prefixing-routes
-	mux.Handle(a.pathPrefix+"/", http.StripPrefix(a.pathPrefix, grpcHandler))
-	mux.HandleFunc(a.pathPrefix+"/healthz", a.healthz)
-	mux.HandleFunc("/", http.NotFound)
+	apiHandler := newAPIHandler(a.cfg, a.repo)
 
 	h2s := &http2.Server{}
 	h1s := &http.Server{
 		Addr:              ":" + a.port,
-		Handler:           a.cors(h2c.NewHandler(mux, h2s)),
+		Handler:           a.cors(h2c.NewHandler(apiHandler, h2s)),
 		ReadHeaderTimeout: readHeaderTimeoutSeconds * time.Second,
 	}
 
@@ -116,11 +97,6 @@ func (a *api) serve(ctx context.Context) error {
 	<-idleConnsClosed
 
 	return nil
-}
-
-func (a *api) healthz(w http.ResponseWriter, _ *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte("ok"))
 }
 
 func (a *api) cors(h http.Handler) http.Handler {
