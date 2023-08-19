@@ -11,6 +11,9 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
+	"github.com/rs/cors"
+	"golang.org/x/net/http2"
+	"golang.org/x/net/http2/h2c"
 )
 
 const (
@@ -25,23 +28,33 @@ type App interface {
 // New returns a new backend app.
 func New(
 	port string,
+	allowedOrigins []string,
+	apiPrefix string,
 	consolePrefix string,
 	firestoreClient *firestore.Client,
+	debug bool,
+	dummyUser string,
 ) App {
 	repo := &repository{firestoreClient}
 
 	return &app{
-		port: port,
+		port:           port,
+		allowedOrigins: allowedOrigins,
+		apiPrefix:      apiPrefix,
 		redirectHandler: &redirectHandler{
 			consolePrefix: consolePrefix,
 			repo:          repo,
 		},
+		apiHandler: newAPIHandler(repo, debug, dummyUser),
 	}
 }
 
 type app struct {
 	port            string
+	allowedOrigins  []string
+	apiPrefix       string
 	redirectHandler http.Handler
+	apiHandler      http.Handler
 }
 
 func (a *app) Run(ctx context.Context) error {
@@ -49,9 +62,15 @@ func (a *app) Run(ctx context.Context) error {
 }
 
 func (a *app) serve(ctx context.Context) error {
+	mux := http.NewServeMux()
+	// https://connectrpc.com/docs/go/routing#prefixing-routes
+	mux.Handle(a.apiPrefix+"/", http.StripPrefix(a.apiPrefix, a.apiHandler))
+	mux.Handle("/", a.redirectHandler)
+
+	h2s := &http2.Server{}
 	s := &http.Server{
 		Addr:              ":" + a.port,
-		Handler:           a.redirectHandler,
+		Handler:           a.cors(h2c.NewHandler(mux, h2s)),
 		ReadHeaderTimeout: readHeaderTimeoutSeconds * time.Second,
 	}
 
@@ -85,4 +104,15 @@ func (a *app) serve(ctx context.Context) error {
 	<-idleConnsClosed
 
 	return nil
+}
+
+func (a *app) cors(h http.Handler) http.Handler {
+	c := cors.New(cors.Options{
+		AllowedOrigins:   a.allowedOrigins,
+		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
+		AllowCredentials: true,
+		AllowedHeaders:   []string{"*"},
+	})
+
+	return c.Handler(h)
 }

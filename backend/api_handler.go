@@ -1,4 +1,4 @@
-package api
+package backend
 
 import (
 	"net/http"
@@ -7,16 +7,10 @@ import (
 	"github.com/bufbuild/connect-go"
 	"github.com/nownabe/golink/api/gen/golink/v1/golinkv1connect"
 
-	"github.com/nownabe/golink/api/interceptor"
+	"github.com/nownabe/golink/backend/interceptor"
 )
 
-type APIConfig struct {
-	Prefix    string
-	Debug     bool
-	DummyUser string
-}
-
-func newAPIHandler(cfg *APIConfig, repo *repository) http.Handler {
+func newAPIHandler(repo *repository, debug bool, dummyUser string) http.Handler {
 	// TODO: Move interceptors to route http middlewares
 	interceptors := []connect.Interceptor{
 		// outermost
@@ -28,8 +22,8 @@ func newAPIHandler(cfg *APIConfig, repo *repository) http.Handler {
 		// innermost
 	}
 
-	if cfg.DummyUser != "" {
-		u := strings.Split(cfg.DummyUser, ":")
+	if dummyUser != "" {
+		u := strings.Split(dummyUser, ":")
 		interceptors = append([]connect.Interceptor{interceptor.NewDummyUser(u[0], u[1])}, interceptors...)
 	}
 
@@ -40,7 +34,7 @@ func newAPIHandler(cfg *APIConfig, repo *repository) http.Handler {
 	svc := &golinkService{repo}
 	grpcHandler.Handle(golinkv1connect.NewGolinkServiceHandler(svc, interceptorsOpt))
 
-	if cfg.Debug {
+	if debug {
 		grpcHandler.Handle(golinkv1connect.NewDebugServiceHandler(&debugService{}, interceptorsOpt))
 	}
 
@@ -49,11 +43,7 @@ func newAPIHandler(cfg *APIConfig, repo *repository) http.Handler {
 
 	grpcHandler.HandleFunc("/", http.NotFound)
 
-	// https://connectrpc.com/docs/go/routing#prefixing-routes
-	prefixedMux := http.NewServeMux()
-	prefixedMux.Handle(cfg.Prefix+"/", http.StripPrefix(cfg.Prefix, grpcHandler))
-
-	return prefixedMux
+	return grpcHandler
 }
 
 func healthz(w http.ResponseWriter, _ *http.Request) {

@@ -5,6 +5,7 @@ go 1.20
 require (
 	cloud.google.com/go/compute/metadata v0.2.3
 	cloud.google.com/go/firestore v1.12.0
+	github.com/bufbuild/connect-go v1.10.0
 	github.com/nownabe/golink/go v0.0.0-20230814035337-5b67ef87285c
 	google.golang.org/grpc v1.55.0
 )

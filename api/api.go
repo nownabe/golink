@@ -11,7 +11,6 @@ import (
 	"cloud.google.com/go/firestore"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
-	"github.com/rs/cors"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 )
@@ -97,15 +96,4 @@ func (a *api) serve(ctx context.Context) error {
 	<-idleConnsClosed
 
 	return nil
-}
-
-func (a *api) cors(h http.Handler) http.Handler {
-	c := cors.New(cors.Options{
-		AllowedOrigins:   a.allowedOrigins,
-		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
-		AllowCredentials: true,
-		AllowedHeaders:   []string{"*"},
-	})
-
-	return c.Handler(h)
 }
