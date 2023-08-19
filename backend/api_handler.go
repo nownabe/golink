@@ -37,15 +37,10 @@ func newAPIHandler(repo *repository, debug bool, dummyUser string) http.Handler 
 		grpcHandler.Handle(golinkv1connect.NewDebugServiceHandler(&debugService{}, interceptorsOpt))
 	}
 
-	// TODO: Move /api/healthz to /healthz
-	grpcHandler.HandleFunc("/healthz", healthz)
+	// TODO: Remove this after Golink v0.0.7 is published
+	grpcHandler.Handle("/healthz", newHealthHandler())
 
 	grpcHandler.HandleFunc("/", http.NotFound)
 
 	return grpcHandler
-}
-
-func healthz(w http.ResponseWriter, _ *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte("ok"))
 }
