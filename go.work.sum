@@ -1,7 +1,7 @@
 github.com/bufbuild/connect-go v1.9.0/go.mod h1:CAIePUgkDR5pAFaylSMtNK45ANQjp9JvpluG20rhpV8=
 github.com/google/go-cmp v0.5.8/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
 github.com/nownabe/golink/go v0.0.0-20230813134216-e639dd9de14a/go.mod h1:epZvIi3ynaOJyINM+svTbOuXIHnlXsk1pXcelkmUles=
-github.com/nownabe/golink/go v0.0.0-20230814040452-767ef9cb3550/go.mod h1:epZvIi3ynaOJyINM+svTbOuXIHnlXsk1pXcelkmUles=
+github.com/nownabe/golink/go v0.0.0-20230814035337-5b67ef87285c/go.mod h1:epZvIi3ynaOJyINM+svTbOuXIHnlXsk1pXcelkmUles=
 golang.org/x/mod v0.8.0/go.mod h1:iBbtSCu2XBx23ZKBPSOrRkjjQPZFPuis4dIYUhu/chs=
 golang.org/x/mod v0.11.0/go.mod h1:iBbtSCu2XBx23ZKBPSOrRkjjQPZFPuis4dIYUhu/chs=
 golang.org/x/net v0.6.0/go.mod h1:2Tu9+aMcznHK/AK1HMvgo6xiTLG5rD5rZLDS+rp2Bjs=

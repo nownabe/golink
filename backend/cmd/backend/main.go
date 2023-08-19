@@ -9,7 +9,7 @@ import (
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
 
-	"github.com/nownabe/golink/redirector"
+	"github.com/nownabe/golink/backend"
 )
 
 func main() {
@@ -35,10 +35,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	repo := redirector.NewRepository(fsClient)
-	handler := redirector.NewHandler(repo)
+	repo := backend.NewRepository(fsClient)
+	handler := backend.NewHandler(repo)
 
-	if err := redirector.New(port, handler).Run(ctx); err != nil {
+	if err := backend.New(port, handler).Run(ctx); err != nil {
 		clog.AlertErr(ctx, errors.Wrap(err, "failed to run redirector"))
 	}
 }

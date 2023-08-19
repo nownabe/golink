@@ -1,4 +1,4 @@
-package redirector_test
+package backend_test
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/nownabe/golink/redirector"
+	"github.com/nownabe/golink/backend"
 )
 
 func TestHandler(t *testing.T) {

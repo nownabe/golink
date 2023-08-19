@@ -1,4 +1,4 @@
-module github.com/nownabe/golink/redirector
+module github.com/nownabe/golink/backend
 
 go 1.20
 
