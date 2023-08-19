@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	"cloud.google.com/go/firestore"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
 )
@@ -17,26 +18,40 @@ const (
 	shutdownTimeoutSeconds   = 120
 )
 
-type Redirector struct {
-	port    string
-	handler http.Handler
+type App interface {
+	Run(ctx context.Context) error
 }
 
-func New(port string, h http.Handler) *Redirector {
-	return &Redirector{
-		port:    port,
-		handler: h,
+// New returns a new backend app.
+func New(
+	port string,
+	consolePrefix string,
+	firestoreClient *firestore.Client,
+) App {
+	repo := &repository{firestoreClient}
+
+	return &app{
+		port: port,
+		redirectHandler: &redirectHandler{
+			consolePrefix: consolePrefix,
+			repo:          repo,
+		},
 	}
 }
 
-func (r *Redirector) Run(ctx context.Context) error {
-	return r.serve(ctx)
+type app struct {
+	port            string
+	redirectHandler http.Handler
 }
 
-func (r Redirector) serve(ctx context.Context) error {
+func (a *app) Run(ctx context.Context) error {
+	return a.serve(ctx)
+}
+
+func (a *app) serve(ctx context.Context) error {
 	s := &http.Server{
-		Addr:              ":" + r.port,
-		Handler:           r.handler,
+		Addr:              ":" + a.port,
+		Handler:           a.redirectHandler,
 		ReadHeaderTimeout: readHeaderTimeoutSeconds * time.Second,
 	}
 

@@ -35,10 +35,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	repo := backend.NewRepository(fsClient)
-	handler := backend.NewHandler(repo)
+	app := backend.New(port, "/c/", fsClient)
 
-	if err := backend.New(port, handler).Run(ctx); err != nil {
+	if err := app.Run(ctx); err != nil {
 		clog.AlertErr(ctx, errors.Wrap(err, "failed to run redirector"))
 	}
 }

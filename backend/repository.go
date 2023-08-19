@@ -15,16 +15,6 @@ const collectionName = "golinks"
 
 var errDocumentNotFound = errors.NewWithoutStack("document not found")
 
-type Repository interface {
-	GetURLAndUpdateStats(ctx context.Context, name string) (*url.URL, error)
-}
-
-func NewRepository(c *firestore.Client) Repository {
-	return &repository{
-		firestore: c,
-	}
-}
-
 type repository struct {
 	firestore *firestore.Client
 }

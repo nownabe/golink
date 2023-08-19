@@ -9,31 +9,9 @@ import (
 	"github.com/nownabe/golink/go/errors"
 )
 
-// Middleware is a middleware.
-type Middleware func(http.Handler) http.Handler
-
-// NewHandler returns a new Handler.
-func NewHandler(repo Repository, middlewares ...Middleware) http.Handler {
-	h := &Handler{}
-	h.handler = &redirectHandler{repo: repo}
-
-	for _, m := range middlewares {
-		h.handler = m(h.handler)
-	}
-
-	return h
-}
-
-type Handler struct {
-	handler http.Handler
-}
-
-func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	h.handler.ServeHTTP(w, r)
-}
-
 type redirectHandler struct {
-	repo Repository
+	consolePrefix string
+	repo          *repository
 }
 
 func (h *redirectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -42,14 +20,14 @@ func (h *redirectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	path := strings.Split(strings.TrimLeft(r.URL.Path, "/"), "/")
 
 	if path[0] == "" {
-		http.Redirect(w, r, "/c/", http.StatusMovedPermanently)
+		http.Redirect(w, r, h.consolePrefix, http.StatusMovedPermanently)
 		return
 	}
 
 	url, err := h.repo.GetURLAndUpdateStats(ctx, path[0])
 	if err != nil {
 		if errors.Is(err, errDocumentNotFound) {
-			http.Redirect(w, r, fmt.Sprintf("/c/%s", path[0]), http.StatusTemporaryRedirect)
+			http.Redirect(w, r, fmt.Sprintf("%s%s", h.consolePrefix, path[0]), http.StatusTemporaryRedirect)
 			return
 		}
 

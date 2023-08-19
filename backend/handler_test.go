@@ -22,7 +22,7 @@ func TestHandler(t *testing.T) {
 		"with empty name": {"GET", "https://host//", http.StatusBadRequest, ""},
 	}
 
-	h := redirector.NewHandler(&fakeRepo{})
+	h := backend.NewHandler(&fakeRepo{})
 
 	for name, tt := range tests {
 		tt := tt
