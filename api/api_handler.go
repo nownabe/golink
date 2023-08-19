@@ -16,7 +16,7 @@ type APIConfig struct {
 	DummyUser string
 }
 
-func newAPIHandler(cfg *APIConfig, repo Repository) http.Handler {
+func newAPIHandler(cfg *APIConfig, repo *repository) http.Handler {
 	// TODO: Move interceptors to route http middlewares
 	interceptors := []connect.Interceptor{
 		// outermost

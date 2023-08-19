@@ -1,4 +1,4 @@
-package api_test
+package api
 
 import (
 	"context"
@@ -13,15 +13,12 @@ import (
 	"github.com/bufbuild/connect-go"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"github.com/nownabe/golink/api"
 	golinkv1 "github.com/nownabe/golink/api/gen/golink/v1"
 	"github.com/nownabe/golink/api/gen/golink/v1/golinkv1connect"
 	"github.com/nownabe/golink/go/golinkcontext"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
-
-type dto = api.DTO
 
 var fsClient *firestore.Client
 
@@ -53,8 +50,8 @@ func TestMain(m *testing.M) {
 }
 
 func newService() golinkv1connect.GolinkServiceHandler {
-	repo := api.NewRepository(fsClient)
-	return api.NewGolinkService(repo)
+	repo := &repository{fsClient}
+	return &golinkService{repo}
 }
 
 func clearFirestoreEmulator() {

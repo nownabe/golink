@@ -31,7 +31,7 @@ func New(
 	cfg *APIConfig,
 	fs *firestore.Client,
 ) API {
-	repo := NewRepository(fs)
+	repo := &repository{fs}
 	return &api{
 		port:           port,
 		allowedOrigins: allowedOrigins,
@@ -44,7 +44,7 @@ type api struct {
 	port           string
 	allowedOrigins []string
 	cfg            *APIConfig
-	repo           Repository
+	repo           *repository
 }
 
 func (a *api) Run(ctx context.Context) error {

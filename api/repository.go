@@ -15,26 +15,6 @@ const collectionName = "golinks"
 
 var errDocumentNotFound = errors.NewWithoutStack("not found")
 
-type Repository interface {
-	Transaction(ctx context.Context, f func(ctx context.Context, tx *firestore.Transaction) error) error
-	TxExists(ctx context.Context, tx *firestore.Transaction, name string) (bool, error)
-	Get(ctx context.Context, name string) (*dto, error)
-	TxGet(ctx context.Context, tx *firestore.Transaction, name string) (*dto, error)
-	TxCreate(ctx context.Context, tx *firestore.Transaction, dto *dto) error
-	ListByOwner(ctx context.Context, owner string) ([]*dto, error)
-	ListByURL(ctx context.Context, url string) ([]*dto, error)
-	TxUpdate(ctx context.Context, tx *firestore.Transaction, dto *dto) error
-	TxDelete(ctx context.Context, tx *firestore.Transaction, name string) error
-	TxAddOwner(ctx context.Context, tx *firestore.Transaction, name string, owner string) error
-	TxRemoveOwner(ctx context.Context, tx *firestore.Transaction, name string, owner string) error
-}
-
-func NewRepository(c *firestore.Client) Repository {
-	return &repository{
-		firestore: c,
-	}
-}
-
 type repository struct {
 	firestore *firestore.Client
 }
