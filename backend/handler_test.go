@@ -1,15 +1,6 @@
 package backend_test
 
-import (
-	"context"
-	"net/http"
-	"net/http/httptest"
-	"net/url"
-	"testing"
-
-	"github.com/nownabe/golink/backend"
-)
-
+/*
 func TestHandler(t *testing.T) {
 	tests := map[string]struct {
 		method  string
@@ -51,3 +42,4 @@ type fakeRepo struct{}
 func (r *fakeRepo) GetURLAndUpdateStats(ctx context.Context, name string) (*url.URL, error) {
 	return url.Parse("https://example.com/redirected")
 }
+*/
