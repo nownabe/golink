@@ -8,17 +8,16 @@ import (
 	"cloud.google.com/go/compute/metadata"
 	"cloud.google.com/go/firestore"
 	texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
-	"github.com/bufbuild/connect-go"
-	"github.com/nownabe/golink/api"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
-	"github.com/nownabe/golink/go/interceptors"
 	"go.opentelemetry.io/contrib/detectors/gcp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
-	semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
+	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
+
+	"github.com/nownabe/golink/backend"
 )
 
 func main() {
@@ -26,29 +25,28 @@ func main() {
 
 	ctx := context.Background()
 
-	a, err := buildAPI(ctx)
+	app, err := buildApp(ctx)
 	if err != nil {
-		clog.AlertErr(ctx, errors.Wrap(err, "failed to build API"))
+		clog.AlertErr(ctx, errors.Wrap(err, "failed to build app"))
 		os.Exit(1)
 	}
 
-	if err := a.Run(ctx); err != nil {
-		clog.AlertErr(ctx, errors.Wrap(err, "failed to run server"))
-		os.Exit(1)
+	if err := app.Run(ctx); err != nil {
+		clog.AlertErr(ctx, errors.Wrap(err, "failed to run redirector"))
 	}
 }
 
-func buildAPI(ctx context.Context) (api.API, error) {
+func buildApp(ctx context.Context) (backend.App, error) {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 
-	projectID, err := getProjectID()
+	projectID, err := getProjectID(ctx)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to get project ID")
 	}
-	clog.Infof(ctx, "Project ID: %s", projectID)
+	clog.Infof(ctx, "project ID: %s", projectID)
 	clog.SetContextHandler(projectID)
 
 	origins := strings.Split(os.Getenv("ALLOWED_ORIGINS"), ",")
@@ -63,32 +61,17 @@ func buildAPI(ctx context.Context) (api.API, error) {
 		return nil, errors.Wrap(err, "failed to get tracer")
 	}
 
-	repo := api.NewRepository(fsClient)
-	svc := api.NewGolinkService(repo)
-	apiInterceptors := []connect.Interceptor{
-		// outermost
-		interceptors.NewRecoverer(),
-		interceptors.WithTracer(),
-		interceptors.NewRequestID(),
-		interceptors.NewAuthorizer(),
-		interceptors.NewLogger(),
-		// innermost
-	}
-
 	debug := false
 	if isDebug := strings.ToLower(os.Getenv("DEBUG")); isDebug == "true" {
 		debug = true
 	}
 
-	if user := os.Getenv("USE_DUMMY_USER"); user != "" {
-		u := strings.Split(user, ":")
-		apiInterceptors = append([]connect.Interceptor{interceptors.NewDummyUser(u[0], u[1])}, apiInterceptors...)
-	}
+	dummyUser := os.Getenv("USE_DUMMY_USER")
 
-	return api.New(svc, port, "/api", origins, apiInterceptors, debug), nil
+	return backend.New(port, origins, "/api", "/c/", fsClient, debug, dummyUser), nil
 }
 
-func getProjectID() (string, error) {
+func getProjectID(ctx context.Context) (string, error) {
 	projectID := os.Getenv("PROJECT_ID")
 	if projectID != "" {
 		return projectID, nil

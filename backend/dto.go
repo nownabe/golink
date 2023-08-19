@@ -1,10 +1,10 @@
-package api
+package backend
 
 import (
 	"strings"
 	"time"
 
-	golinkv1 "github.com/nownabe/golink/api/gen/golink/v1"
+	golinkv1 "github.com/nownabe/golink/backend/gen/golink/v1"
 )
 
 type dto struct {

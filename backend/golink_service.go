@@ -1,4 +1,4 @@
-package api
+package backend
 
 import (
 	"context"
@@ -8,22 +8,15 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/bufbuild/connect-go"
-	golinkv1 "github.com/nownabe/golink/api/gen/golink/v1"
-	"github.com/nownabe/golink/api/gen/golink/v1/golinkv1connect"
+	golinkv1 "github.com/nownabe/golink/backend/gen/golink/v1"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
 	"github.com/nownabe/golink/go/golinkcontext"
 	"golang.org/x/exp/slices"
 )
 
-func NewGolinkService(repo Repository) golinkv1connect.GolinkServiceHandler {
-	return &golinkService{
-		repo: repo,
-	}
-}
-
 type golinkService struct {
-	repo Repository
+	repo *repository
 }
 
 func (s *golinkService) CreateGolink(

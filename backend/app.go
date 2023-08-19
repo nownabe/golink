@@ -1,4 +1,4 @@
-package api
+package backend
 
 import (
 	"context"
@@ -8,8 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/bufbuild/connect-go"
-	"github.com/nownabe/golink/api/gen/golink/v1/golinkv1connect"
+	"cloud.google.com/go/firestore"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
 	"github.com/rs/cors"
@@ -22,69 +21,58 @@ const (
 	shutdownTimeoutSeconds   = 120
 )
 
-type API interface {
+type App interface {
 	Run(ctx context.Context) error
 }
 
+// New returns a new backend app.
 func New(
-	golinkSvc golinkv1connect.GolinkServiceHandler,
-	port, pathPrefix string,
+	port string,
 	allowedOrigins []string,
-	interceptors []connect.Interceptor,
+	apiPrefix string,
+	consolePrefix string,
+	firestoreClient *firestore.Client,
 	debug bool,
-) API {
-	return &api{
-		golinkSvc:      golinkSvc,
+	dummyUser string,
+) App {
+	repo := &repository{firestoreClient}
+
+	return &app{
 		port:           port,
-		pathPrefix:     pathPrefix,
 		allowedOrigins: allowedOrigins,
-		interceptors:   interceptors,
-		debug:          debug,
+		apiPrefix:      apiPrefix,
+		redirectHandler: &redirectHandler{
+			consolePrefix: consolePrefix,
+			repo:          repo,
+		},
+		apiHandler: newAPIHandler(repo, debug, dummyUser),
 	}
 }
 
-type api struct {
-	golinkSvc golinkv1connect.GolinkServiceHandler
-
-	port           string
-	pathPrefix     string
-	allowedOrigins []string
-	interceptors   []connect.Interceptor
-	debug          bool
+type app struct {
+	port            string
+	allowedOrigins  []string
+	apiPrefix       string
+	redirectHandler http.Handler
+	apiHandler      http.Handler
 }
 
-func (a *api) Run(ctx context.Context) error {
+func (a *app) Run(ctx context.Context) error {
 	return a.serve(ctx)
 }
 
-func (a *api) buildServer() *http.Server {
-	interceptors := connect.WithInterceptors(a.interceptors...)
-
-	grpcHandler := http.NewServeMux()
-	grpcHandler.Handle(golinkv1connect.NewGolinkServiceHandler(a.golinkSvc, interceptors))
-
-	if a.debug {
-		grpcHandler.Handle(golinkv1connect.NewDebugServiceHandler(&debugService{}, interceptors))
-	}
-
+func (a *app) serve(ctx context.Context) error {
 	mux := http.NewServeMux()
 	// https://connectrpc.com/docs/go/routing#prefixing-routes
-	mux.Handle(a.pathPrefix+"/", http.StripPrefix(a.pathPrefix, grpcHandler))
-	mux.HandleFunc(a.pathPrefix+"/healthz", a.healthz)
-	mux.HandleFunc("/", http.NotFound)
+	mux.Handle(a.apiPrefix+"/", http.StripPrefix(a.apiPrefix, a.apiHandler))
+	mux.Handle("/", a.redirectHandler)
 
 	h2s := &http2.Server{}
-	h1s := &http.Server{
+	s := &http.Server{
 		Addr:              ":" + a.port,
 		Handler:           a.cors(h2c.NewHandler(mux, h2s)),
 		ReadHeaderTimeout: readHeaderTimeoutSeconds * time.Second,
 	}
-
-	return h1s
-}
-
-func (a *api) serve(ctx context.Context) error {
-	s := a.buildServer()
 
 	idleConnsClosed := make(chan struct{})
 
@@ -93,13 +81,13 @@ func (a *api) serve(ctx context.Context) error {
 		signal.Notify(ch, syscall.SIGTERM, syscall.SIGINT)
 
 		sig := <-ch
-		clog.Noticef(ctx, "received signal %s and terminating", sig)
+		clog.Noticef(ctx, "received signal %v and terminating", sig)
 
 		ctx, cancel := context.WithTimeout(context.Background(), shutdownTimeoutSeconds*time.Second)
 		defer cancel()
 
 		if err := s.Shutdown(ctx); err != nil {
-			err := errors.Wrap(err, "failed to shutdown gracefully")
+			err := errors.Wrap(err, "failed to shutdown gracefully") // TODO:
 			clog.Err(ctx, err)
 		}
 
@@ -118,12 +106,7 @@ func (a *api) serve(ctx context.Context) error {
 	return nil
 }
 
-func (a *api) healthz(w http.ResponseWriter, _ *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte("ok"))
-}
-
-func (a *api) cors(h http.Handler) http.Handler {
+func (a *app) cors(h http.Handler) http.Handler {
 	c := cors.New(cors.Options{
 		AllowedOrigins:   a.allowedOrigins,
 		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},

@@ -9,9 +9,9 @@
   },
   "packageManager": "pnpm@8.6.12",
   "scripts": {
-    "dev": "VITE_API_ENDPOINT='http://localhost:8081/api' vite",
-    "build": "vite build --outDir ../redirector/console",
-    "clean": "rm -rf ../redirector/console"
+    "dev": "VITE_API_ENDPOINT='http://localhost:8080/api' vite",
+    "build": "vite build --outDir ../backend/console",
+    "clean": "rm -rf ../backend/console"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^4.32.5",

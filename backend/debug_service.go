@@ -1,10 +1,10 @@
-package api
+package backend
 
 import (
 	"context"
 
 	"github.com/bufbuild/connect-go"
-	golinkv1 "github.com/nownabe/golink/api/gen/golink/v1"
+	golinkv1 "github.com/nownabe/golink/backend/gen/golink/v1"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
 )
