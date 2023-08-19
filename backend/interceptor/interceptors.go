@@ -12,13 +12,12 @@ import (
 	"time"
 
 	"github.com/bufbuild/connect-go"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/propagation"
-
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/clog/clogcontext"
 	"github.com/nownabe/golink/go/errors"
 	"github.com/nownabe/golink/go/golinkcontext"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
 )
 
 const (
@@ -172,7 +171,12 @@ const (
 )
 
 func randomString(length uint8) string {
-	reader := randomReaderPool.Get().(*bufio.Reader)
+	reader, ok := randomReaderPool.Get().(*bufio.Reader)
+	if !ok {
+		err := errors.New("failed to get random reader from pool")
+		clog.AlertErr(context.Background(), err)
+		panic(err)
+	}
 	defer randomReaderPool.Put(reader)
 
 	b := make([]byte, length)

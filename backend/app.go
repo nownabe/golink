@@ -87,7 +87,7 @@ func (a *app) serve(ctx context.Context) error {
 		defer cancel()
 
 		if err := s.Shutdown(ctx); err != nil {
-			err := errors.Wrap(err, "failed to shutdown gracefully") // TODO:
+			err := errors.Wrap(err, "failed to shutdown gracefully")
 			clog.Err(ctx, err)
 		}
 

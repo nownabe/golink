@@ -14,11 +14,10 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	golinkv1 "github.com/nownabe/golink/backend/gen/golink/v1"
+	"github.com/nownabe/golink/backend/gen/golink/v1/golinkv1connect"
 	"github.com/nownabe/golink/go/golinkcontext"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	"github.com/nownabe/golink/backend/gen/golink/v1/golinkv1connect"
 )
 
 var fsClient *firestore.Client
