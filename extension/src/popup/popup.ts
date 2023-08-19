@@ -118,7 +118,8 @@ class GolinkPopup {
 
   private async checkAuth(): Promise<boolean> {
     try {
-      const res = await fetch(this.api + "/healthz", {
+      console.log(`[checkAuth] trying to fetch ${this.url}healthz`);
+      const res = await fetch(this.url + "healthz", {
         credentials: "include",
       });
       return res.status === 200;

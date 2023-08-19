@@ -65,6 +65,7 @@ func (a *app) serve(ctx context.Context) error {
 	mux := http.NewServeMux()
 	// https://connectrpc.com/docs/go/routing#prefixing-routes
 	mux.Handle(a.apiPrefix+"/", http.StripPrefix(a.apiPrefix, a.apiHandler))
+	mux.Handle("/healthz", newHealthHandler())
 	mux.Handle("/", a.redirectHandler)
 
 	h2s := &http2.Server{}
