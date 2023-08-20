@@ -75,6 +75,7 @@ func middlewares(allowedOrigins []string, tracerName, consolePrefix, localConsol
 		// innermost
 		middleware.NewLocalConsoleRedirector(consolePrefix, localConsoleURL),
 		middleware.NewCORS(allowedOrigins),
+		middleware.NewRequestID(),
 		middleware.NewTraceContext(tracerName),
 		middleware.NewRecoverer(),
 		// outermost

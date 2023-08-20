@@ -1,19 +1,14 @@
 package interceptor
 
 import (
-	"bufio"
 	"context"
-	"crypto/rand"
 	"fmt"
-	"io"
 	"net/http"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/bufbuild/connect-go"
 	"github.com/nownabe/golink/go/clog"
-	"github.com/nownabe/golink/go/clog/clogcontext"
 	"github.com/nownabe/golink/go/errors"
 	"github.com/nownabe/golink/go/golinkcontext"
 )
@@ -23,7 +18,6 @@ const (
 	headerUserEmail    = "X-Appengine-User-Email"
 	headerUserID       = "X-Appengine-User-Id"
 	headerTraceContext = "X-Cloud-Trace-Context"
-	headerRequestID    = "X-Request-Id"
 )
 
 func NewAuthorizer() connect.UnaryInterceptorFunc {
@@ -74,19 +68,6 @@ func NewRecoverer() connect.UnaryInterceptorFunc {
 			res, err := next(ctx, req)
 			panicked = false
 			return res, err
-		})
-	})
-}
-
-func NewRequestID() connect.UnaryInterceptorFunc {
-	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
-		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-			reqID := req.Header().Get(headerRequestID)
-			if reqID == "" {
-				reqID = randomString(64)
-			}
-			req.Header().Set(headerRequestID, reqID)
-			return next(clogcontext.WithRequestID(ctx, reqID), req)
 		})
 	})
 }
@@ -142,47 +123,4 @@ func getRemoteIP(req connect.AnyRequest) string {
 	}
 
 	return ""
-}
-
-var randomReaderPool = sync.Pool{New: func() interface{} {
-	return bufio.NewReader(rand.Reader)
-}}
-
-const (
-	randomStringAlphabet    = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	randomStringAlphabetLen = 62
-	randomStringMaxByte     = 255 - (256 % randomStringAlphabetLen)
-)
-
-func randomString(length uint8) string {
-	reader, ok := randomReaderPool.Get().(*bufio.Reader)
-	if !ok {
-		err := errors.New("failed to get random reader from pool")
-		clog.AlertErr(context.Background(), err)
-		panic(err)
-	}
-	defer randomReaderPool.Put(reader)
-
-	b := make([]byte, length)
-	r := make([]byte, length+(length/4))
-	var i uint8 = 0
-
-	for {
-		_, err := io.ReadFull(reader, r)
-		if err != nil {
-			err := errors.Wrap(err, "failed to read random bytes")
-			clog.AlertErr(context.Background(), err)
-			panic("unexpected error in randomString")
-		}
-		for _, rb := range r {
-			if rb > randomStringMaxByte {
-				continue
-			}
-			b[i] = randomStringAlphabet[rb%randomStringAlphabetLen]
-			i++
-			if i == length {
-				return string(b)
-			}
-		}
-	}
 }
