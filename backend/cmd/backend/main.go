@@ -67,7 +67,7 @@ func buildApp(ctx context.Context) (backend.App, error) {
 
 	dummyUser := os.Getenv("USE_DUMMY_USER")
 
-	return backend.New(port, origins, "/api", "/c/", fsClient, debug, dummyUser), nil
+	return backend.New(port, origins, "/api", "/-/", fsClient, debug, dummyUser), nil
 }
 
 func getProjectID() (string, error) {

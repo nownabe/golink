@@ -39,7 +39,7 @@ const router = createBrowserRouter(
     },
   ],
   {
-    basename: "/c/",
+    basename: "/-/",
   }
 );
 

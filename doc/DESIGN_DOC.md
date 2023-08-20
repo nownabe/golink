@@ -1,5 +1,7 @@
 # Design Doc
 
+**This doc is outdated. Please refer to [GitHub Issues](https://github.com/nownabe/golink/issues?q=is%3Aissue) for tracking changes.**
+
 ## Context
 
 See [PRD](./PRD.md).

@@ -1,5 +1,7 @@
 # Product Requirements Document
 
+**This doc is outdated. Please refer to [GitHub Issues](https://github.com/nownabe/golink/issues?q=is%3Aissue) for tracking changes.**
+
 ## Overview
 
 Golink makes it easy for Internet users to access websites with long URLs or those that are hard to find in the bookmarks.

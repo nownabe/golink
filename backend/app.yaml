@@ -16,7 +16,7 @@ handlers:
     expiration: 1d
     secure: always
     redirect_http_response_code: 301
-  - url: /c/.*
+  - url: /-/.*
     static_files: console/index.html
     upload: console/index\.html
     expiration: 1d
@@ -26,4 +26,4 @@ handlers:
     script: auto
     secure: always
     redirect_http_response_code: 301
-main: ./cmd/redirector
+main: ./cmd/backend
