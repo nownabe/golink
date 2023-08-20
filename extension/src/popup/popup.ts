@@ -157,10 +157,12 @@ class GolinkPopup {
       if (!ul) return;
 
       golinks.forEach((golink) => {
+        const consoleUrl = `${this.url}-/${golink.name}`;
         const li = document.createElement("li");
         const a = document.createElement("a");
-        a.href = golink.url;
+        a.href = consoleUrl;
         a.innerText = "go/" + golink.name;
+        a.onclick = () => chrome.tabs.create({ url: consoleUrl });
         li.appendChild(a);
         ul.appendChild(li);
       });
