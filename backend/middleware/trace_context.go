@@ -8,8 +8,6 @@ import (
 	"go.opentelemetry.io/otel/propagation"
 )
 
-const headerTraceContext = "X-Cloud-Trace-Context"
-
 func NewTraceContext(tracerName string) Middleware {
 	propagator := otel.GetTextMapPropagator()
 	tracer := otel.GetTracerProvider().Tracer(tracerName)
