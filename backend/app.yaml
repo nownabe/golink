@@ -11,8 +11,8 @@ automatic_scaling:
   max_pending_latency: automatic
   max_concurrent_requests: 100
 handlers:
-  - url: /assets
-    static_dir: console/assets
+  - url: /-/assets
+    static_dir: console/-/assets
     expiration: 1d
     secure: always
     redirect_http_response_code: 301
