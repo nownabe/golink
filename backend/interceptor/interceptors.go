@@ -16,8 +16,6 @@ import (
 	"github.com/nownabe/golink/go/clog/clogcontext"
 	"github.com/nownabe/golink/go/errors"
 	"github.com/nownabe/golink/go/golinkcontext"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/propagation"
 )
 
 const (
@@ -119,20 +117,6 @@ func NewLogger() connect.UnaryInterceptorFunc {
 			clog.InfoHTTPRequest(ctx, req.Spec().Procedure, r)
 
 			return res, err
-		})
-	})
-}
-
-func WithTracer() connect.UnaryInterceptorFunc {
-	propagator := otel.GetTextMapPropagator()
-	tracer := otel.GetTracerProvider().Tracer("golink-interceptor")
-
-	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
-		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-			ctx = propagator.Extract(ctx, propagation.HeaderCarrier(req.Header()))
-			ctx, span := tracer.Start(ctx, req.Spec().Procedure)
-			defer span.End()
-			return next(ctx, req)
 		})
 	})
 }

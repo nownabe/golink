@@ -29,6 +29,7 @@ type App interface {
 func New(
 	port string,
 	allowedOrigins []string,
+	tracerName string,
 	apiPrefix string,
 	consolePrefix string,
 	firestoreClient *firestore.Client,
@@ -38,7 +39,7 @@ func New(
 ) App {
 	repo := &repository{firestoreClient}
 	h := handler(repo, apiPrefix, consolePrefix, debug, dummyUser)
-	for _, m := range middlewares(allowedOrigins, consolePrefix, localConsoleURL) {
+	for _, m := range middlewares(allowedOrigins, tracerName, consolePrefix, localConsoleURL) {
 		h = m(h)
 	}
 
@@ -69,11 +70,12 @@ func handler(
 	return h2c.NewHandler(mux, h2s)
 }
 
-func middlewares(allowedOrigins []string, consolePrefix, localConsoleURL string) []middleware.Middleware {
+func middlewares(allowedOrigins []string, tracerName, consolePrefix, localConsoleURL string) []middleware.Middleware {
 	ms := []middleware.Middleware{
 		// innermost
 		middleware.NewLocalConsoleRedirector(consolePrefix, localConsoleURL),
 		middleware.NewCORS(allowedOrigins),
+		middleware.NewTraceContext(tracerName),
 		middleware.NewRecoverer(),
 		// outermost
 	}
