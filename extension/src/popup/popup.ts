@@ -113,7 +113,7 @@ class GolinkPopup {
   };
 
   public openConsole = async () => {
-    chrome.tabs.create({ url: this.url + "c/" });
+    chrome.tabs.create({ url: this.url + "-/" });
   };
 
   private async checkAuth(): Promise<boolean> {
