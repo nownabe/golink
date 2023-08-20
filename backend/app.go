@@ -12,7 +12,6 @@ import (
 	"github.com/nownabe/golink/backend/middleware"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
-	"github.com/rs/cors"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 )
@@ -38,29 +37,53 @@ func New(
 	localConsoleURL string,
 ) App {
 	repo := &repository{firestoreClient}
+	h := handler(repo, apiPrefix, consolePrefix, debug, dummyUser)
+	for _, m := range middlewares(allowedOrigins, consolePrefix, localConsoleURL) {
+		h = m(h)
+	}
 
 	return &app{
-		port:           port,
-		allowedOrigins: allowedOrigins,
-		apiPrefix:      apiPrefix,
-		consolePrefix:  consolePrefix,
-		redirectHandler: &redirectHandler{
-			consolePrefix: consolePrefix,
-			repo:          repo,
-		},
-		apiHandler:      newAPIHandler(repo, debug, dummyUser),
-		localConsoleURL: localConsoleURL,
+		port:    port,
+		handler: h,
 	}
 }
 
+func handler(
+	repo *repository,
+	apiPrefix string,
+	consolePrefix string,
+	debug bool,
+	dummyUser string,
+) http.Handler {
+	rh := newRedirectHandler(repo, consolePrefix)
+	ah := newAPIHandler(repo, debug, dummyUser)
+	hh := newHealthHandler()
+
+	mux := http.NewServeMux()
+	// https://connectrpc.com/docs/go/routing#prefixing-routes
+	mux.Handle(apiPrefix+"/", http.StripPrefix(apiPrefix, ah))
+	mux.Handle("/healthz", hh)
+	mux.Handle("/", rh)
+
+	h2s := &http2.Server{}
+	return h2c.NewHandler(mux, h2s)
+}
+
+func middlewares(allowedOrigins []string, consolePrefix, localConsoleURL string) []middleware.Middleware {
+	ms := []middleware.Middleware{
+		// innermost
+		middleware.NewLocalConsoleRedirector(consolePrefix, localConsoleURL),
+		middleware.NewCORS(allowedOrigins),
+		middleware.NewRecoverer(),
+		// outermost
+	}
+
+	return ms
+}
+
 type app struct {
-	port            string
-	allowedOrigins  []string
-	apiPrefix       string
-	consolePrefix   string
-	redirectHandler http.Handler
-	apiHandler      http.Handler
-	localConsoleURL string
+	port    string
+	handler http.Handler
 }
 
 func (a *app) Run(ctx context.Context) error {
@@ -68,22 +91,9 @@ func (a *app) Run(ctx context.Context) error {
 }
 
 func (a *app) serve(ctx context.Context) error {
-	mux := http.NewServeMux()
-	// https://connectrpc.com/docs/go/routing#prefixing-routes
-	mux.Handle(a.apiPrefix+"/", http.StripPrefix(a.apiPrefix, a.apiHandler))
-	mux.Handle("/healthz", newHealthHandler())
-	mux.Handle("/", a.redirectHandler)
-
-	h2s := &http2.Server{}
-	h := a.cors(h2c.NewHandler(mux, h2s))
-	if a.localConsoleURL != "" {
-		h = middleware.NewLocalConsoleRedirector(a.consolePrefix, a.localConsoleURL)(h)
-	}
-	h = middleware.NewRecoverer()(h)
-
 	s := &http.Server{
 		Addr:              ":" + a.port,
-		Handler:           h,
+		Handler:           a.handler,
 		ReadHeaderTimeout: readHeaderTimeoutSeconds * time.Second,
 	}
 
@@ -117,15 +127,4 @@ func (a *app) serve(ctx context.Context) error {
 	<-idleConnsClosed
 
 	return nil
-}
-
-func (a *app) cors(h http.Handler) http.Handler {
-	c := cors.New(cors.Options{
-		AllowedOrigins:   a.allowedOrigins,
-		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
-		AllowCredentials: true,
-		AllowedHeaders:   []string{"*"},
-	})
-
-	return c.Handler(h)
 }

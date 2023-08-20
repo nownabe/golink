@@ -14,6 +14,13 @@ type redirectHandler struct {
 	repo          *repository
 }
 
+func newRedirectHandler(repo *repository, consolePrefix string) *redirectHandler {
+	return &redirectHandler{
+		consolePrefix: consolePrefix,
+		repo:          repo,
+	}
+}
+
 func (h *redirectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
