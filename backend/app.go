@@ -35,6 +35,7 @@ func New(
 	firestoreClient *firestore.Client,
 	debug bool,
 	dummyUser string,
+	localConsoleURL string,
 ) App {
 	repo := &repository{firestoreClient}
 
@@ -42,11 +43,13 @@ func New(
 		port:           port,
 		allowedOrigins: allowedOrigins,
 		apiPrefix:      apiPrefix,
+		consolePrefix:  consolePrefix,
 		redirectHandler: &redirectHandler{
 			consolePrefix: consolePrefix,
 			repo:          repo,
 		},
-		apiHandler: newAPIHandler(repo, debug, dummyUser),
+		apiHandler:      newAPIHandler(repo, debug, dummyUser),
+		localConsoleURL: localConsoleURL,
 	}
 }
 
@@ -54,8 +57,10 @@ type app struct {
 	port            string
 	allowedOrigins  []string
 	apiPrefix       string
+	consolePrefix   string
 	redirectHandler http.Handler
 	apiHandler      http.Handler
+	localConsoleURL string
 }
 
 func (a *app) Run(ctx context.Context) error {
@@ -70,7 +75,11 @@ func (a *app) serve(ctx context.Context) error {
 	mux.Handle("/", a.redirectHandler)
 
 	h2s := &http2.Server{}
-	h := middleware.NewRecoverer()(a.cors(h2c.NewHandler(mux, h2s)))
+	h := a.cors(h2c.NewHandler(mux, h2s))
+	if a.localConsoleURL != "" {
+		h = middleware.NewLocalConsoleRedirector(a.consolePrefix, a.localConsoleURL)(h)
+	}
+	h = middleware.NewRecoverer()(h)
 
 	s := &http.Server{
 		Addr:              ":" + a.port,
