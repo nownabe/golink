@@ -60,16 +60,14 @@ func buildApp(ctx context.Context) (backend.App, error) {
 		return nil, errors.Wrap(err, "failed to get tracer")
 	}
 
-	debug := false
-	if isDebug := strings.ToLower(os.Getenv("DEBUG")); isDebug == "true" {
-		debug = true
+	ldcfg := backend.LocalDevelopmentConfig{
+		LocalConsoleURL: os.Getenv("LOCAL_CONSOLE_URL"),
+		DebugEndpoint:   strings.ToLower(os.Getenv("DEBUG")) == "true",
+		DummyUserEmail:  os.Getenv("DUMMY_USER_EMAIL"),
+		DummyUserID:     os.Getenv("DUMMY_USER_ID"),
 	}
 
-	dummyUserEmail := os.Getenv("DUMMY_USER_EMAIL")
-	dummyUserID := os.Getenv("DUMMY_USER_ID")
-	localConsoleURL := os.Getenv("LOCAL_CONSOLE_URL")
-
-	return backend.New(port, origins, "golink-backend", "/api", "/-/", fsClient, debug, localConsoleURL, dummyUserEmail, dummyUserID), nil
+	return backend.New(port, origins, "golink-backend", "/api", "/-/", fsClient, ldcfg), nil
 }
 
 func getProjectID() (string, error) {

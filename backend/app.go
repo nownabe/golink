@@ -21,6 +21,13 @@ const (
 	shutdownTimeoutSeconds   = 120
 )
 
+type LocalDevelopmentConfig struct {
+	LocalConsoleURL string
+	DebugEndpoint   bool
+	DummyUserEmail  string
+	DummyUserID     string
+}
+
 type App interface {
 	Run(ctx context.Context) error
 }
@@ -33,14 +40,11 @@ func New(
 	apiPrefix string,
 	consolePrefix string,
 	firestoreClient *firestore.Client,
-	debug bool,
-	localConsoleURL string,
-	dummyUserEmail string,
-	dummyUserID string,
+	ldcfg LocalDevelopmentConfig,
 ) App {
 	repo := &repository{firestoreClient}
-	h := handler(repo, apiPrefix, consolePrefix, debug)
-	for _, m := range middlewares(allowedOrigins, tracerName, consolePrefix, localConsoleURL, dummyUserEmail, dummyUserID) {
+	h := handler(repo, apiPrefix, consolePrefix, ldcfg.DebugEndpoint)
+	for _, m := range middlewares(allowedOrigins, tracerName, consolePrefix, ldcfg) {
 		h = m(h)
 	}
 
@@ -70,15 +74,20 @@ func handler(
 	return h2c.NewHandler(mux, h2s)
 }
 
-func middlewares(allowedOrigins []string, tracerName, consolePrefix, localConsoleURL, dummyUserEmail, dummyUserID string) []middleware.Middleware {
+func middlewares(
+	allowedOrigins []string,
+	tracerName string,
+	consolePrefix string,
+	ldcfg LocalDevelopmentConfig,
+) []middleware.Middleware {
 	ms := []middleware.Middleware{
 		// innermost
-		middleware.NewLocalConsoleRedirector(consolePrefix, localConsoleURL),
+		middleware.NewLocalConsoleRedirector(consolePrefix, ldcfg.LocalConsoleURL),
 		middleware.NewCORS(allowedOrigins),
 		middleware.NewRequestID(),
 		middleware.NewTraceContext(tracerName),
 		middleware.NewRecoverer(),
-		middleware.NewDummyUser(dummyUserEmail, dummyUserID),
+		middleware.NewDummyUser(ldcfg.DummyUserEmail, ldcfg.DummyUserID),
 		// outermost
 	}
 
