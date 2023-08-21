@@ -1,2 +1,8 @@
-export PORT=8081
-export ALLOWED_ORIGINS="http://localhost:1234"
+export PORT=8080
+export PROJECT_ID="local"
+export FIRESTORE_EMULATOR_HOST="127.0.0.1:9000"
+export ALLOWED_ORIGINS="http://localhost:3000,http://localhost:5173,chrome-extension://xxx"
+export DUMMY_USER_EMAIL="user@example.com"
+export DUMMY_USER_ID="dummyid"
+export DEBUG="true"
+export LOCAL_CONSOLE_URL="http://localhost:5173"
