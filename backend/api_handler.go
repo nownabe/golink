@@ -2,14 +2,13 @@ package backend
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/bufbuild/connect-go"
 	"github.com/nownabe/golink/backend/gen/golink/v1/golinkv1connect"
 	"github.com/nownabe/golink/backend/interceptor"
 )
 
-func newAPIHandler(repo *repository, debug bool, dummyUser string) http.Handler {
+func newAPIHandler(repo *repository, debug bool) http.Handler {
 	// TODO: Move interceptors to route http middlewares
 	interceptors := []connect.Interceptor{
 		// outermost
@@ -17,11 +16,6 @@ func newAPIHandler(repo *repository, debug bool, dummyUser string) http.Handler 
 		interceptor.NewAuthorizer(),
 		interceptor.NewLogger(),
 		// innermost
-	}
-
-	if dummyUser != "" {
-		u := strings.Split(dummyUser, ":")
-		interceptors = append([]connect.Interceptor{interceptor.NewDummyUser(u[0], u[1])}, interceptors...)
 	}
 
 	interceptorsOpt := connect.WithInterceptors(interceptors...)

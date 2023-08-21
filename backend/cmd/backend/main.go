@@ -65,10 +65,11 @@ func buildApp(ctx context.Context) (backend.App, error) {
 		debug = true
 	}
 
-	dummyUser := os.Getenv("USE_DUMMY_USER")
+	dummyUserEmail := os.Getenv("DUMMY_USER_EMAIL")
+	dummyUserID := os.Getenv("DUMMY_USER_ID")
 	localConsoleURL := os.Getenv("LOCAL_CONSOLE_URL")
 
-	return backend.New(port, origins, "golink-backend", "/api", "/-/", fsClient, debug, dummyUser, localConsoleURL), nil
+	return backend.New(port, origins, "golink-backend", "/api", "/-/", fsClient, debug, localConsoleURL, dummyUserEmail, dummyUserID), nil
 }
 
 func getProjectID() (string, error) {

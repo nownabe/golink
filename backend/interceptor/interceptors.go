@@ -2,7 +2,6 @@ package interceptor
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -29,16 +28,6 @@ func NewAuthorizer() connect.UnaryInterceptorFunc {
 			userID := strings.TrimPrefix(req.Header().Get(headerUserID), googHeaderPrefix)
 			ctx = golinkcontext.WithUserID(ctx, userID)
 
-			return next(ctx, req)
-		})
-	})
-}
-
-func NewDummyUser(email, userID string) connect.UnaryInterceptorFunc {
-	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
-		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-			req.Header().Set(headerUserEmail, fmt.Sprintf("accounts.google.com:%s", email))
-			req.Header().Set(headerUserID, fmt.Sprintf("accounts.google.com:%s", userID))
 			return next(ctx, req)
 		})
 	})

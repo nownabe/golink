@@ -34,12 +34,13 @@ func New(
 	consolePrefix string,
 	firestoreClient *firestore.Client,
 	debug bool,
-	dummyUser string,
 	localConsoleURL string,
+	dummyUserEmail string,
+	dummyUserID string,
 ) App {
 	repo := &repository{firestoreClient}
-	h := handler(repo, apiPrefix, consolePrefix, debug, dummyUser)
-	for _, m := range middlewares(allowedOrigins, tracerName, consolePrefix, localConsoleURL) {
+	h := handler(repo, apiPrefix, consolePrefix, debug)
+	for _, m := range middlewares(allowedOrigins, tracerName, consolePrefix, localConsoleURL, dummyUserEmail, dummyUserID) {
 		h = m(h)
 	}
 
@@ -54,10 +55,9 @@ func handler(
 	apiPrefix string,
 	consolePrefix string,
 	debug bool,
-	dummyUser string,
 ) http.Handler {
 	rh := newRedirectHandler(repo, consolePrefix)
-	ah := newAPIHandler(repo, debug, dummyUser)
+	ah := newAPIHandler(repo, debug)
 	hh := newHealthHandler()
 
 	mux := http.NewServeMux()
@@ -70,7 +70,7 @@ func handler(
 	return h2c.NewHandler(mux, h2s)
 }
 
-func middlewares(allowedOrigins []string, tracerName, consolePrefix, localConsoleURL string) []middleware.Middleware {
+func middlewares(allowedOrigins []string, tracerName, consolePrefix, localConsoleURL, dummyUserEmail, dummyUserID string) []middleware.Middleware {
 	ms := []middleware.Middleware{
 		// innermost
 		middleware.NewLocalConsoleRedirector(consolePrefix, localConsoleURL),
@@ -78,6 +78,7 @@ func middlewares(allowedOrigins []string, tracerName, consolePrefix, localConsol
 		middleware.NewRequestID(),
 		middleware.NewTraceContext(tracerName),
 		middleware.NewRecoverer(),
+		middleware.NewDummyUser(dummyUserEmail, dummyUserID),
 		// outermost
 	}
 
