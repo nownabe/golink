@@ -14,7 +14,6 @@ func newAPIHandler(repo *repository, debug bool, dummyUser string) http.Handler 
 	interceptors := []connect.Interceptor{
 		// outermost
 		interceptor.NewRecoverer(),
-		interceptor.NewRequestID(),
 		interceptor.NewAuthorizer(),
 		interceptor.NewLogger(),
 		// innermost
