@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { AddOwnerRequest, AddOwnerResponse, CreateGolinkRequest, CreateGolinkResponse, DeleteGolinkRequest, DeleteGolinkResponse, GetGolinkRequest, GetGolinkResponse, GetMeRequest, GetMeResponse, ListGolinksByUrlRequest, ListGolinksByUrlResponse, ListGolinksRequest, ListGolinksResponse, RemoveOwnerRequest, RemoveOwnerResponse, UpdateGolinkRequest, UpdateGolinkResponse } from "./golink_pb.js";
+import { AddOwnerRequest, AddOwnerResponse, CreateGolinkRequest, CreateGolinkResponse, DeleteGolinkRequest, DeleteGolinkResponse, GetGolinkRequest, GetGolinkResponse, GetMeRequest, GetMeResponse, ListGolinksByUrlRequest, ListGolinksByUrlResponse, ListGolinksRequest, ListGolinksResponse, ListPopularGolinksRequest, ListPopularGolinksResponse, RemoveOwnerRequest, RemoveOwnerResponse, UpdateGolinkRequest, UpdateGolinkResponse } from "./golink_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -46,6 +46,15 @@ export const GolinkService = {
       name: "ListGolinksByUrl",
       I: ListGolinksByUrlRequest,
       O: ListGolinksByUrlResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc golink.v1.GolinkService.ListPopularGolinks
+     */
+    listPopularGolinks: {
+      name: "ListPopularGolinks",
+      I: ListPopularGolinksRequest,
+      O: ListPopularGolinksResponse,
       kind: MethodKind.Unary,
     },
     /**

@@ -7,6 +7,7 @@ service GolinkService {
   rpc GetGolink(GetGolinkRequest) returns (GetGolinkResponse) {}
   rpc ListGolinks(ListGolinksRequest) returns (ListGolinksResponse) {}
   rpc ListGolinksByUrl(ListGolinksByUrlRequest) returns (ListGolinksByUrlResponse) {}
+  rpc ListPopularGolinks(ListPopularGolinksRequest) returns (ListPopularGolinksResponse) {}
   rpc UpdateGolink(UpdateGolinkRequest) returns (UpdateGolinkResponse) {}
   rpc DeleteGolink(DeleteGolinkRequest) returns (DeleteGolinkResponse) {}
   rpc AddOwner(AddOwnerRequest) returns (AddOwnerResponse) {}
@@ -50,6 +51,15 @@ message ListGolinksByUrlRequest {
 }
 
 message ListGolinksByUrlResponse {
+  repeated Golink golinks = 1;
+}
+
+message ListPopularGolinksRequest {
+  int32 limit = 1;
+  int32 days = 2;
+}
+
+message ListPopularGolinksResponse {
   repeated Golink golinks = 1;
 }
 

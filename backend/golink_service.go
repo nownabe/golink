@@ -141,6 +141,14 @@ func (s *golinkService) ListGolinksByUrl(
 	return res, nil
 }
 
+func (s *golinkService) ListPopularGolinks(
+	ctx context.Context,
+	req *connect.Request[golinkv1.ListPopularGolinksRequest],
+) (*connect.Response[golinkv1.ListPopularGolinksResponse], error) {
+	res := connect.NewResponse(&golinkv1.ListPopularGolinksResponse{Golinks: []*golinkv1.Golink{}})
+	return res, nil
+}
+
 func (s *golinkService) UpdateGolink(
 	ctx context.Context,
 	req *connect.Request[golinkv1.UpdateGolinkRequest],

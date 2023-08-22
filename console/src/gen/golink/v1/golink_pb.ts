@@ -352,6 +352,80 @@ export class ListGolinksByUrlResponse extends Message<ListGolinksByUrlResponse> 
 }
 
 /**
+ * @generated from message golink.v1.ListPopularGolinksRequest
+ */
+export class ListPopularGolinksRequest extends Message<ListPopularGolinksRequest> {
+  /**
+   * @generated from field: int32 limit = 1;
+   */
+  limit = 0;
+
+  constructor(data?: PartialMessage<ListPopularGolinksRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "golink.v1.ListPopularGolinksRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "limit", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListPopularGolinksRequest {
+    return new ListPopularGolinksRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ListPopularGolinksRequest {
+    return new ListPopularGolinksRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ListPopularGolinksRequest {
+    return new ListPopularGolinksRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: ListPopularGolinksRequest | PlainMessage<ListPopularGolinksRequest> | undefined, b: ListPopularGolinksRequest | PlainMessage<ListPopularGolinksRequest> | undefined): boolean {
+    return proto3.util.equals(ListPopularGolinksRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message golink.v1.ListPopularGolinksResponse
+ */
+export class ListPopularGolinksResponse extends Message<ListPopularGolinksResponse> {
+  /**
+   * @generated from field: repeated golink.v1.Golink golinks = 1;
+   */
+  golinks: Golink[] = [];
+
+  constructor(data?: PartialMessage<ListPopularGolinksResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "golink.v1.ListPopularGolinksResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "golinks", kind: "message", T: Golink, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListPopularGolinksResponse {
+    return new ListPopularGolinksResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ListPopularGolinksResponse {
+    return new ListPopularGolinksResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ListPopularGolinksResponse {
+    return new ListPopularGolinksResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: ListPopularGolinksResponse | PlainMessage<ListPopularGolinksResponse> | undefined, b: ListPopularGolinksResponse | PlainMessage<ListPopularGolinksResponse> | undefined): boolean {
+    return proto3.util.equals(ListPopularGolinksResponse, a, b);
+  }
+}
+
+/**
  * @generated from message golink.v1.UpdateGolinkRequest
  */
 export class UpdateGolinkRequest extends Message<UpdateGolinkRequest> {
