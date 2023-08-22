@@ -29,7 +29,5 @@ func newAPIHandler(repo *repository, debug bool) http.Handler {
 		grpcHandler.Handle(golinkv1connect.NewDebugServiceHandler(&debugService{}, interceptorsOpt))
 	}
 
-	grpcHandler.HandleFunc("/", http.NotFound)
-
 	return grpcHandler
 }
