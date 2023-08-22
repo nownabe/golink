@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import Layout from "./pages/Layout";
-import Home from "./pages/Home";
+import Home, { homeLoader } from "./pages/Home";
 import MyGolinks, { myGolinksLoader } from "./pages/MyGolinks";
 import NewGolink, { newGolinkLoader } from "./pages/NewGolink";
 import EditGolink, { editGolinkLoader } from "./pages/EditGolink";
@@ -16,6 +16,8 @@ const router = createBrowserRouter(
         {
           index: true,
           element: <Home />,
+          loader: homeLoader,
+          errorElement: <RouterErrorDialog />,
         },
         {
           path: "/-/",
