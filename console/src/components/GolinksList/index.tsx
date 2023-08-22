@@ -34,7 +34,7 @@ export function Loading() {
   );
 }
 
-export default function Golinks({ golinks }: Props) {
+export default function GolinksList({ golinks }: Props) {
   return (
     <List>
       {golinks.map((golink) => (

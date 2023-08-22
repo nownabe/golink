@@ -3,10 +3,10 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { Helmet } from "react-helmet";
 
 import { Suspense } from "react";
-import Golinks, { Loading } from "./Golinks";
 import { Await, defer, useLoaderData } from "react-router-dom";
 import client from "@/client";
 import { Golink } from "@/gen/golink/v1/golink_pb";
+import GolinksList, { Loading } from "@/components/GolinksList";
 
 export async function myGolinksLoader() {
   const golinks = (async () => {
@@ -34,7 +34,7 @@ export default function MyGolinks() {
         <Grid xs={12}>
           <Suspense fallback={<Loading />}>
             <Await resolve={golinks}>
-              {(golinks: Golink[]) => <Golinks golinks={golinks} />}
+              {(golinks: Golink[]) => <GolinksList golinks={golinks} />}
             </Await>
           </Suspense>
         </Grid>
