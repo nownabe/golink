@@ -39,7 +39,6 @@ message GetGolinkResponse {
 }
 
 message ListGolinksRequest {
-  string owner = 1;
 }
 
 message ListGolinksResponse {

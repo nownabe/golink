@@ -213,11 +213,6 @@ export class GetGolinkResponse extends Message<GetGolinkResponse> {
  * @generated from message golink.v1.ListGolinksRequest
  */
 export class ListGolinksRequest extends Message<ListGolinksRequest> {
-  /**
-   * @generated from field: string owner = 1;
-   */
-  owner = "";
-
   constructor(data?: PartialMessage<ListGolinksRequest>) {
     super();
     proto3.util.initPartial(data, this);
@@ -226,7 +221,6 @@ export class ListGolinksRequest extends Message<ListGolinksRequest> {
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "golink.v1.ListGolinksRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "owner", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListGolinksRequest {
