@@ -29,9 +29,6 @@ func newAPIHandler(repo *repository, debug bool) http.Handler {
 		grpcHandler.Handle(golinkv1connect.NewDebugServiceHandler(&debugService{}, interceptorsOpt))
 	}
 
-	// TODO: Remove this after Golink v0.0.7 is published
-	grpcHandler.Handle("/healthz", newHealthHandler())
-
 	grpcHandler.HandleFunc("/", http.NotFound)
 
 	return grpcHandler
