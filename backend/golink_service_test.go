@@ -18,12 +18,14 @@ import (
 	"github.com/nownabe/golink/go/golinkcontext"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 var fsClient *firestore.Client
 
 var cmpOptions = []cmp.Option{
 	cmpopts.IgnoreTypes(time.Time{}),
+	cmpopts.IgnoreTypes(&timestamppb.Timestamp{}),
 	cmpopts.IgnoreUnexported(golinkv1.Golink{}),
 	cmpopts.IgnoreUnexported(golinkv1.CreateGolinkResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.GetGolinkResponse{}),
