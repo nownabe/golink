@@ -3,6 +3,7 @@ package backend
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/nownabe/golink/go/clog"
@@ -31,14 +32,23 @@ func (h *redirectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	url, err := h.repo.GetURLAndUpdateStats(ctx, path[0])
+	golink, err := h.repo.Get(ctx, path[0])
 	if err != nil {
 		if errors.Is(err, errDocumentNotFound) {
 			http.Redirect(w, r, fmt.Sprintf("%s%s", h.consolePrefix, path[0]), http.StatusTemporaryRedirect)
 			return
 		}
 
-		err := errors.Wrapf(err, "failed to get url: %s", path[0])
+		err := errors.Wrapf(err, "failed to get url for %q", path[0])
+		clog.Err(ctx, err)
+
+		http.Error(w, "internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	u, err := url.Parse(golink.URL)
+	if err != nil {
+		err := errors.Wrapf(err, "failed to parse url (id=%q): %q", path[0], golink.URL)
 		clog.Err(ctx, err)
 
 		http.Error(w, "internal server error", http.StatusInternalServerError)
@@ -46,8 +56,10 @@ func (h *redirectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if len(path) > 1 {
-		url.Path = fmt.Sprintf("%s/%s", url.Path, strings.Join(path[1:], "/"))
+		u.Path = fmt.Sprintf("%s/%s", u.Path, strings.Join(path[1:], "/"))
 	}
 
-	http.Redirect(w, r, url.String(), http.StatusTemporaryRedirect)
+	http.Redirect(w, r, u.String(), http.StatusTemporaryRedirect)
+
+	go h.repo.incrementCount(ctx, golink.Name)
 }

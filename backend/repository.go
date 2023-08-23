@@ -2,7 +2,6 @@ package backend
 
 import (
 	"context"
-	"net/url"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -19,10 +18,6 @@ var errDocumentNotFound = errors.NewWithoutStack("document not found")
 
 type repository struct {
 	firestore *firestore.Client
-}
-
-type golink struct {
-	URL string `firestore:"url"`
 }
 
 func (r *repository) Transaction(
@@ -208,42 +203,18 @@ func (r *repository) TxRemoveOwner(ctx context.Context, tx *firestore.Transactio
 	return nil
 }
 
-func (r *repository) GetURLAndUpdateStats(ctx context.Context, name string) (*url.URL, error) {
-	col := r.firestore.Collection(collectionName)
-	doc := col.Doc(name)
+func (r *repository) incrementCount(ctx context.Context, name string) {
+	col := r.collection()
+	doc := col.Doc(nameToID(name))
 
-	s, err := doc.Get(ctx)
-	if status.Code(err) == codes.NotFound {
-		return nil, errors.Wrapf(errDocumentNotFound, "not found %s", doc.Path)
-	}
-	if err != nil {
-		return nil, errors.Wrapf(err, "failed to get %s", doc.Path)
-	}
-
-	var g golink
-	if err := s.DataTo(&g); err != nil {
-		return nil, errors.Wrapf(err, "failed to parse %s", doc.Path)
-	}
-
-	u, err := url.Parse(g.URL)
-	if err != nil {
-		return nil, errors.Wrapf(err, "invalid url: %s", g.URL)
-	}
-
-	go r.incrementCount(ctx, doc)
-
-	return u, nil
-}
-
-func (r *repository) incrementCount(ctx context.Context, docRef *firestore.DocumentRef) {
-	_, err := docRef.Update(ctx, []firestore.Update{
+	_, err := doc.Update(ctx, []firestore.Update{
 		{
 			Path:  "redirect_count",
 			Value: firestore.Increment(1),
 		},
 	})
 	if err != nil {
-		err := errors.Wrapf(err, "failed to increment redirect_count of %s", docRef.Path)
+		err := errors.Wrapf(err, "failed to increment redirect_count of %s", doc.Path)
 		clog.Err(ctx, err)
 	}
 }
