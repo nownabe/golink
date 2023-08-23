@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 package golink.v1;
 
 service GolinkService {
@@ -20,6 +22,10 @@ message Golink {
   string name = 1;
   string url = 2;
   repeated string owners = 3;
+  int32 redirect_count_28days = 4;
+  int32 redirect_count_7days = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
 }
 
 message CreateGolinkRequest {

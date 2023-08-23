@@ -4,7 +4,7 @@
 // @ts-nocheck
 
 import type { BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialMessage, PlainMessage } from "@bufbuild/protobuf";
-import { Message, proto3 } from "@bufbuild/protobuf";
+import { Message, proto3, Timestamp } from "@bufbuild/protobuf";
 
 /**
  * @generated from message golink.v1.Golink
@@ -25,6 +25,26 @@ export class Golink extends Message<Golink> {
    */
   owners: string[] = [];
 
+  /**
+   * @generated from field: int32 redirect_count_28days = 4;
+   */
+  redirectCount28days = 0;
+
+  /**
+   * @generated from field: int32 redirect_count_7days = 5;
+   */
+  redirectCount7days = 0;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp created_at = 6;
+   */
+  createdAt?: Timestamp;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp updated_at = 7;
+   */
+  updatedAt?: Timestamp;
+
   constructor(data?: PartialMessage<Golink>) {
     super();
     proto3.util.initPartial(data, this);
@@ -36,6 +56,10 @@ export class Golink extends Message<Golink> {
     { no: 1, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 2, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 3, name: "owners", kind: "scalar", T: 9 /* ScalarType.STRING */, repeated: true },
+    { no: 4, name: "redirect_count_28days", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+    { no: 5, name: "redirect_count_7days", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+    { no: 6, name: "created_at", kind: "message", T: Timestamp },
+    { no: 7, name: "updated_at", kind: "message", T: Timestamp },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Golink {
@@ -360,6 +384,11 @@ export class ListPopularGolinksRequest extends Message<ListPopularGolinksRequest
    */
   limit = 0;
 
+  /**
+   * @generated from field: int32 days = 2;
+   */
+  days = 0;
+
   constructor(data?: PartialMessage<ListPopularGolinksRequest>) {
     super();
     proto3.util.initPartial(data, this);
@@ -369,6 +398,7 @@ export class ListPopularGolinksRequest extends Message<ListPopularGolinksRequest
   static readonly typeName = "golink.v1.ListPopularGolinksRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "limit", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+    { no: 2, name: "days", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListPopularGolinksRequest {
