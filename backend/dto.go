@@ -8,12 +8,15 @@ import (
 )
 
 type dto struct {
-	Name          string    `firestore:"name"`
-	URL           string    `firestore:"url"`
-	RedirectCount int64     `firestore:"redirect_count"`
-	CreatedAt     time.Time `firestore:"created_at"`
-	UpdatedAt     time.Time `firestore:"updated_at"`
-	Owners        []string  `firestore:"owners"`
+	Name                        string    `firestore:"name"`
+	URL                         string    `firestore:"url"`
+	RedirectCount28Days         int32     `firestore:"redirect_count_28days"`
+	RedirectCount7Days          int32     `firestore:"redirect_count_7days"`
+	RedirectCountCalculatedDate time.Time `firestore:"redirect_count_calculated_date"`
+	DailyRedirectCounts         []int32   `firestore:"daily_redirect_counts"`
+	CreatedAt                   time.Time `firestore:"created_at"`
+	UpdatedAt                   time.Time `firestore:"updated_at"`
+	Owners                      []string  `firestore:"owners"`
 }
 
 func (o *dto) ID() string {
