@@ -4,7 +4,7 @@
 // @ts-nocheck
 
 import type { BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialMessage, PlainMessage } from "@bufbuild/protobuf";
-import { Message, proto3, Timestamp } from "@bufbuild/protobuf";
+import { Message, proto3, protoInt64, Timestamp } from "@bufbuild/protobuf";
 
 /**
  * @generated from message golink.v1.Golink
@@ -26,14 +26,14 @@ export class Golink extends Message<Golink> {
   owners: string[] = [];
 
   /**
-   * @generated from field: int32 redirect_count_28days = 4;
+   * @generated from field: int64 redirect_count_28days = 4;
    */
-  redirectCount28days = 0;
+  redirectCount28days = protoInt64.zero;
 
   /**
-   * @generated from field: int32 redirect_count_7days = 5;
+   * @generated from field: int64 redirect_count_7days = 5;
    */
-  redirectCount7days = 0;
+  redirectCount7days = protoInt64.zero;
 
   /**
    * @generated from field: google.protobuf.Timestamp created_at = 6;
@@ -56,8 +56,8 @@ export class Golink extends Message<Golink> {
     { no: 1, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 2, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 3, name: "owners", kind: "scalar", T: 9 /* ScalarType.STRING */, repeated: true },
-    { no: 4, name: "redirect_count_28days", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
-    { no: 5, name: "redirect_count_7days", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+    { no: 4, name: "redirect_count_28days", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
+    { no: 5, name: "redirect_count_7days", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
     { no: 6, name: "created_at", kind: "message", T: Timestamp },
     { no: 7, name: "updated_at", kind: "message", T: Timestamp },
   ]);

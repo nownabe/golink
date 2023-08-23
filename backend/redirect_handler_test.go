@@ -18,52 +18,52 @@ func TestUpdateRedirectCount(t *testing.T) {
 			golink: &backend.Golink{
 				RedirectCount28Days: 0,
 				RedirectCount7Days:  0,
-				DailyRedirectCounts: [28]int32{},
+				DailyRedirectCounts: [28]int64{},
 			},
 			daysDelayed: 0,
 			want: &backend.Golink{
 				RedirectCount28Days: 1,
 				RedirectCount7Days:  1,
-				DailyRedirectCounts: [28]int32{0: 1},
+				DailyRedirectCounts: [28]int64{0: 1},
 			},
 		},
 		"1 day delay": {
 			golink: &backend.Golink{
 				RedirectCount28Days: 15,
 				RedirectCount7Days:  8,
-				DailyRedirectCounts: [28]int32{0: 3, 6: 5, 27: 7},
+				DailyRedirectCounts: [28]int64{0: 3, 6: 5, 27: 7},
 			},
 			daysDelayed: 1,
 			want: &backend.Golink{
 				RedirectCount28Days: 9,
 				RedirectCount7Days:  4,
-				DailyRedirectCounts: [28]int32{0: 1, 1: 3, 7: 5},
+				DailyRedirectCounts: [28]int64{0: 1, 1: 3, 7: 5},
 			},
 		},
 		"7 days delay": {
 			golink: &backend.Golink{
 				RedirectCount28Days: 39,
 				RedirectCount7Days:  8,
-				DailyRedirectCounts: [28]int32{0: 3, 6: 5, 20: 7, 21: 11, 27: 13},
+				DailyRedirectCounts: [28]int64{0: 3, 6: 5, 20: 7, 21: 11, 27: 13},
 			},
 			daysDelayed: 7,
 			want: &backend.Golink{
 				RedirectCount28Days: 16,
 				RedirectCount7Days:  1,
-				DailyRedirectCounts: [28]int32{0: 1, 7: 3, 13: 5, 27: 7},
+				DailyRedirectCounts: [28]int64{0: 1, 7: 3, 13: 5, 27: 7},
 			},
 		},
 		"28 days delay": {
 			golink: &backend.Golink{
 				RedirectCount28Days: 3,
 				RedirectCount7Days:  3,
-				DailyRedirectCounts: [28]int32{0: 1, 1: 2},
+				DailyRedirectCounts: [28]int64{0: 1, 1: 2},
 			},
 			daysDelayed: 28,
 			want: &backend.Golink{
 				RedirectCount28Days: 1,
 				RedirectCount7Days:  1,
-				DailyRedirectCounts: [28]int32{0: 1},
+				DailyRedirectCounts: [28]int64{0: 1},
 			},
 		},
 	}

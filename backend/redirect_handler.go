@@ -94,14 +94,14 @@ func updateRedirectCount(o *dto, daysDelayed int) {
 	if daysDelayed >= 28 {
 		o.RedirectCount28Days = 1
 		o.RedirectCount7Days = 1
-		o.DailyRedirectCounts = [28]int32{1}
+		o.DailyRedirectCounts = [28]int64{1}
 		return
 	}
 
 	if daysDelayed > 0 {
 		counts := o.DailyRedirectCounts[:]
 		for i := 0; i < daysDelayed; i++ {
-			counts = append([]int32{0}, counts...)
+			counts = append([]int64{0}, counts...)
 			o.RedirectCount28Days -= counts[28]
 			o.RedirectCount7Days -= counts[7]
 		}
