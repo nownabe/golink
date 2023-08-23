@@ -15,7 +15,7 @@ type dto struct {
 	RedirectCount28Days         int32     `firestore:"redirect_count_28days"`
 	RedirectCount7Days          int32     `firestore:"redirect_count_7days"`
 	RedirectCountCalculatedDate time.Time `firestore:"redirect_count_calculated_date"`
-	DailyRedirectCounts         []int32   `firestore:"daily_redirect_counts"`
+	DailyRedirectCounts         [28]int32 `firestore:"daily_redirect_counts"`
 	CreatedAt                   time.Time `firestore:"created_at"`
 	UpdatedAt                   time.Time `firestore:"updated_at"`
 }

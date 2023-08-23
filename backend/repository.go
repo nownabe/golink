@@ -156,6 +156,10 @@ func (r *repository) TxUpdate(ctx context.Context, tx *firestore.Transaction, dt
 
 	if err := tx.Update(doc, []firestore.Update{
 		{Path: "url", Value: dto.URL},
+		{Path: "redirect_count_28days", Value: dto.RedirectCount28Days},
+		{Path: "redirect_count_7days", Value: dto.RedirectCount7Days},
+		{Path: "redirect_count_calculated_date", Value: dto.RedirectCountCalculatedDate},
+		{Path: "daily_redirect_counts", Value: dto.DailyRedirectCounts},
 		{Path: "updated_at", Value: dto.UpdatedAt},
 	}); err != nil {
 		return errors.Wrapf(err, "failed to update %s", doc.Path)
