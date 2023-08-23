@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
-	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
 	"google.golang.org/api/iterator"
 	"google.golang.org/grpc/codes"
@@ -205,22 +204,6 @@ func (r *repository) TxRemoveOwner(ctx context.Context, tx *firestore.Transactio
 	}
 
 	return nil
-}
-
-func (r *repository) incrementCount(ctx context.Context, name string) {
-	col := r.collection()
-	doc := col.Doc(nameToID(name))
-
-	_, err := doc.Update(ctx, []firestore.Update{
-		{
-			Path:  "redirect_count",
-			Value: firestore.Increment(1),
-		},
-	})
-	if err != nil {
-		err := errors.Wrapf(err, "failed to increment redirect_count of %s", doc.Path)
-		clog.Err(ctx, err)
-	}
 }
 
 func (r *repository) collection() *firestore.CollectionRef {
