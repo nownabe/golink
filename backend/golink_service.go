@@ -145,6 +145,16 @@ func (s *golinkService) ListPopularGolinks(
 	ctx context.Context,
 	req *connect.Request[golinkv1.ListPopularGolinksRequest],
 ) (*connect.Response[golinkv1.ListPopularGolinksResponse], error) {
+	if req.Msg.Limit <= 0 {
+		return nil, errf(connect.CodeInvalidArgument, "limit must be greater than 0")
+	}
+	if req.Msg.Limit > 100 {
+		return nil, errf(connect.CodeInvalidArgument, "limit must be less than or equal to 100")
+	}
+	if req.Msg.Days != 7 && req.Msg.Days != 28 {
+		return nil, errf(connect.CodeInvalidArgument, "days must be 7 or 28")
+	}
+
 	golinks, err := s.repo.ListPopularGolinks(ctx, int(req.Msg.Days), int(req.Msg.Limit))
 	if err != nil {
 		err := errors.Wrapf(err, "s.repo.ListPopularGolinks(ctx, %d, %d)", req.Msg.Days, req.Msg.Limit)

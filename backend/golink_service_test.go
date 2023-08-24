@@ -511,21 +511,61 @@ func TestService_ListPopularGolinks(t *testing.T) {
 		limit    int32
 		days     int32
 		wantDTOs []*dto
+		wantErr  bool
 	}{
 		"7days": {
 			limit:    10,
 			days:     7,
 			wantDTOs: []*dto{o1, o2, o3},
+			wantErr:  false,
 		},
 		"28days": {
 			limit:    10,
 			days:     28,
 			wantDTOs: []*dto{o3, o2, o1},
+			wantErr:  false,
 		},
 		"7days with limit": {
 			limit:    2,
 			days:     7,
 			wantDTOs: []*dto{o1, o2},
+			wantErr:  false,
+		},
+		"limit is -1": {
+			limit:    -1,
+			days:     7,
+			wantDTOs: []*dto{},
+			wantErr:  true,
+		},
+		"limit is 0": {
+			limit:    0,
+			days:     7,
+			wantDTOs: []*dto{},
+			wantErr:  true,
+		},
+		"limit is 1": {
+			limit:    1,
+			days:     7,
+			wantDTOs: []*dto{o1},
+			wantErr:  false,
+		},
+		"limit is 100": {
+			limit:    100,
+			days:     7,
+			wantDTOs: []*dto{o1, o2, o3},
+			wantErr:  false,
+		},
+		"limit is 101": {
+			limit:    101,
+			days:     7,
+			wantDTOs: []*dto{},
+			wantErr:  true,
+		},
+		"days is 1": {
+			limit:    10,
+			days:     1,
+			wantDTOs: []*dto{},
+			wantErr:  true,
 		},
 	}
 
@@ -537,6 +577,15 @@ func TestService_ListPopularGolinks(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			req := &golinkv1.ListPopularGolinksRequest{Limit: tt.limit, Days: tt.days}
 			got, err := s.ListPopularGolinks(ctx, connect.NewRequest(req))
+
+			if tt.wantErr {
+				if err == nil {
+					t.Fatal("error expected")
+				} else {
+					return
+				}
+			}
+
 			if err != nil {
 				t.Errorf("unexpected error: %v", err)
 			}
