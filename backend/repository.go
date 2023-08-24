@@ -2,27 +2,25 @@ package backend
 
 import (
 	"context"
-	"net/url"
 	"time"
 
 	"cloud.google.com/go/firestore"
-	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
 	"google.golang.org/api/iterator"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-const collectionName = "golinks"
+const (
+	collectionName                    = "golinks"
+	firestoreFieldRedirectCount28Days = "redirect_count_28days"
+	firestoreFieldRedirectCount7Days  = "redirect_count_7days"
+)
 
 var errDocumentNotFound = errors.NewWithoutStack("document not found")
 
 type repository struct {
 	firestore *firestore.Client
-}
-
-type golink struct {
-	URL string `firestore:"url"`
 }
 
 func (r *repository) Transaction(
@@ -91,6 +89,7 @@ func (r *repository) TxCreate(ctx context.Context, tx *firestore.Transaction, dt
 	col := r.collection()
 	doc := col.Doc(dto.ID())
 
+	dto.RedirectCountCalculatedDate = time.Now().Truncate(24 * time.Hour)
 	dto.CreatedAt = time.Now()
 	dto.UpdatedAt = time.Now()
 
@@ -153,6 +152,43 @@ func (r *repository) ListByURL(ctx context.Context, url string) ([]*dto, error) 
 	return dtos, nil
 }
 
+func (r *repository) ListPopularGolinks(ctx context.Context, days, limit int) ([]*dto, error) {
+	col := r.collection()
+	var field string
+
+	switch days {
+	case 7:
+		field = firestoreFieldRedirectCount7Days
+	case 28:
+		field = firestoreFieldRedirectCount28Days
+	default:
+		return nil, errors.Errorf("invalid days: %d", days)
+	}
+
+	iter := col.OrderBy(field, firestore.Desc).Limit(limit).Documents(ctx)
+	defer iter.Stop()
+
+	var golinks []*dto
+	for {
+		s, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, errors.Wrapf(err, "failed to iterate %s", col.Path)
+		}
+
+		var golink dto
+		if err := s.DataTo(&golink); err != nil {
+			return nil, errors.Wrapf(err, "failed to populate %s", s.Ref.Path)
+		}
+
+		golinks = append(golinks, &golink)
+	}
+
+	return golinks, nil
+}
+
 func (r *repository) TxUpdate(ctx context.Context, tx *firestore.Transaction, dto *dto) error {
 	col := r.collection()
 	doc := col.Doc(dto.ID())
@@ -161,6 +197,10 @@ func (r *repository) TxUpdate(ctx context.Context, tx *firestore.Transaction, dt
 
 	if err := tx.Update(doc, []firestore.Update{
 		{Path: "url", Value: dto.URL},
+		{Path: firestoreFieldRedirectCount28Days, Value: dto.RedirectCount28Days},
+		{Path: firestoreFieldRedirectCount7Days, Value: dto.RedirectCount7Days},
+		{Path: "redirect_count_calculated_date", Value: dto.RedirectCountCalculatedDate},
+		{Path: "daily_redirect_counts", Value: dto.DailyRedirectCounts},
 		{Path: "updated_at", Value: dto.UpdatedAt},
 	}); err != nil {
 		return errors.Wrapf(err, "failed to update %s", doc.Path)
@@ -206,46 +246,6 @@ func (r *repository) TxRemoveOwner(ctx context.Context, tx *firestore.Transactio
 	}
 
 	return nil
-}
-
-func (r *repository) GetURLAndUpdateStats(ctx context.Context, name string) (*url.URL, error) {
-	col := r.firestore.Collection(collectionName)
-	doc := col.Doc(name)
-
-	s, err := doc.Get(ctx)
-	if status.Code(err) == codes.NotFound {
-		return nil, errors.Wrapf(errDocumentNotFound, "not found %s", doc.Path)
-	}
-	if err != nil {
-		return nil, errors.Wrapf(err, "failed to get %s", doc.Path)
-	}
-
-	var g golink
-	if err := s.DataTo(&g); err != nil {
-		return nil, errors.Wrapf(err, "failed to parse %s", doc.Path)
-	}
-
-	u, err := url.Parse(g.URL)
-	if err != nil {
-		return nil, errors.Wrapf(err, "invalid url: %s", g.URL)
-	}
-
-	go r.incrementCount(ctx, doc)
-
-	return u, nil
-}
-
-func (r *repository) incrementCount(ctx context.Context, docRef *firestore.DocumentRef) {
-	_, err := docRef.Update(ctx, []firestore.Update{
-		{
-			Path:  "redirect_count",
-			Value: firestore.Increment(1),
-		},
-	})
-	if err != nil {
-		err := errors.Wrapf(err, "failed to increment redirect_count of %s", docRef.Path)
-		clog.Err(ctx, err)
-	}
 }
 
 func (r *repository) collection() *firestore.CollectionRef {

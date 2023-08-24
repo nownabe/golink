@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 package golink.v1;
 
 service GolinkService {
@@ -7,6 +9,7 @@ service GolinkService {
   rpc GetGolink(GetGolinkRequest) returns (GetGolinkResponse) {}
   rpc ListGolinks(ListGolinksRequest) returns (ListGolinksResponse) {}
   rpc ListGolinksByUrl(ListGolinksByUrlRequest) returns (ListGolinksByUrlResponse) {}
+  rpc ListPopularGolinks(ListPopularGolinksRequest) returns (ListPopularGolinksResponse) {}
   rpc UpdateGolink(UpdateGolinkRequest) returns (UpdateGolinkResponse) {}
   rpc DeleteGolink(DeleteGolinkRequest) returns (DeleteGolinkResponse) {}
   rpc AddOwner(AddOwnerRequest) returns (AddOwnerResponse) {}
@@ -19,6 +22,10 @@ message Golink {
   string name = 1;
   string url = 2;
   repeated string owners = 3;
+  int64 redirect_count_28days = 4;
+  int64 redirect_count_7days = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
 }
 
 message CreateGolinkRequest {
@@ -39,7 +46,6 @@ message GetGolinkResponse {
 }
 
 message ListGolinksRequest {
-  string owner = 1;
 }
 
 message ListGolinksResponse {
@@ -51,6 +57,15 @@ message ListGolinksByUrlRequest {
 }
 
 message ListGolinksByUrlResponse {
+  repeated Golink golinks = 1;
+}
+
+message ListPopularGolinksRequest {
+  int32 limit = 1;
+  int32 days = 2;
+}
+
+message ListPopularGolinksResponse {
   repeated Golink golinks = 1;
 }
 

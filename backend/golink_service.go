@@ -126,7 +126,7 @@ func (s *golinkService) ListGolinksByUrl(
 ) (*connect.Response[golinkv1.ListGolinksByUrlResponse], error) {
 	dtos, err := s.repo.ListByURL(ctx, req.Msg.Url)
 	if err != nil {
-		err := errors.New("failed to list Golinks")
+		err := errors.Wrapf(err, "s.repo.ListByURL(ctx, %q)", req.Msg.Url)
 		clog.Err(ctx, err)
 		return nil, errf(connect.CodeInternal, "internal error")
 	}
@@ -139,6 +139,36 @@ func (s *golinkService) ListGolinksByUrl(
 	res := connect.NewResponse(&golinkv1.ListGolinksByUrlResponse{Golinks: golinks})
 
 	return res, nil
+}
+
+func (s *golinkService) ListPopularGolinks(
+	ctx context.Context,
+	req *connect.Request[golinkv1.ListPopularGolinksRequest],
+) (*connect.Response[golinkv1.ListPopularGolinksResponse], error) {
+	if req.Msg.Limit <= 0 {
+		return nil, errf(connect.CodeInvalidArgument, "limit must be greater than 0")
+	}
+	if req.Msg.Limit > 100 {
+		return nil, errf(connect.CodeInvalidArgument, "limit must be less than or equal to 100")
+	}
+	if req.Msg.Days != 7 && req.Msg.Days != 28 {
+		return nil, errf(connect.CodeInvalidArgument, "days must be 7 or 28")
+	}
+
+	golinks, err := s.repo.ListPopularGolinks(ctx, int(req.Msg.Days), int(req.Msg.Limit))
+	if err != nil {
+		err := errors.Wrapf(err, "s.repo.ListPopularGolinks(ctx, %d, %d)", req.Msg.Days, req.Msg.Limit)
+		clog.Err(ctx, err)
+		return nil, errf(connect.CodeInternal, "internal error")
+	}
+
+	resp := &golinkv1.ListPopularGolinksResponse{}
+
+	for _, golink := range golinks {
+		resp.Golinks = append(resp.Golinks, golink.ToProto())
+	}
+
+	return connect.NewResponse(resp), nil
 }
 
 func (s *golinkService) UpdateGolink(

@@ -4,7 +4,7 @@
 // @ts-nocheck
 
 import type { BinaryReadOptions, FieldList, JsonReadOptions, JsonValue, PartialMessage, PlainMessage } from "@bufbuild/protobuf";
-import { Message, proto3 } from "@bufbuild/protobuf";
+import { Message, proto3, protoInt64, Timestamp } from "@bufbuild/protobuf";
 
 /**
  * @generated from message golink.v1.Golink
@@ -25,6 +25,26 @@ export class Golink extends Message<Golink> {
    */
   owners: string[] = [];
 
+  /**
+   * @generated from field: int64 redirect_count_28days = 4;
+   */
+  redirectCount28days = protoInt64.zero;
+
+  /**
+   * @generated from field: int64 redirect_count_7days = 5;
+   */
+  redirectCount7days = protoInt64.zero;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp created_at = 6;
+   */
+  createdAt?: Timestamp;
+
+  /**
+   * @generated from field: google.protobuf.Timestamp updated_at = 7;
+   */
+  updatedAt?: Timestamp;
+
   constructor(data?: PartialMessage<Golink>) {
     super();
     proto3.util.initPartial(data, this);
@@ -36,6 +56,10 @@ export class Golink extends Message<Golink> {
     { no: 1, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 2, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 3, name: "owners", kind: "scalar", T: 9 /* ScalarType.STRING */, repeated: true },
+    { no: 4, name: "redirect_count_28days", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
+    { no: 5, name: "redirect_count_7days", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
+    { no: 6, name: "created_at", kind: "message", T: Timestamp },
+    { no: 7, name: "updated_at", kind: "message", T: Timestamp },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Golink {
@@ -213,11 +237,6 @@ export class GetGolinkResponse extends Message<GetGolinkResponse> {
  * @generated from message golink.v1.ListGolinksRequest
  */
 export class ListGolinksRequest extends Message<ListGolinksRequest> {
-  /**
-   * @generated from field: string owner = 1;
-   */
-  owner = "";
-
   constructor(data?: PartialMessage<ListGolinksRequest>) {
     super();
     proto3.util.initPartial(data, this);
@@ -226,7 +245,6 @@ export class ListGolinksRequest extends Message<ListGolinksRequest> {
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "golink.v1.ListGolinksRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
-    { no: 1, name: "owner", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListGolinksRequest {
@@ -354,6 +372,86 @@ export class ListGolinksByUrlResponse extends Message<ListGolinksByUrlResponse> 
 
   static equals(a: ListGolinksByUrlResponse | PlainMessage<ListGolinksByUrlResponse> | undefined, b: ListGolinksByUrlResponse | PlainMessage<ListGolinksByUrlResponse> | undefined): boolean {
     return proto3.util.equals(ListGolinksByUrlResponse, a, b);
+  }
+}
+
+/**
+ * @generated from message golink.v1.ListPopularGolinksRequest
+ */
+export class ListPopularGolinksRequest extends Message<ListPopularGolinksRequest> {
+  /**
+   * @generated from field: int32 limit = 1;
+   */
+  limit = 0;
+
+  /**
+   * @generated from field: int32 days = 2;
+   */
+  days = 0;
+
+  constructor(data?: PartialMessage<ListPopularGolinksRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "golink.v1.ListPopularGolinksRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "limit", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+    { no: 2, name: "days", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListPopularGolinksRequest {
+    return new ListPopularGolinksRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ListPopularGolinksRequest {
+    return new ListPopularGolinksRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ListPopularGolinksRequest {
+    return new ListPopularGolinksRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: ListPopularGolinksRequest | PlainMessage<ListPopularGolinksRequest> | undefined, b: ListPopularGolinksRequest | PlainMessage<ListPopularGolinksRequest> | undefined): boolean {
+    return proto3.util.equals(ListPopularGolinksRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message golink.v1.ListPopularGolinksResponse
+ */
+export class ListPopularGolinksResponse extends Message<ListPopularGolinksResponse> {
+  /**
+   * @generated from field: repeated golink.v1.Golink golinks = 1;
+   */
+  golinks: Golink[] = [];
+
+  constructor(data?: PartialMessage<ListPopularGolinksResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "golink.v1.ListPopularGolinksResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "golinks", kind: "message", T: Golink, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListPopularGolinksResponse {
+    return new ListPopularGolinksResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ListPopularGolinksResponse {
+    return new ListPopularGolinksResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ListPopularGolinksResponse {
+    return new ListPopularGolinksResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: ListPopularGolinksResponse | PlainMessage<ListPopularGolinksResponse> | undefined, b: ListPopularGolinksResponse | PlainMessage<ListPopularGolinksResponse> | undefined): boolean {
+    return proto3.util.equals(ListPopularGolinksResponse, a, b);
   }
 }
 
