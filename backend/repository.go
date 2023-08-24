@@ -89,6 +89,7 @@ func (r *repository) TxCreate(ctx context.Context, tx *firestore.Transaction, dt
 	col := r.collection()
 	doc := col.Doc(dto.ID())
 
+	dto.RedirectCountCalculatedDate = time.Now().Truncate(24 * time.Hour)
 	dto.CreatedAt = time.Now()
 	dto.UpdatedAt = time.Now()
 

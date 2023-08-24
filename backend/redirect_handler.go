@@ -64,7 +64,7 @@ func (h *redirectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, u.String(), http.StatusTemporaryRedirect)
 
-	go h.count(ctx, golink.Name)
+	go h.count(context.Background(), golink.Name)
 }
 
 func (h *redirectHandler) count(ctx context.Context, name string) {
