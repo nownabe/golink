@@ -3,7 +3,11 @@ name: backend on pr
 on:
   pull_request:
     paths:
-      - backend/**
+      - backend/**/*.go
+      - backend/go.mod
+      - backend/go.sum
+      - .golangci.yaml
+      - .github/workflows/backend-on-pr.yaml
 
 jobs:
   test:
