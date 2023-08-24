@@ -11,7 +11,11 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-const collectionName = "golinks"
+const (
+	collectionName                    = "golinks"
+	firestoreFieldRedirectCount28Days = "redirect_count_28days"
+	firestoreFieldRedirectCount7Days  = "redirect_count_7days"
+)
 
 var errDocumentNotFound = errors.NewWithoutStack("document not found")
 
@@ -147,6 +151,43 @@ func (r *repository) ListByURL(ctx context.Context, url string) ([]*dto, error) 
 	return dtos, nil
 }
 
+func (r *repository) ListPopularGolinks(ctx context.Context, days, limit int) ([]*dto, error) {
+	col := r.collection()
+	var field string
+
+	switch days {
+	case 7:
+		field = firestoreFieldRedirectCount7Days
+	case 28:
+		field = firestoreFieldRedirectCount28Days
+	default:
+		return nil, errors.Errorf("invalid days: %d", days)
+	}
+
+	iter := col.OrderBy(field, firestore.Desc).Limit(int(limit)).Documents(ctx)
+	defer iter.Stop()
+
+	var golinks []*dto
+	for {
+		s, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, errors.Wrapf(err, "failed to iterate %s", col.Path)
+		}
+
+		var golink dto
+		if err := s.DataTo(&golink); err != nil {
+			return nil, errors.Wrapf(err, "failed to populate %s", s.Ref.Path)
+		}
+
+		golinks = append(golinks, &golink)
+	}
+
+	return golinks, nil
+}
+
 func (r *repository) TxUpdate(ctx context.Context, tx *firestore.Transaction, dto *dto) error {
 	col := r.collection()
 	doc := col.Doc(dto.ID())
@@ -155,8 +196,8 @@ func (r *repository) TxUpdate(ctx context.Context, tx *firestore.Transaction, dt
 
 	if err := tx.Update(doc, []firestore.Update{
 		{Path: "url", Value: dto.URL},
-		{Path: "redirect_count_28days", Value: dto.RedirectCount28Days},
-		{Path: "redirect_count_7days", Value: dto.RedirectCount7Days},
+		{Path: firestoreFieldRedirectCount28Days, Value: dto.RedirectCount28Days},
+		{Path: firestoreFieldRedirectCount7Days, Value: dto.RedirectCount7Days},
 		{Path: "redirect_count_calculated_date", Value: dto.RedirectCountCalculatedDate},
 		{Path: "daily_redirect_counts", Value: dto.DailyRedirectCounts},
 		{Path: "updated_at", Value: dto.UpdatedAt},

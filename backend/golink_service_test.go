@@ -31,6 +31,7 @@ var cmpOptions = []cmp.Option{
 	cmpopts.IgnoreUnexported(golinkv1.GetGolinkResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.ListGolinksResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.ListGolinksByUrlResponse{}),
+	cmpopts.IgnoreUnexported(golinkv1.ListPopularGolinksResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.UpdateGolinkResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.AddOwnerResponse{}),
 	cmpopts.IgnoreUnexported(golinkv1.RemoveOwnerResponse{}),
@@ -470,6 +471,81 @@ func TestService_ListGolinksByURL(t *testing.T) {
 				wantGolinks = append(wantGolinks, o.ToProto())
 			}
 			want := &golinkv1.ListGolinksByUrlResponse{Golinks: wantGolinks}
+
+			if !cmp.Equal(got.Msg, want, cmpOptions...) {
+				t.Errorf("unexpected response (-want +got): %v", cmp.Diff(want, got.Msg, cmpOptions...))
+			}
+		})
+	}
+}
+
+func TestService_ListPopularGolinks(t *testing.T) {
+	defer clearFirestoreEmulator()
+
+	o1 := &dto{
+		Name:                "o1",
+		URL:                 "https://example.com/1",
+		Owners:              []string{"user@example.com"},
+		RedirectCount28Days: 1,
+		RedirectCount7Days:  3,
+	}
+	o2 := &dto{
+		Name:                "o2",
+		URL:                 "https://example.com/2",
+		Owners:              []string{"user@example.com", "other@example.com"},
+		RedirectCount28Days: 2,
+		RedirectCount7Days:  2,
+	}
+	o3 := &dto{
+		Name:                "o3",
+		URL:                 "https://example.com/1",
+		Owners:              []string{"other@example.com"},
+		RedirectCount28Days: 3,
+		RedirectCount7Days:  1,
+	}
+	createGolink(o1)
+	createGolink(o2)
+	createGolink(o3)
+
+	tests := map[string]struct {
+		limit    int32
+		days     int32
+		wantDTOs []*dto
+	}{
+		"7days": {
+			limit:    10,
+			days:     7,
+			wantDTOs: []*dto{o1, o2, o3},
+		},
+		"28days": {
+			limit:    10,
+			days:     28,
+			wantDTOs: []*dto{o3, o2, o1},
+		},
+		"7days with limit": {
+			limit:    2,
+			days:     7,
+			wantDTOs: []*dto{o1, o2},
+		},
+	}
+
+	s := newService()
+	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
+
+	for name, tt := range tests {
+		tt := tt
+		t.Run(name, func(t *testing.T) {
+			req := &golinkv1.ListPopularGolinksRequest{Limit: tt.limit, Days: tt.days}
+			got, err := s.ListPopularGolinks(ctx, connect.NewRequest(req))
+			if err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+
+			wantGolinks := []*golinkv1.Golink{}
+			for _, o := range tt.wantDTOs {
+				wantGolinks = append(wantGolinks, o.ToProto())
+			}
+			want := &golinkv1.ListPopularGolinksResponse{Golinks: wantGolinks}
 
 			if !cmp.Equal(got.Msg, want, cmpOptions...) {
 				t.Errorf("unexpected response (-want +got): %v", cmp.Diff(want, got.Msg, cmpOptions...))
