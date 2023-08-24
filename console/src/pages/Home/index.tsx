@@ -10,7 +10,10 @@ import { Golink } from "@/gen/golink/v1/golink_pb";
 
 export async function homeLoader() {
   const popularGolinks = (async () => {
-    const resp = await client.listPopularGolinks({});
+    const resp = await client.listPopularGolinks({
+      days: 28,
+      limit: 20,
+    });
     return resp.golinks;
   })();
   return defer({ popularGolinks });
