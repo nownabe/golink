@@ -165,7 +165,7 @@ func (r *repository) ListPopularGolinks(ctx context.Context, days, limit int) ([
 		return nil, errors.Errorf("invalid days: %d", days)
 	}
 
-	iter := col.OrderBy(field, firestore.Desc).Limit(int(limit)).Documents(ctx)
+	iter := col.OrderBy(field, firestore.Desc).Limit(limit).Documents(ctx)
 	defer iter.Stop()
 
 	var golinks []*dto
