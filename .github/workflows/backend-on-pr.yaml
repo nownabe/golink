@@ -15,26 +15,30 @@ jobs:
     defaults:
       run:
         working-directory: ./backend
+    env:
+      GOEXPERIMENT: loopvar
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
         with:
-          go-version: "1.20"
+          go-version: "1.21"
       - run: go mod download
       - name: Firestore Emulator
         run: docker run -d -p 9000:9000 gcr.io/google.com/cloudsdktool/cloud-sdk:emulators gcloud emulators firestore start --host-port=0.0.0.0:9000
       - run: go build -v ./...
-      - run: go test -v -vet=all -race ./...
+      - run: go test -v -race ./...
         env:
           FIRESTORE_EMULATOR_HOST: "localhost:9000"
 
   golangci-lint:
     runs-on: ubuntu-latest
+    env:
+      GOEXPERIMENT: loopvar
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
         with:
-          go-version: "1.20"
+          go-version: "1.21"
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
@@ -44,6 +48,8 @@ jobs:
 
   reviewdog-golangci-lint:
     runs-on: ubuntu-latest
+    env:
+      GOEXPERIMENT: loopvar
     steps:
       - uses: actions/checkout@v3
       - name: golangci-lint
@@ -51,6 +57,6 @@ jobs:
         with:
           workdir: ./backend
           fail_on_error: true
-          go_version: "1.20"
+          go_version: "1.21"
           golangci_lint_version: v1.53.3
           golangci_lint_flags: -c ../.golangci.yaml

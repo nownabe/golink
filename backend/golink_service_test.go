@@ -286,7 +286,6 @@ func TestService_CreateGolink_Validations(t *testing.T) {
 	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	for name, tt := range tests {
-		tt := tt
 		t.Run(name, func(t *testing.T) {
 			defer clearFirestoreEmulator()
 
@@ -392,7 +391,6 @@ func TestService_ListGolinks(t *testing.T) {
 	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	for name, tt := range tests {
-		tt := tt
 		t.Run(name, func(t *testing.T) {
 			defer clearFirestoreEmulator()
 
@@ -458,7 +456,6 @@ func TestService_ListGolinksByURL(t *testing.T) {
 	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	for name, tt := range tests {
-		tt := tt
 		t.Run(name, func(t *testing.T) {
 			req := &golinkv1.ListGolinksByUrlRequest{Url: tt.url}
 			got, err := s.ListGolinksByUrl(ctx, connect.NewRequest(req))
@@ -573,7 +570,6 @@ func TestService_ListPopularGolinks(t *testing.T) {
 	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	for name, tt := range tests {
-		tt := tt
 		t.Run(name, func(t *testing.T) {
 			req := &golinkv1.ListPopularGolinksRequest{Limit: tt.limit, Days: tt.days}
 			got, err := s.ListPopularGolinks(ctx, connect.NewRequest(req))
@@ -783,7 +779,6 @@ func TestService_AddOwner(t *testing.T) {
 	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	for name, tt := range tests {
-		tt := tt
 		t.Run(name, func(t *testing.T) {
 			defer clearFirestoreEmulator()
 
@@ -868,7 +863,6 @@ func TestService_RemoveOwner(t *testing.T) {
 	ctx := golinkcontext.WithUserEmail(context.Background(), "user@example.com")
 
 	for name, tt := range tests {
-		tt := tt
 		t.Run(name, func(t *testing.T) {
 			defer clearFirestoreEmulator()
 

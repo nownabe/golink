@@ -5,6 +5,12 @@ run:
 output:
   format: colored-line-number
 linters-settings:
+  govet:
+    enable-all: true
+    disable:
+      - fieldalignment
+      - loopclosure
+      - shadow
   revive:
     rules:
       - name: var-naming
