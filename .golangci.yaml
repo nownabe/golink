@@ -55,4 +55,5 @@ issues:
         - dupl
         - exhaustruct
         - funlen
+        - govet
         - testpackage

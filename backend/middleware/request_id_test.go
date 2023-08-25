@@ -61,8 +61,6 @@ func TestRequestID(t *testing.T) {
 	}
 
 	for name, tt := range tests {
-		// TODO: Remove this after Go 1.21
-		tt := tt
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 

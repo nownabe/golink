@@ -1,5 +1,11 @@
 # Development
 
+## Go
+
+```shell
+GOEXPERIMENT=loopvar
+```
+
 ## Proto
 
 ```shell
