@@ -67,7 +67,7 @@ func handler(
 	mux := http.NewServeMux()
 	// https://connectrpc.com/docs/go/routing#prefixing-routes
 	mux.Handle(apiPrefix+"/", http.StripPrefix(apiPrefix, ah))
-	mux.Handle("/healthz", hh)
+	mux.Handle("/health", hh)
 	mux.Handle("/", rh)
 
 	h2s := &http2.Server{}
