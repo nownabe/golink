@@ -16,14 +16,8 @@ gcloud services enable \
 
 gcloud app create --region "$region"
 
-cd "$root/redirector"
+cd "$root/backend"
 gcloud app deploy --quiet
-
-cd "$root/api"
-gcloud app deploy --quiet
-
-cd "$root"
-gcloud app deploy dispatch.yaml --quiet
 
 gcloud alpha firestore databases update --type=firestore-native --quiet
 
