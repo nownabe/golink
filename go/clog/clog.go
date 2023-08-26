@@ -6,8 +6,7 @@ import (
 	"io"
 	"os"
 	"sync/atomic"
-
-	"golang.org/x/exp/slog"
+	"log/slog"
 
 	"github.com/nownabe/golink/go/clog/clogcontext"
 )

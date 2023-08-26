@@ -5,8 +5,7 @@ import (
 	"runtime"
 	"strconv"
 	"time"
-
-	"golang.org/x/exp/slog"
+	"log/slog"
 )
 
 const (

@@ -1,6 +1,6 @@
 package clog
 
-import "golang.org/x/exp/slog"
+import "log/slog"
 
 // Levels describe the severity of the log.
 // They follow definitions of Cloud Logging.

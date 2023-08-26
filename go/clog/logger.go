@@ -3,8 +3,7 @@ package clog
 import (
 	"context"
 	"fmt"
-
-	"golang.org/x/exp/slog"
+	"log/slog"
 )
 
 type Logger struct {

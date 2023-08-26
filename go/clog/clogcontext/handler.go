@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"sync"
+	"log/slog"
 
 	"go.opentelemetry.io/otel/trace"
-	"golang.org/x/exp/slog"
 )
 
 const (
