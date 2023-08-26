@@ -1,6 +1,6 @@
 package clog
 
-import "golang.org/x/exp/slog"
+import "log/slog"
 
 // ErrorEvent is an interface for Error Reporting.
 // See https://cloud.google.com/error-reporting/docs/formatting-error-messages#log-error

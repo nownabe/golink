@@ -1,6 +1,6 @@
 package clog
 
-import "golang.org/x/exp/slog"
+import "log/slog"
 
 // https://cloud.google.com/logging/docs/structured-logging#special-payload-fields
 func replaceLevelKey(a slog.Attr) slog.Attr {

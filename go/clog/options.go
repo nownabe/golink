@@ -1,6 +1,6 @@
 package clog
 
-import "golang.org/x/exp/slog"
+import "log/slog"
 
 type option func(h slog.Handler) slog.Handler
 
