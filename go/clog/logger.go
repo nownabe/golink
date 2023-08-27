@@ -117,7 +117,7 @@ func (l *Logger) err(ctx context.Context, lv slog.Level, err error) {
 		attrs = append(attrs, slog.String("@type", "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent"))
 
 		if ec := ee.ErrorContext(); ec != nil {
-			attrs = append(attrs, slog.Group("context", ec))
+			attrs = append(attrs, slog.Group("context", ec.LogAttr()))
 		}
 
 		if s := ee.Stack(); s != nil {
