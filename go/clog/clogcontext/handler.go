@@ -3,8 +3,8 @@ package clogcontext
 import (
 	"context"
 	"fmt"
-	"sync"
 	"log/slog"
+	"sync"
 
 	"go.opentelemetry.io/otel/trace"
 )
@@ -42,12 +42,12 @@ func (h *handler) Handle(ctx context.Context, r slog.Record) error {
 	}
 
 	if m, ok := ctx.Value(keyLabels{}).(*sync.Map); ok {
-		var attrs []slog.Attr
+		var attrs []any
 		m.Range(func(key, value any) bool {
 			attrs = append(attrs, slog.String(key.(string), value.(string)))
 			return true
 		})
-		r.AddAttrs(slog.Group(labelsKey, attrs))
+		r.AddAttrs(slog.Group(labelsKey, attrs...))
 	}
 
 	return h.Handler.Handle(ctx, r)
