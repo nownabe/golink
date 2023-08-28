@@ -3,13 +3,11 @@ package interceptor
 import (
 	"context"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/bufbuild/connect-go"
 	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
-	"github.com/nownabe/golink/go/golinkcontext"
 )
 
 const (
@@ -18,20 +16,6 @@ const (
 	headerUserID       = "X-Appengine-User-Id"
 	headerTraceContext = "X-Cloud-Trace-Context"
 )
-
-func NewAuthorizer() connect.UnaryInterceptorFunc {
-	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
-		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-			email := strings.TrimPrefix(req.Header().Get(headerUserEmail), googHeaderPrefix)
-			ctx = golinkcontext.WithUserEmail(ctx, email)
-
-			userID := strings.TrimPrefix(req.Header().Get(headerUserID), googHeaderPrefix)
-			ctx = golinkcontext.WithUserID(ctx, userID)
-
-			return next(ctx, req)
-		})
-	})
-}
 
 // https://github.com/golang/go/issues/25448
 func NewRecoverer() connect.UnaryInterceptorFunc {
