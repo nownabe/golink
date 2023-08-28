@@ -70,6 +70,8 @@ func TestAuthorizer(t *testing.T) {
 
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
 			var gotEmail, gotUserID string
 
 			h := middleware.NewAuthorizer()(userContextRecordHandler(&gotEmail, &gotUserID))
