@@ -83,6 +83,7 @@ func middlewares(
 	ms := []middleware.Middleware{
 		// innermost
 		middleware.NewLocalConsoleRedirector(consolePrefix, ldcfg.LocalConsoleURL),
+		middleware.NewAuthorizer(),
 		middleware.NewCORS(allowedOrigins),
 		middleware.NewRequestID(),
 		middleware.NewTraceContext(tracerName),
