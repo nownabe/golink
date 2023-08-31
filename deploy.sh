@@ -19,6 +19,8 @@ gcloud app create --region "$region"
 cd "$root/backend"
 gcloud app deploy --quiet
 
+cd "$root"
+
 gcloud alpha firestore databases update --type=firestore-native --quiet
 
 gcloud iap settings set \
