@@ -7,8 +7,6 @@ import (
 	"log/slog"
 	"os"
 	"sync/atomic"
-
-	"github.com/nownabe/golink/backend/clog/clogcontext"
 )
 
 var defaultLogger atomic.Value
@@ -27,7 +25,7 @@ func SetDefault(l *Logger) {
 
 func SetContextHandler(projectID string) {
 	l := Default()
-	h := clogcontext.NewHandler(l.Handler(), projectID)
+	h := newContextHandler(l.Handler(), projectID)
 	SetDefault(&Logger{slog.New(h)})
 }
 
