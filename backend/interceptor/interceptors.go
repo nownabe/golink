@@ -3,7 +3,6 @@ package interceptor
 import (
 	"context"
 	"net/http"
-	"time"
 
 	"github.com/bufbuild/connect-go"
 	"github.com/nownabe/golink/go/clog"
@@ -40,36 +39,6 @@ func NewRecoverer() connect.UnaryInterceptorFunc {
 			}()
 			res, err := next(ctx, req)
 			panicked = false
-			return res, err
-		})
-	})
-}
-
-func NewLogger() connect.UnaryInterceptorFunc {
-	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
-		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
-			start := time.Now()
-			res, err := next(ctx, req)
-
-			r := &clog.HTTPRequest{
-				RequestMethod:                  req.HTTPMethod(),
-				RequestURL:                     req.Spec().Procedure,
-				RequestSize:                    req.Header().Get(headerContentLength),
-				Status:                         "",
-				ResponseSize:                   "",
-				UserAgent:                      req.Header().Get(headerUserAgent),
-				RemoteIP:                       getRemoteIP(req),
-				ServerIP:                       "",
-				Referer:                        req.Header().Get(headerReferer),
-				Latency:                        time.Since(start),
-				CacheLookup:                    false,
-				CacheHit:                       false,
-				CacheValidatedWithOriginServer: false,
-				CacheFillBytes:                 0,
-				Protocol:                       req.Peer().Protocol,
-			}
-			clog.InfoHTTPRequest(ctx, req.Spec().Procedure, r)
-
 			return res, err
 		})
 	})

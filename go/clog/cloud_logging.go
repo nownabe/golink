@@ -2,10 +2,10 @@ package clog
 
 import (
 	"fmt"
+	"log/slog"
 	"runtime"
 	"strconv"
 	"time"
-	"log/slog"
 )
 
 const (
@@ -25,8 +25,8 @@ type HTTPRequest struct {
 	RequestMethod                  string
 	RequestURL                     string
 	RequestSize                    string
-	Status                         string
-	ResponseSize                   string
+	Status                         int
+	ResponseSize                   int64
 	UserAgent                      string
 	RemoteIP                       string
 	ServerIP                       string
@@ -44,8 +44,8 @@ func (r *HTTPRequest) LogValue() slog.Value {
 		slog.String("requestMethod", r.RequestMethod),
 		slog.String("requestUrl", r.RequestURL),
 		slog.String("requestSize", r.RequestSize),
-		slog.String("status", r.Status),
-		slog.String("responseSize", r.ResponseSize),
+		slog.Int("status", r.Status),
+		slog.String("responseSize", strconv.FormatInt(r.ResponseSize, 10)),
 		slog.String("userAgent", r.UserAgent),
 		slog.String("remoteIp", r.RemoteIP),
 		slog.String("serverIp", r.ServerIP),

@@ -13,7 +13,6 @@ func newAPIHandler(repo *repository, debug bool) http.Handler {
 	interceptors := []connect.Interceptor{
 		// outermost
 		interceptor.NewRecoverer(),
-		interceptor.NewLogger(),
 		// innermost
 	}
 

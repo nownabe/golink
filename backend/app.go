@@ -87,6 +87,7 @@ func middlewares(
 		middleware.NewCORS(allowedOrigins),
 		middleware.NewRequestID(),
 		middleware.NewTraceContext(tracerName),
+		middleware.NewHTTPLogger(),
 		middleware.NewRecoverer(),
 		middleware.NewDummyUser(ldcfg.DummyUserEmail, ldcfg.DummyUserID),
 		// outermost
