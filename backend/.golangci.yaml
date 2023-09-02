@@ -2,6 +2,7 @@ run:
   skip-files:
     - ".*/gen/.*\\.pb\\.go$"
     - ".*/gen/.*\\.connect\\.go$"
+    - ".*/sdk/go1.21.0/src/.*\\.go$"
 output:
   format: colored-line-number
 linters-settings:
