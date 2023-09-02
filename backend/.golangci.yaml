@@ -22,8 +22,6 @@ linters:
   enable-all: true
   disable:
     # Temporarily disabled linters
-    - wsl
-    - wrapcheck
     - ireturn
     - revive
     - bodyclose
@@ -44,6 +42,7 @@ linters:
     - paralleltest
     - typecheck
     - varnamelen
+    - wsl
 
     # Deprecated linters
     - deadcode
@@ -92,3 +91,4 @@ issues:
       linters:
         - forcetypeassert
         - nestif
+        - wrapcheck
