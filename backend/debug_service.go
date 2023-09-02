@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/bufbuild/connect-go"
+	"github.com/nownabe/golink/backend/clog"
 	golinkv1 "github.com/nownabe/golink/backend/gen/golink/v1"
-	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
 )
 

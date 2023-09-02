@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/nownabe/golink/go/clog"
+	"github.com/nownabe/golink/backend/clog"
 )
 
 type anyVal struct{}

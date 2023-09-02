@@ -8,9 +8,9 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/bufbuild/connect-go"
+	"github.com/nownabe/golink/backend/clog"
 	golinkv1 "github.com/nownabe/golink/backend/gen/golink/v1"
 	"github.com/nownabe/golink/backend/golinkcontext"
-	"github.com/nownabe/golink/go/clog"
 	"github.com/nownabe/golink/go/errors"
 	"golang.org/x/exp/slices"
 )

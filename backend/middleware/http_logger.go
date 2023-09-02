@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/nownabe/golink/go/clog"
+	"github.com/nownabe/golink/backend/clog"
 )
 
 const (

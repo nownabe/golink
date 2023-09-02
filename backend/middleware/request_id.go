@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/nownabe/golink/go/clog"
-	"github.com/nownabe/golink/go/clog/clogcontext"
+	"github.com/nownabe/golink/backend/clog"
+	"github.com/nownabe/golink/backend/clog/clogcontext"
 	"github.com/nownabe/golink/go/errors"
 	"go.opentelemetry.io/otel/trace"
 )

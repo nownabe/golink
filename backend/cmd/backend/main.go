@@ -9,7 +9,7 @@ import (
 	"cloud.google.com/go/firestore"
 	texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
 	"github.com/nownabe/golink/backend"
-	"github.com/nownabe/golink/go/clog"
+	"github.com/nownabe/golink/backend/clog"
 	"github.com/nownabe/golink/go/errors"
 	"go.opentelemetry.io/contrib/detectors/gcp"
 	"go.opentelemetry.io/otel"
