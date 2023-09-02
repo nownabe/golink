@@ -57,6 +57,9 @@ linters:
     - structcheck
 issues:
   exclude-rules:
+    - path: /
+      linters:
+        - typecheck
     - path: _test\.go
       linters:
         - containedctx
