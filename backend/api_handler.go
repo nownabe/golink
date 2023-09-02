@@ -9,7 +9,6 @@ import (
 )
 
 func newAPIHandler(repo *repository, debug bool) http.Handler {
-	// TODO: Move interceptors to route http middlewares
 	interceptors := []connect.Interceptor{
 		// outermost
 		interceptor.NewRecoverer(),

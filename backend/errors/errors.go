@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/nownabe/golink/go/clog"
+	"github.com/nownabe/golink/backend/clog"
 )
 
 func New(msg string) error {

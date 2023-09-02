@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/bufbuild/connect-go"
-	"github.com/nownabe/golink/go/clog"
-	"github.com/nownabe/golink/go/errors"
+	"github.com/nownabe/golink/backend/clog"
+	"github.com/nownabe/golink/backend/errors"
 )
 
 const (

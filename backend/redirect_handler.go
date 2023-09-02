@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
-	"github.com/nownabe/golink/go/clog"
-	"github.com/nownabe/golink/go/errors"
+	"github.com/nownabe/golink/backend/clog"
+	"github.com/nownabe/golink/backend/errors"
 )
 
 type redirectHandler struct {

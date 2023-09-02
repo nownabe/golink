@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/nownabe/golink/go/golinkcontext"
+	"github.com/nownabe/golink/backend/golinkcontext"
 )
 
 const (

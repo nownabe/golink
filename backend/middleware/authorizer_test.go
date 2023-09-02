@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/nownabe/golink/backend/golinkcontext"
 	"github.com/nownabe/golink/backend/middleware"
-	"github.com/nownabe/golink/go/golinkcontext"
 )
 
 func userContextRecordHandler(email, userID *string) http.Handler {

@@ -15,7 +15,7 @@ import (
 	"github.com/google/go-cmp/cmp/cmpopts"
 	golinkv1 "github.com/nownabe/golink/backend/gen/golink/v1"
 	"github.com/nownabe/golink/backend/gen/golink/v1/golinkv1connect"
-	"github.com/nownabe/golink/go/golinkcontext"
+	"github.com/nownabe/golink/backend/golinkcontext"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"

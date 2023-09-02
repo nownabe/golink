@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log/slog"
 	"os"
 	"sync/atomic"
-	"log/slog"
 
-	"github.com/nownabe/golink/go/clog/clogcontext"
+	"github.com/nownabe/golink/backend/clog/clogcontext"
 )
 
 var defaultLogger atomic.Value

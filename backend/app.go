@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
+	"github.com/nownabe/golink/backend/clog"
+	"github.com/nownabe/golink/backend/errors"
 	"github.com/nownabe/golink/backend/middleware"
-	"github.com/nownabe/golink/go/clog"
-	"github.com/nownabe/golink/go/errors"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 )
