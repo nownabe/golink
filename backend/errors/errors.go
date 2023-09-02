@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"runtime"
+
+	"github.com/nownabe/golink/backend/clog"
 )
 
 func New(msg string) error {
@@ -62,10 +64,10 @@ func Is(err error, target error) bool {
 }
 
 type wrapped struct {
-	err   error
-	msg   string
-	stack []uintptr
-	// TODO: context *clog.ErrorContext
+	err     error
+	msg     string
+	stack   []uintptr
+	context *clog.ErrorContext
 }
 
 func (w *wrapped) Error() string {
@@ -79,11 +81,9 @@ func (w *wrapped) Unwrap() error {
 	return w.err
 }
 
-/*
 func (w *wrapped) ErrorContext() *clog.ErrorContext {
 	return w.context
 }
-*/
 
 func (w *wrapped) Stack() []byte {
 	buf := bytes.Buffer{}

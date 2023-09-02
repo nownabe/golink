@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/nownabe/golink/backend/clog"
-	"github.com/nownabe/golink/go/errors"
+	"github.com/nownabe/golink/backend/errors"
 )
 
 func NewRecoverer() Middleware {

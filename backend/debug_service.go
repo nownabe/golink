@@ -5,8 +5,8 @@ import (
 
 	"github.com/bufbuild/connect-go"
 	"github.com/nownabe/golink/backend/clog"
+	"github.com/nownabe/golink/backend/errors"
 	golinkv1 "github.com/nownabe/golink/backend/gen/golink/v1"
-	"github.com/nownabe/golink/go/errors"
 )
 
 type debugService struct{}
