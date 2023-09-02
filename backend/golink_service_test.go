@@ -2,6 +2,7 @@ package backend
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -147,7 +148,8 @@ func TestService_CreateGolink_AlreadyExists(t *testing.T) {
 	}
 
 	_, err = s.CreateGolink(ctx, connect.NewRequest(req))
-	if err, ok := err.(*connect.Error); !ok || err.Code() != connect.CodeAlreadyExists {
+	var cerr *connect.Error
+	if ok := errors.As(err, &cerr); !ok || cerr.Code() != connect.CodeAlreadyExists {
 		t.Errorf("got %v, want %v", err, connect.CodeAlreadyExists)
 	}
 }
@@ -663,7 +665,8 @@ func TestService_UpdateGolink_PermissionDenied(t *testing.T) {
 	}
 
 	_, err := s.UpdateGolink(ctx, connect.NewRequest(req))
-	if err, ok := err.(*connect.Error); !ok || err.Code() != connect.CodePermissionDenied {
+	var cerr *connect.Error
+	if ok := errors.As(err, &cerr); !ok || cerr.Code() != connect.CodePermissionDenied {
 		t.Errorf("got %v, want %v", err, connect.CodePermissionDenied)
 	}
 }
@@ -680,7 +683,8 @@ func TestService_UpdateGolink_NotFound(t *testing.T) {
 	}
 
 	_, err := s.UpdateGolink(ctx, connect.NewRequest(req))
-	if err, ok := err.(*connect.Error); !ok || err.Code() != connect.CodeNotFound {
+	var cerr *connect.Error
+	if ok := errors.As(err, &cerr); !ok || cerr.Code() != connect.CodeNotFound {
 		t.Errorf("got %v, want %v", err, connect.CodeNotFound)
 	}
 }
@@ -727,7 +731,8 @@ func TestService_DeleteGolink_PermissionDenied(t *testing.T) {
 	req := &golinkv1.DeleteGolinkRequest{Name: o.Name}
 
 	_, err := s.DeleteGolink(ctx, connect.NewRequest(req))
-	if err, ok := err.(*connect.Error); !ok || err.Code() != connect.CodePermissionDenied {
+	var cerr *connect.Error
+	if ok := errors.As(err, &cerr); !ok || cerr.Code() != connect.CodePermissionDenied {
 		t.Errorf("got %v, want %v", err, connect.CodePermissionDenied)
 	}
 }
@@ -741,7 +746,8 @@ func TestService_DeleteGolink_NotFound(t *testing.T) {
 	req := &golinkv1.DeleteGolinkRequest{Name: "link-name"}
 
 	_, err := s.DeleteGolink(ctx, connect.NewRequest(req))
-	if err, ok := err.(*connect.Error); !ok || err.Code() != connect.CodeNotFound {
+	var cerr *connect.Error
+	if ok := errors.As(err, &cerr); !ok || cerr.Code() != connect.CodeNotFound {
 		t.Errorf("got %v, want %v", err, connect.CodeNotFound)
 	}
 }
@@ -794,7 +800,8 @@ func TestService_AddOwner(t *testing.T) {
 			got, err := s.AddOwner(ctx, connect.NewRequest(req))
 
 			if tt.wantErr != noErr {
-				if err, ok := err.(*connect.Error); !ok || err.Code() != tt.wantErr {
+				var cerr *connect.Error
+				if ok := errors.As(err, &cerr); !ok || cerr.Code() != tt.wantErr {
 					t.Errorf("err got %v, want %v", err, tt.wantErr)
 				}
 				return
@@ -878,7 +885,8 @@ func TestService_RemoveOwner(t *testing.T) {
 			got, err := s.RemoveOwner(ctx, connect.NewRequest(req))
 
 			if tt.wantErr != noErr {
-				if err, ok := err.(*connect.Error); !ok || err.Code() != tt.wantErr {
+				var cerr *connect.Error
+				if ok := errors.As(err, &cerr); !ok || cerr.Code() != tt.wantErr {
 					t.Errorf("err got %v, want %v", err, tt.wantErr)
 				}
 				return
