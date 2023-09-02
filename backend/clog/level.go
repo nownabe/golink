@@ -9,7 +9,7 @@ const (
 	// LevelDefault means the log entry has no assigned severity level.
 	LevelDefault = slog.Level(0)
 
-	// LevelDebug means debug or trace information
+	// LevelDebug means debug or trace information.
 	LevelDebug = slog.Level(100)
 
 	// LevelInfo means routine information, such as ongoing status or performance.

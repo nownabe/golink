@@ -128,8 +128,10 @@ type flushHijackWriterWrapper struct {
 	*baseWriterWrapper
 }
 
-var _ http.Flusher = &flushHijackWriterWrapper{}
-var _ http.Hijacker = &flushHijackWriterWrapper{}
+var (
+	_ http.Flusher  = &flushHijackWriterWrapper{}
+	_ http.Hijacker = &flushHijackWriterWrapper{}
+)
 
 func (w *flushHijackWriterWrapper) Flush() {
 	w.wroteHeader = true
@@ -146,9 +148,11 @@ type httpFancyWriterWrapper struct {
 	*baseWriterWrapper
 }
 
-var _ http.Flusher = &httpFancyWriterWrapper{}
-var _ http.Hijacker = &httpFancyWriterWrapper{}
-var _ io.ReaderFrom = &httpFancyWriterWrapper{}
+var (
+	_ http.Flusher  = &httpFancyWriterWrapper{}
+	_ http.Hijacker = &httpFancyWriterWrapper{}
+	_ io.ReaderFrom = &httpFancyWriterWrapper{}
+)
 
 func (w *httpFancyWriterWrapper) Flush() {
 	w.wroteHeader = true
@@ -179,8 +183,10 @@ type http2FancyWriterWrapper struct {
 	*baseWriterWrapper
 }
 
-var _ http.Flusher = &http2FancyWriterWrapper{}
-var _ http.Pusher = &http2FancyWriterWrapper{}
+var (
+	_ http.Flusher = &http2FancyWriterWrapper{}
+	_ http.Pusher  = &http2FancyWriterWrapper{}
+)
 
 func (w *http2FancyWriterWrapper) Flush() {
 	w.wroteHeader = true

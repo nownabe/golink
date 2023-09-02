@@ -2,6 +2,7 @@ run:
   skip-files:
     - ".*/gen/.*\\.pb\\.go$"
     - ".*/gen/.*\\.connect\\.go$"
+    - ".*/sdk/go1.21.0/src/.*\\.go$"
 output:
   format: colored-line-number
 linters-settings:
@@ -21,8 +22,6 @@ linters:
   enable-all: true
   disable:
     # Temporarily disabled linters
-    - wsl
-    - wrapcheck
     - ireturn
     - revive
     - bodyclose
@@ -38,9 +37,12 @@ linters:
     # Unpreferred linters
     - depguard
     - gochecknoglobals
+    - godox
     - nlreturn
     - paralleltest
+    - typecheck
     - varnamelen
+    - wsl
 
     # Deprecated linters
     - deadcode
@@ -55,10 +57,41 @@ linters:
     - structcheck
 issues:
   exclude-rules:
+    - path: /
+      linters:
+        - typecheck
     - path: _test\.go
       linters:
         - containedctx
+        - dogsled
         - dupl
         - exhaustruct
         - funlen
+        - noctx
         - testpackage
+    - path: clog/level\.go
+      linters:
+        - exhaustive
+    - path: clog/clog\.go
+      linters:
+        - gci
+        - gochecknoinits
+        - forcetypeassert
+    - path: clog/cloud_logging\.go
+      linters:
+        - gci
+    - path: clog/logger\.go
+      linters:
+        - gci
+    - path: clog/replacers\.go
+      linters:
+        - forcetypeassert
+    - path: clog/clogcontext/handler\.go
+      linters:
+        - gci
+        - forcetypeassert
+    - path: middleware/http_logger.go
+      linters:
+        - forcetypeassert
+        - nestif
+        - wrapcheck

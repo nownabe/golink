@@ -3,7 +3,6 @@ package clog_test
 import (
 	"context"
 	"errors"
-	"fmt"
 	"runtime"
 	"testing"
 )
@@ -54,8 +53,6 @@ func TestSourceHandler_Err(t *testing.T) {
 			"function": frame.Function,
 		},
 	}
-
-	fmt.Println(w.String())
 
 	w.expect(t, want)
 }

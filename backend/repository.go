@@ -27,7 +27,11 @@ func (r *repository) Transaction(
 	ctx context.Context,
 	f func(ctx context.Context, tx *firestore.Transaction) error,
 ) error {
-	return r.firestore.RunTransaction(ctx, f)
+	if err := r.firestore.RunTransaction(ctx, f); err != nil {
+		return errors.Wrap(err, "r.firestore.RunTransaction(ctx, f)")
+	}
+
+	return nil
 }
 
 func (r *repository) TxExists(ctx context.Context, tx *firestore.Transaction, name string) (bool, error) {

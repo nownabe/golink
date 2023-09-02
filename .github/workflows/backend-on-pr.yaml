@@ -43,5 +43,6 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           working-directory: ./backend
+          skip-cache: true
           version: v1.53.3
-          args: --config ../.golangci.yaml
+          args: --config=.golangci.yaml

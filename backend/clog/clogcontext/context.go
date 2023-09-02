@@ -22,3 +22,13 @@ func WithLabel(ctx context.Context, key, value string) context.Context {
 	m.Store(key, value)
 	return context.WithValue(ctx, keyLabels{}, m)
 }
+
+func RequestIDFrom(ctx context.Context) (string, bool) {
+	reqID, ok := ctx.Value(keyRequestID{}).(string)
+	return reqID, ok
+}
+
+func LabelFrom(ctx context.Context) (*sync.Map, bool) {
+	m, ok := ctx.Value(keyLabels{}).(*sync.Map)
+	return m, ok
+}

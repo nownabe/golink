@@ -1,38 +1,32 @@
-package clogcontext
+package clog
 
 import (
 	"context"
 	"fmt"
 	"log/slog"
-	"sync"
 
+	"github.com/nownabe/golink/backend/clog/clogcontext"
 	"go.opentelemetry.io/otel/trace"
 )
 
-const (
-	spanIDKey = "logging.googleapis.com/spanId"
-	traceKey  = "logging.googleapis.com/trace"
-	labelsKey = "logging.googleapis.com/labels"
-)
-
-func NewHandler(h slog.Handler, projectID string) slog.Handler {
-	return &handler{
+func newContextHandler(h slog.Handler, projectID string) slog.Handler {
+	return &contextHandler{
 		Handler:   h,
 		projectID: projectID,
 	}
 }
 
-type handler struct {
+type contextHandler struct {
 	slog.Handler
 	projectID string
 }
 
-func (h *handler) Enabled(ctx context.Context, l slog.Level) bool {
+func (h *contextHandler) Enabled(ctx context.Context, l slog.Level) bool {
 	return h.Handler.Enabled(ctx, l)
 }
 
-func (h *handler) Handle(ctx context.Context, r slog.Record) error {
-	if reqID, ok := ctx.Value(keyRequestID{}).(string); ok {
+func (h *contextHandler) Handle(ctx context.Context, r slog.Record) error {
+	if reqID, ok := clogcontext.RequestIDFrom(ctx); ok {
 		r.AddAttrs(slog.String("request_id", reqID))
 	}
 
@@ -41,7 +35,7 @@ func (h *handler) Handle(ctx context.Context, r slog.Record) error {
 		r.AddAttrs(slog.String(spanIDKey, spanCtx.SpanID().String()))
 	}
 
-	if m, ok := ctx.Value(keyLabels{}).(*sync.Map); ok {
+	if m, ok := clogcontext.LabelFrom(ctx); ok {
 		var attrs []any
 		m.Range(func(key, value any) bool {
 			attrs = append(attrs, slog.String(key.(string), value.(string)))
@@ -53,15 +47,15 @@ func (h *handler) Handle(ctx context.Context, r slog.Record) error {
 	return h.Handler.Handle(ctx, r)
 }
 
-func (h *handler) WithAttrs(attrs []slog.Attr) slog.Handler {
-	return &handler{
+func (h *contextHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
+	return &contextHandler{
 		Handler:   h.Handler.WithAttrs(attrs),
 		projectID: h.projectID,
 	}
 }
 
-func (h *handler) WithGroup(name string) slog.Handler {
-	return &handler{
+func (h *contextHandler) WithGroup(name string) slog.Handler {
+	return &contextHandler{
 		Handler:   h.Handler.WithGroup(name),
 		projectID: h.projectID,
 	}
