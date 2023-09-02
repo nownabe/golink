@@ -9,13 +9,6 @@ import (
 	"github.com/nownabe/golink/backend/errors"
 )
 
-const (
-	googHeaderPrefix   = "accounts.google.com:"
-	headerUserEmail    = "X-Appengine-User-Email"
-	headerUserID       = "X-Appengine-User-Id"
-	headerTraceContext = "X-Cloud-Trace-Context"
-)
-
 // https://github.com/golang/go/issues/25448
 func NewRecoverer() connect.UnaryInterceptorFunc {
 	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
@@ -42,27 +35,4 @@ func NewRecoverer() connect.UnaryInterceptorFunc {
 			return res, err
 		})
 	})
-}
-
-const (
-	headerContentLength = "Content-Length"
-	headerUserAgent     = "User-Agent"
-	headerUserIP        = "X-Appengine-User-Ip"
-	headerForwardedFor  = "X-Forwarded-For"
-	headerRealIP        = "X-Real-Ip"
-	headerReferer       = "Referer"
-)
-
-func getRemoteIP(req connect.AnyRequest) string {
-	if ip := req.Header().Get(headerForwardedFor); ip != "" {
-		return ip
-	}
-	if ip := req.Header().Get(headerUserIP); ip != "" {
-		return ip
-	}
-	if ip := req.Header().Get(headerRealIP); ip != "" {
-		return ip
-	}
-
-	return ""
 }

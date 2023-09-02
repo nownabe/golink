@@ -25,7 +25,9 @@ func (l *Logger) logWithSource(ctx context.Context, level slog.Level, msg string
 	l.Logger.Log(ctx, level, msg, args...)
 }
 
-func (l *Logger) logAttrsWithSource(ctx context.Context, level slog.Level, msg string, s *slog.Source, attrs ...slog.Attr) {
+func (l *Logger) logAttrsWithSource(
+	ctx context.Context, level slog.Level, msg string, s *slog.Source, attrs ...slog.Attr,
+) {
 	attrs = append(attrs, slog.Any(sourceLocationKey, s))
 	l.Logger.LogAttrs(ctx, level, msg, attrs...)
 }
@@ -118,7 +120,8 @@ func (l *Logger) err(ctx context.Context, lv slog.Level, err error) {
 	var attrs []slog.Attr
 
 	if ee, ok := err.(ErrorEvent); ok {
-		attrs = append(attrs, slog.String("@type", "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent"))
+		attrs = append(attrs,
+			slog.String("@type", "type.googleapis.com/google.devtools.clouderrorreporting.v1beta1.ReportedErrorEvent"))
 
 		if ec := ee.ErrorContext(); ec != nil {
 			attrs = append(attrs, slog.Group("context", ec.LogAttr()))

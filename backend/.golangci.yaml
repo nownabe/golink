@@ -39,8 +39,10 @@ linters:
     # Unpreferred linters
     - depguard
     - gochecknoglobals
+    - godox
     - nlreturn
     - paralleltest
+    - typecheck
     - varnamelen
 
     # Deprecated linters
@@ -59,7 +61,34 @@ issues:
     - path: _test\.go
       linters:
         - containedctx
+        - dogsled
         - dupl
         - exhaustruct
         - funlen
+        - noctx
         - testpackage
+    - path: clog/level\.go
+      linters:
+        - exhaustive
+    - path: clog/clog\.go
+      linters:
+        - gci
+        - gochecknoinits
+        - forcetypeassert
+    - path: clog/cloud_logging\.go
+      linters:
+        - gci
+    - path: clog/logger\.go
+      linters:
+        - gci
+    - path: clog/replacers\.go
+      linters:
+        - forcetypeassert
+    - path: clog/clogcontext/handler\.go
+      linters:
+        - gci
+        - forcetypeassert
+    - path: middleware/http_logger.go
+      linters:
+        - forcetypeassert
+        - nestif

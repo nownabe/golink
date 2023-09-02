@@ -9,9 +9,11 @@ import (
 	"github.com/nownabe/golink/backend/clog"
 )
 
-type anyVal struct{}
-type anyStringVal struct{}
-type nonNilVal struct{}
+type (
+	anyVal       struct{}
+	anyStringVal struct{}
+	nonNilVal    struct{}
+)
 
 type expectation map[string]any
 
@@ -28,7 +30,7 @@ func (w *stubWriter) expect(t *testing.T, e expectation) {
 	}
 
 	got := map[string]any{}
-	if err := json.Unmarshal([]byte(l), &got); err != nil {
+	if err := json.Unmarshal(l, &got); err != nil {
 		panic(err)
 	}
 

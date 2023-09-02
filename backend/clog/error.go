@@ -31,17 +31,19 @@ type ErrorContext struct {
 	SourceReferences []*SourceReference
 }
 
-// TODO
+// TODO.
 func (c *ErrorContext) LogValue() slog.Value {
 	return slog.GroupValue()
 }
 
-// TODO
+// TODO.
 func (c *ErrorContext) LogAttr() slog.Attr {
 	return slog.Group("context", slog.String("dummy", "dummy"))
 }
 
-// TODO
-type HTTPRequestContext struct{}
-type ReportLocation struct{}
-type SourceReference struct{}
+// TODO.
+type (
+	HTTPRequestContext struct{}
+	ReportLocation     struct{}
+	SourceReference    struct{}
+)
