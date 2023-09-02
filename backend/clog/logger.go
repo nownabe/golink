@@ -10,6 +10,10 @@ type Logger struct {
 	*slog.Logger
 }
 
+func (l *Logger) Handler() slog.Handler {
+	return l.Logger.Handler()
+}
+
 func (l *Logger) log(ctx context.Context, level slog.Level, msg string, args ...any) {
 	// skip [runtime.Callers, getSource, this function, clog exported functions]
 	s := getSource(4)
