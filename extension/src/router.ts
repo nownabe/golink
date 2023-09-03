@@ -9,17 +9,17 @@ export type RequestMessage<T> = {
   sendResponse: (response?: any) => void;
 };
 
-export interface Response<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-}
+export type Response<T> =
+  | {
+      success: true;
+      data: T;
+    }
+  | {
+      success: false;
+      error: string;
+    };
 
-export interface SimpleResponse extends Response<void> {
-  success: boolean;
-}
-
-export type HandlerFn<T, S> = (request: Request<T>) => Promise<Response<S>>;
+export type HandlerFn<T, S> = (request: Request<T>) => Promise<S>;
 
 type listenerFn = (
   request: Request<any>,
@@ -57,12 +57,28 @@ export class Router {
 
       (async () => {
         console.log(`[Router][${name}] started handling message with`, data);
-        const response = await handler({ name, data });
-        sendResponse(response);
-        console.log(
-          `[Router][${name}] finished handling message with`,
-          response
-        );
+        try {
+          const responseData = await handler({ name, data });
+          const response = { success: true, data: responseData };
+          sendResponse(response);
+          console.log(
+            `[Router][${name}] finished handling message with`,
+            response
+          );
+        } catch (e) {
+          console.error(`[Router][${name}] failed to handle message`, e);
+
+          var msg;
+          if (e instanceof Error) {
+            msg = e.message;
+          } else {
+            msg = "unknown message";
+          }
+          sendResponse({
+            success: false,
+            error: msg,
+          });
+        }
       })();
 
       // Returning true indicates that the response will be sent asynchronously.
@@ -71,7 +87,7 @@ export class Router {
   }
 }
 
-export async function send<T, S>(name: string, req: T): Promise<S> {
+export async function send<T, S>(name: string, req: T): Promise<Response<S>> {
   console.log(`[send] sending request`, req);
   const msg: Request<T> = {
     name,
