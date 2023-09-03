@@ -1,6 +1,7 @@
 import { getGolinkUrl } from "./storage";
 
 export async function updateRedirectRule() {
+  console.debug("[updateRedirectRule] started");
   const ruleId = 1;
 
   const url = await getGolinkUrl();
@@ -10,13 +11,13 @@ export async function updateRedirectRule() {
     return;
   }
 
-  console.log(`[updateRedirectRule] updating redirect rule to ${url}`);
+  console.debug(`[updateRedirectRule] updating redirect rule to ${url}`);
   let host;
   try {
     host = new URL(url).host;
   } catch (e) {
-    console.log("Invalid URL:", url);
-    console.log(e);
+    console.error("Invalid URL:", url);
+    console.error(e);
     return;
   }
 
@@ -39,7 +40,9 @@ export async function updateRedirectRule() {
     removeRuleIds: [ruleId],
     addRules: [redirectRule],
   };
+  console.debug("[updateRedirectRule] updateRuleOptions", updateRuleOptions);
 
   await chrome.declarativeNetRequest.updateDynamicRules(updateRuleOptions);
-  console.log("[updateRedirectRule] updated redirect rule");
+  console.log(`[updateRedirectRule] updated redirect rule to ${url}`);
+  console.debug("[updateRedirectRule] finished");
 }

@@ -9,7 +9,7 @@ import {
 import { Router } from "./router";
 
 async function initialize() {
-  console.log("[initialize] initializing");
+  console.debug("[initialize] started");
 
   const router = new Router();
   router.on(saveGolinkUrlName, saveGolinkUrl);
@@ -17,12 +17,11 @@ async function initialize() {
   router.on(isManagedName, isManaged);
   chrome.runtime.onMessage.addListener(router.listener());
 
-  // await updateRedirectRule();
-  console.log("[initialize] initialized");
+  console.debug("[initialize] finished");
 }
 
 function onInstalled() {
-  console.log("[onInstalled] started");
+  console.debug("[onInstalled] started");
   (async () => {
     try {
       await initialize();
@@ -31,6 +30,7 @@ function onInstalled() {
     }
   })();
 
+  console.debug("[onInstalled] finished");
   return true;
 }
 

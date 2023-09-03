@@ -40,7 +40,7 @@ export class Router {
 
   public listener(): listenerFn {
     return (request, sender, sendResponse) => {
-      console.log("[Router] received message", request, sender);
+      console.debug("[Router] received message", request, sender);
 
       const { name, data } = request;
 
@@ -56,12 +56,12 @@ export class Router {
       }
 
       (async () => {
-        console.log(`[Router][${name}] started handling message with`, data);
+        console.debug(`[Router][${name}] started handling message with`, data);
         try {
           const responseData = await handler({ name, data });
           const response = { success: true, data: responseData };
           sendResponse(response);
-          console.log(
+          console.debug(
             `[Router][${name}] finished handling message with`,
             response
           );
