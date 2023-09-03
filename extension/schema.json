@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "golinkInstanceUrl": {
+      "title": "Golink instance URL",
+      "type": "string",
+      "description": "The URL of your Golink instance, e.g. https://your-golink.an.r.appspot.com."
+    }
+  }
+}

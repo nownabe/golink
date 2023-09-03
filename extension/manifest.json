@@ -14,9 +14,13 @@
   },
 
   "background": {
-    "service_worker": "dist/service-worker.js"
+    "service_worker": "dist/service-worker.js",
+    "type": "module"
   },
   "host_permissions": ["http://go/*", "https://go/*"],
   "options_page": "dist/options.html",
-  "permissions": ["declarativeNetRequest", "storage", "tabs"]
+  "permissions": ["declarativeNetRequest", "storage", "tabs"],
+  "storage": {
+    "managed_schema": "schema.json"
+  }
 }

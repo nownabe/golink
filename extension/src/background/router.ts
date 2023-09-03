@@ -1,7 +1,7 @@
-export interface Request<T> {
+export type Request<T> = {
   name: string;
   data: T;
-}
+};
 
 export type RequestMessage<T> = {
   request: Request<T>;
@@ -85,15 +85,4 @@ export class Router {
       return true;
     };
   }
-}
-
-export async function send<T, S>(name: string, req: T): Promise<Response<S>> {
-  console.log(`[send] sending request`, req);
-  const msg: Request<T> = {
-    name,
-    data: req,
-  };
-  const response = await chrome.runtime.sendMessage(msg);
-  console.log(`[send] received response`, response);
-  return response;
 }

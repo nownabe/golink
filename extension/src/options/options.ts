@@ -1,31 +1,46 @@
 import {
-  SaveGolinkUrlRequestData,
-  SaveGolinkUrlResponseData,
-  saveGolinkUrlName,
-} from "../messageListeners";
-import { send } from "../router";
-
-const storageKey = "golinkUrl";
+  fetchGolinkUrl,
+  fetchIsManaged,
+  saveGolinkUrl,
+} from "../backgroundServices";
 
 async function onSave() {
   const url = (<HTMLInputElement>document.getElementById("option-url")).value;
-  await chrome.storage.sync.set({ [storageKey]: url });
-  const response = await send<
-    SaveGolinkUrlRequestData,
-    SaveGolinkUrlResponseData
-  >(saveGolinkUrlName, {
-    url,
-  });
-  alert("Saved!");
-}
-
-async function restoreOptions() {
-  const url = (await chrome.storage.sync.get(storageKey))[storageKey];
-  const input = <HTMLInputElement>document.getElementById("option-url");
-  if (input) {
-    input.value = url ?? "";
+  try {
+    await saveGolinkUrl(url);
+    alert("Saved!");
+  } catch (e) {
+    console.error("[options.onSave] saveGolinkUrl failed:", e);
+    alert(`Failed to save.`);
   }
 }
 
-document.addEventListener("DOMContentLoaded", restoreOptions);
+async function initialize() {
+  const url = (await fetchGolinkUrl()) ?? "";
+  const input = <HTMLInputElement>document.getElementById("option-url");
+  input.value = url;
+
+  const isManaged = await fetchIsManaged();
+  if (isManaged) {
+    input.disabled = true;
+    (<HTMLButtonElement>document.getElementById("save")).disabled = true;
+    document.getElementById("managed")!.hidden = false;
+  }
+}
+
+function onDOMContentLoaded() {
+  console.debug("[options.onDOMContentLoaded] started");
+  (async () => {
+    try {
+      await initialize();
+    } catch (e) {
+      console.error("[options.onDOMContentLoaded] initialize failed:", e);
+    }
+  })();
+  console.debug("[options.onDOMContentLoaded] finished");
+
+  return true;
+}
+
+document.addEventListener("DOMContentLoaded", onDOMContentLoaded);
 document.getElementById("save")?.addEventListener("click", onSave);
