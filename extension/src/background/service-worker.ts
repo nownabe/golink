@@ -7,6 +7,7 @@ import {
   saveGolinkUrlName,
 } from "./messageListeners";
 import { Router } from "./router";
+import { updateRedirectRule } from "./updateRedirectRule";
 
 async function initialize() {
   console.debug("[initialize] started");
@@ -16,6 +17,8 @@ async function initialize() {
   router.on(fetchGolinkUrlName, fetchGolinkUrl);
   router.on(isManagedName, isManaged);
   chrome.runtime.onMessage.addListener(router.listener());
+
+  await updateRedirectRule();
 
   console.debug("[initialize] finished");
 }
