@@ -1,102 +1,50 @@
-const golinkUrlKey = "golinkUrl";
-
-async function updateRedirectRule(url: string) {
-  const ruleId = 1;
-
-  console.log(`[updateRedirectRule] updating redirect rule to ${url}`);
-  let host;
-  try {
-    host = new URL(url).host;
-  } catch (e) {
-    console.log("Invalid URL:", url);
-    console.log(e);
-    return;
-  }
-
-  const redirectRule = {
-    id: ruleId,
-    priority: 1,
-    action: {
-      type: "redirect",
-      redirect: {
-        transform: { scheme: "https", host: host },
-      },
-    },
-    condition: {
-      urlFilter: "*://go/*",
-      resourceTypes: ["main_frame"],
-    },
-  };
-
-  const updateRuleOptions = {
-    removeRuleIds: [ruleId],
-    addRules: [redirectRule],
-  };
-
-  await chrome.declarativeNetRequest.updateDynamicRules(updateRuleOptions);
-  console.log("[updateRedirectRule] updated redirect rule");
-}
-
-async function saveGolinkUrl(url: string) {
-  await chrome.storage.sync.set({ [golinkUrlKey]: url });
-}
+import {
+  fetchGolinkUrl,
+  fetchGolinkUrlName,
+  isManaged,
+  isManagedName,
+  saveGolinkUrl,
+  saveGolinkUrlName,
+} from "./messageListeners";
+import { Router } from "./router";
+import { updateRedirectRule } from "./updateRedirectRule";
 
 async function initialize() {
-  console.log("Initializing");
+  console.debug("[initialize] started");
 
-  const url = (await chrome.storage.sync.get(golinkUrlKey))[golinkUrlKey];
+  const router = new Router();
+  router.on(saveGolinkUrlName, saveGolinkUrl);
+  router.on(fetchGolinkUrlName, fetchGolinkUrl);
+  router.on(isManagedName, isManaged);
+  chrome.runtime.onMessage.addListener(router.listener());
 
-  await updateRedirectRule(url);
+  await updateRedirectRule();
 
-  chrome.storage.onChanged.addListener(
-    (
-      changes: { [key: string]: chrome.storage.StorageChange },
-      namespace: string
-    ) => {
-      (async () => {
-        if (namespace === "sync" && golinkUrlKey in changes) {
-          console.log(
-            "[storage.onChanged] Golink URL changed",
-            changes[golinkUrlKey].newValue
-          );
-        }
-      })();
-    }
-  );
-
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log("[runtime.onMessage] received message", request, sender);
-    (async () => {
-      if (request.type === "saveGolinkUrl") {
-        await saveGolinkUrl(request.url);
-        console.log(
-          "[runtime.onMessage] saved Golink URL successfully",
-          request.url
-        );
-        await updateRedirectRule(request.url);
-        console.log("[runtime.onMessage] updated redirect rule successfully");
-        sendResponse({ success: true });
-        console.log("[runtime.onMessage] sent response");
-      }
-    })();
-  });
-
-  console.log("Initialized");
+  console.debug("[initialize] finished");
 }
 
 function onInstalled() {
-  console.log("onInstalled");
+  console.debug("[onInstalled] started");
   (async () => {
-    await initialize();
+    try {
+      await initialize();
+    } catch (e) {
+      console.error("[onInstalled]", e);
+    }
   })();
+
+  console.debug("[onInstalled] finished");
+  return true;
 }
 
 function onStartup() {
-  console.log("onStartup");
+  console.log("[onStartup]");
   (async () => {
     await initialize();
   })();
+
+  return true;
 }
 
 chrome.runtime.onInstalled.addListener(onInstalled);
-chrome.runtime.onStartup.addListener(onStartup);
+// chrome.runtime.onStartup.addListener(onStartup);

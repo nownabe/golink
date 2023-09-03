@@ -9,8 +9,9 @@
     "build:release:clean": "rm -rf dist",
     "build:release:icons": "cp -r icons dist/",
     "build:release:manifest": "cp manifest.release.json dist/manifest.json",
+    "build:release:schema": "cp schema.json dist/schema.json",
     "build:release:zip": "cd dist && zip ../extension.zip * icons/*",
-    "build:release": "npm run build:release:clean && npm run build && npm run build:release:icons && npm run build:release:manifest && npm run build:release:zip",
+    "build:release": "npm run build:release:clean && npm run build && npm run build:release:icons && npm run build:release:manifest && npm run build:release:schema && npm run build:release:zip",
     "check": "tsc --noEmit"
   },
   "devDependencies": {
