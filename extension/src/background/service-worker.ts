@@ -1,6 +1,9 @@
-const golinkUrlKey = "golinkUrl";
+import { saveGolinkUrl, saveGolinkUrlName } from "../messageListeners";
+import { Router, SimpleResponse } from "../router";
 
-async function updateRedirectRule(url: string) {
+export const golinkUrlKey = "golinkUrl";
+
+export async function updateRedirectRule(url: string) {
   const ruleId = 1;
 
   console.log(`[updateRedirectRule] updating redirect rule to ${url}`);
@@ -37,12 +40,8 @@ async function updateRedirectRule(url: string) {
   console.log("[updateRedirectRule] updated redirect rule");
 }
 
-async function saveGolinkUrl(url: string) {
-  await chrome.storage.sync.set({ [golinkUrlKey]: url });
-}
-
 async function initialize() {
-  console.log("Initializing");
+  console.log("[initialize] initializing");
 
   const url = (await chrome.storage.sync.get(golinkUrlKey))[golinkUrlKey];
 
@@ -64,35 +63,22 @@ async function initialize() {
     }
   );
 
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    console.log("[runtime.onMessage] received message", request, sender);
-    (async () => {
-      if (request.type === "saveGolinkUrl") {
-        await saveGolinkUrl(request.url);
-        console.log(
-          "[runtime.onMessage] saved Golink URL successfully",
-          request.url
-        );
-        await updateRedirectRule(request.url);
-        console.log("[runtime.onMessage] updated redirect rule successfully");
-        sendResponse({ success: true });
-        console.log("[runtime.onMessage] sent response");
-      }
-    })();
-  });
+  const router = new Router();
+  router.on(saveGolinkUrlName, saveGolinkUrl);
+  chrome.runtime.onMessage.addListener(router.listener());
 
-  console.log("Initialized");
+  console.log("[initialize] initialized");
 }
 
 function onInstalled() {
-  console.log("onInstalled");
+  console.log("[onInstalled]");
   (async () => {
     await initialize();
   })();
 }
 
 function onStartup() {
-  console.log("onStartup");
+  console.log("[onStartup]");
   (async () => {
     await initialize();
   })();

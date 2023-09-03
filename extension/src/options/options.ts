@@ -1,13 +1,21 @@
+import {
+  SaveGolinkUrlRequestData,
+  SaveGolinkUrlResponseData,
+  saveGolinkUrlName,
+} from "../messageListeners";
+import { send } from "../router";
+
 const storageKey = "golinkUrl";
 
 async function onSave() {
   const url = (<HTMLInputElement>document.getElementById("option-url")).value;
   await chrome.storage.sync.set({ [storageKey]: url });
-  const response = await chrome.runtime.sendMessage({
-    type: "saveGolinkUrl",
-    url: url,
+  const response = await send<
+    SaveGolinkUrlRequestData,
+    SaveGolinkUrlResponseData
+  >(saveGolinkUrlName, {
+    url,
   });
-  console.log(response);
   alert("Saved!");
 }
 
