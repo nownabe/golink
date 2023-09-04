@@ -1,0 +1,30 @@
+name: Publish Extension
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'extension/manifest.release.json'
+
+jobs:
+  publish:
+    name: Publish Extension
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: extension
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm ci
+      - run: npm run build:release
+      - name: Release extension
+        uses: npx chrome-webstore-upload-cli@2.2.2 upload --source extension.zip --auto-publish
+        env:
+          EXTENSION_ID: ${{ secrets.EXTENSION_ID }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
