@@ -24,7 +24,7 @@ jobs:
       - name: Release extension
         uses: npx chrome-webstore-upload-cli@2.2.2 upload --source extension.zip --auto-publish
         env:
-          EXTENSION_ID: ${{ secrets.EXTENSION_ID }}
+          EXTENSION_ID: 'clecngohjeflemkblbfdfbjkjnigbjok'
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
