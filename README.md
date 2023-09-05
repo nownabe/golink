@@ -135,6 +135,21 @@ echo "https://$(gcloud app describe --format "get(defaultHostname)")"
 
 Then, enter this URL in Golink Chrome Extension Options. Enjoy using golinks!
 
+## Distribute Extension and Configuration
+
+You can enforce Golink Chrome extension to be installed in your organization members' browsers.
+
+1. Open https://admin.google.com and navigate to Devices > Chrome > Apps & extensions > Users & browsers.
+2. Click the yellow plus button at the bottom right and then click "add from Chrome Web Store".
+3. Enter `clecngohjeflemkblbfdfbjkjnigbjok` in the "View app by ID" textbox and click the "Select" button.
+4. Configure your Golink URL as JSON like follorings:
+
+```js
+{
+  "golinkInstanceUrl": "https://your-golink.an.r.appspot.com"
+}
+```
+
 ## Alternatives
 
 Considering other options? Here are some similar platforms:
