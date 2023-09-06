@@ -1,4 +1,4 @@
-name: backend on pr
+name: backend ci
 
 on:
   pull_request:
@@ -8,6 +8,9 @@ on:
       - backend/go.sum
       - .golangci.yaml
       - .github/workflows/backend-on-pr.yaml
+  push:
+    branches:
+      - main
 
 jobs:
   test:
