@@ -22,7 +22,7 @@ jobs:
       - run: npm ci
       - run: npm run build:release
       - name: Release extension
-        uses: npx chrome-webstore-upload-cli@2.2.2 upload --source extension.zip --auto-publish
+        run: npx chrome-webstore-upload-cli@2.2.2 upload --source extension.zip --auto-publish
         env:
           EXTENSION_ID: 'clecngohjeflemkblbfdfbjkjnigbjok'
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
