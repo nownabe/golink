@@ -1,23 +1,18 @@
-import { getGolinkUrl } from "./storage";
+const ruleId = 1;
 
-export async function updateRedirectRule() {
+export async function updateRedirectRule(url: string) {
   console.debug("[updateRedirectRule] started");
-  const ruleId = 1;
-
-  const url = await getGolinkUrl();
 
   if (!url) {
-    console.error("[updateRedirectRule] golink url is not configured");
+    console.error(`[updateRedirectRule] golink url is empty: '${url}`);
     return;
   }
 
-  console.debug(`[updateRedirectRule] updating redirect rule to ${url}`);
   let host;
   try {
     host = new URL(url).host;
   } catch (e) {
-    console.error("Invalid URL:", url);
-    console.error(e);
+    console.error(`[updateRedirectRUle] invalid url: '${url}:`, e);
     return;
   }
 
@@ -42,7 +37,8 @@ export async function updateRedirectRule() {
   };
   console.debug("[updateRedirectRule] updateRuleOptions", updateRuleOptions);
 
+  console.debug(`[updateRedirectRule] updating redirect rule to ${url}`);
   await chrome.declarativeNetRequest.updateDynamicRules(updateRuleOptions);
-  console.log(`[updateRedirectRule] updated redirect rule to ${url}`);
+
   console.debug("[updateRedirectRule] finished");
 }

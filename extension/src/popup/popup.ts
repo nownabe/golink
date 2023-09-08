@@ -3,7 +3,7 @@ import { createConnectTransport } from "@bufbuild/connect-web";
 import type { PromiseClient } from "@bufbuild/connect";
 
 import { GolinkService } from "../../gen/golink/v1/golink_connect";
-import { fetchGolinkUrl } from "../backgroundServices";
+import { getGolinkUrl } from "../storage";
 
 class GolinkPopup {
   client: PromiseClient<typeof GolinkService> | undefined;
@@ -22,7 +22,7 @@ class GolinkPopup {
   }
 
   public static async create(): Promise<GolinkPopup> {
-    const url = (await fetchGolinkUrl()) ?? null;
+    const url = await getGolinkUrl();
     return new GolinkPopup(url);
   }
 

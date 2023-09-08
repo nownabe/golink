@@ -1,24 +1,22 @@
-import {
-  fetchGolinkUrl,
-  fetchGolinkUrlName,
-  isManaged,
-  isManagedName,
-  saveGolinkUrl,
-  saveGolinkUrlName,
-} from "./messageListeners";
-import { Router } from "./router";
+import { addListenerOnGolinkUrlChanged, getGolinkUrl } from "../storage";
 import { updateRedirectRule } from "./updateRedirectRule";
 
 async function initialize() {
   console.debug("[initialize] started");
 
-  const router = new Router();
-  router.on(saveGolinkUrlName, saveGolinkUrl);
-  router.on(fetchGolinkUrlName, fetchGolinkUrl);
-  router.on(isManagedName, isManaged);
-  chrome.runtime.onMessage.addListener(router.listener());
+  const url = await getGolinkUrl();
+  if (url) {
+    await updateRedirectRule(url);
+  }
 
-  await updateRedirectRule();
+  addListenerOnGolinkUrlChanged((newUrl, oldUrl) => {
+    console.debug(`[golinkChanged] newUrl = '${newUrl}', oldUrl = '${oldUrl}'`);
+    (async () => {
+      if (newUrl) {
+        updateRedirectRule(newUrl);
+      }
+    })();
+  });
 
   console.debug("[initialize] finished");
 }
@@ -37,14 +35,14 @@ function onInstalled() {
   return true;
 }
 
-function onStartup() {
-  console.log("[onStartup]");
-  (async () => {
-    await initialize();
-  })();
+// function onStartup() {
+//   console.log("[onStartup]");
+//   (async () => {
+//     await initialize();
+//   })();
 
-  return true;
-}
+//   return true;
+// }
 
 chrome.runtime.onInstalled.addListener(onInstalled);
 // chrome.runtime.onStartup.addListener(onStartup);
