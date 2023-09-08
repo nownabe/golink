@@ -1,8 +1,10 @@
 run:
+  go: "1.21"
   skip-files:
     - ".*/gen/.*\\.pb\\.go$"
     - ".*/gen/.*\\.connect\\.go$"
     - ".*/sdk/go1.21.0/src/.*\\.go$"
+  timeout: 5m
 output:
   format: colored-line-number
 linters-settings:
