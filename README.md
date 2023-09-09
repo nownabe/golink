@@ -4,6 +4,23 @@ A URL shortener for creating concise, memorable short links, suitable for organi
 
 https://github.com/nownabe/golink/assets/1286807/9337f9f8-b3de-40bd-879c-f21b8d441604
 
+## Alternatives
+
+Considering other options? Here are some similar platforms:
+
+- [GoLinks® | Knowledge Discovery & Link Management Platform](https://www.golinks.io/)
+- [Trotto - Open-Source Go Links](https://www.trot.to/)
+- [tailscale/golink: A private shortlink service for tailnets](https://github.com/tailscale/golink)
+
+Golinks has the following advantages compared to these alternatives:
+
+- Self-hosted: You have full control of Golink backend.
+- Fully-managed: Golink can be built on fully-managed infrastructure.
+- Easy to deploy: Just run a script.
+- Cost-effective: You can get started with Golink at no cost.
+- No DNS configuration: Redirect through the Golink Chrome extension.
+- Chrome extension with [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/intro/): Manifest V3 is more secure than V2 and V2 will be end-of-life.
+
 ## Golink Origin
 
 Golink originated from Google's internal short links.
@@ -21,9 +38,9 @@ If you are curious about history of go/, dive into the stories on these websites
 2. Right-click the extension icon and select **Options**.
 3. Input your Golink URL and then click the **Save** button.
 
-### Setup for Administrators
+## Setup for Administrators
 
-#### Prerequisites
+### Prerequisites
 
 - New Google Cloud project
 - [gcloud](https://cloud.google.com/sdk/docs/install)
@@ -34,7 +51,7 @@ Additionally, you need to execute the following command:
 gcloud auth login
 ```
 
-#### Configure Your Project
+### Configure Your Project
 
 Set your project ID:
 
@@ -42,7 +59,7 @@ Set your project ID:
 gcloud config set project <YOUR-PROJECT-ID>
 ```
 
-#### Deploy Applications
+### Deploy Applications
 
 Clone this repository:
 
@@ -63,7 +80,7 @@ For instance:
 ./deploy.sh us-central1
 ```
 
-#### Configure Identity-Aware Proxy
+### Configure Identity-Aware Proxy
 
 Begin by accessing the [Google Cloud Console](https://console.cloud.google.com/apis/credentials/consent) to set up the OAuth consent screen.
 
@@ -83,7 +100,7 @@ Proceed to [Identity-Aware Proxy](https://console.cloud.google.com/security/iap)
 Turn on IAP for the App Engine app.
 If you encounter an error status before enabling, you can safely disregard it at this time.
 
-#### Add Users
+### Add Users
 
 To make Golink accessible to all members of your organization, execute:
 
@@ -125,7 +142,7 @@ gcloud iap web add-iam-policy-binding \
   --member group:group1@your-company.example.com
 ```
 
-#### Retrieve Your Golink URL
+### Retrieve Your Golink URL
 
 Determine your Golink URL with:
 
@@ -133,9 +150,9 @@ Determine your Golink URL with:
 echo "https://$(gcloud app describe --format "get(defaultHostname)")"
 ```
 
-Then, enter this URL in Golink Chrome Extension Options. Enjoy using golinks!
+Then notify your team members to enter this URL in Golink Chrome Extension Options. Enjoy using golinks!
 
-## Distribute Golink extension to your organization
+### Distribute Golink extension to your organization
 
 You can enforce Golink Chrome extension to be installed in your organization members' browsers.
 
@@ -155,11 +172,3 @@ You can enforce Golink Chrome extension to be installed in your organization mem
 
 ```
 -->
-
-## Alternatives
-
-Considering other options? Here are some similar platforms:
-
-- [GoLinks® | Knowledge Discovery & Link Management Platform](https://www.golinks.io/)
-- [Trotto - Open-Source Go Links](https://www.trot.to/)
-- [tailscale/golink: A private shortlink service for tailnets](https://github.com/tailscale/golink)
