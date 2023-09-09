@@ -1,6 +1,5 @@
-import { updateRedirectRule } from "./background/updateRedirectRule";
-
 const golinkUrlKey = "golinkUrl" as const;
+const isFinishedFirstOpenKey = "isFinishedFirstOpen" as const;
 const managedInstanceUrlKey = "golinkInstanceUrl" as const;
 
 export async function getGolinkUrl(): Promise<string | null> {
@@ -57,4 +56,21 @@ export function addListenerOnGolinkUrlChanged(callback: listenerFn) {
     }
     console.debug(`[onChanged] finished`);
   });
+}
+
+export async function getIsFinishedFirstOpen(): Promise<boolean> {
+  console.debug(`[getIsFinishedFirstOpen] started`);
+  const result = await chrome.storage.local.get(isFinishedFirstOpenKey);
+  const isFinished = result && result[isFinishedFirstOpenKey] ? true : false;
+  console.debug(`[getIsFinishedFirstOpen] isFinished = ${isFinished}`);
+  console.debug(`[getIsFinishedFirstOpen] finished`);
+  return isFinished;
+}
+
+export async function setIsFinishedFirstOpen(
+  isFinished: boolean
+): Promise<void> {
+  console.debug(`[setIsFinishedFirstOpen] started`);
+  await chrome.storage.local.set({ [isFinishedFirstOpenKey]: isFinished });
+  console.debug(`[setIsFinishedFirstOpen] finished`);
 }
