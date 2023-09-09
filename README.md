@@ -14,12 +14,12 @@ Considering other options? Here are some similar platforms:
 
 Golinks has the following advantages compared to these alternatives:
 
-- Self-hosted: You have full control of Golink backend.
-- Fully-managed: Golink can be built on fully-managed infrastructure.
-- Easy to deploy: Just run a script.
-- Cost-effective: You can get started with Golink at no cost.
-- No DNS configuration: Redirect through the Golink Chrome extension.
-- Chrome extension with [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/intro/): Manifest V3 is more secure than V2 and V2 will be end-of-life.
+- **Self-hosted**: You have full control of Golink backend.
+- **Fully-managed**: Golink can be built on fully-managed infrastructure.
+- **Easy to deploy**: You can complete to deploy Golink in just three simple steps.
+- **Cost-effective**: You can get started with Golink at no cost.
+- **No DNS configuration**: Redirect through the Golink Chrome extension.
+- **Chrome extension with [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/intro/)**: Manifest V3 is more secure than V2 and V2 will be end-of-life.
 
 ## Golink Origin
 
@@ -42,8 +42,8 @@ If you are curious about history of go/, dive into the stories on these websites
 
 ### Prerequisites
 
-- New Google Cloud project
-- [gcloud](https://cloud.google.com/sdk/docs/install)
+- [New Google Cloud project](https://cloud.google.com/docs/get-started)
+- [gcloud](https://cloud.google.com/sdk/docs/install) CLI
 
 Additionally, you need to execute the following command:
 
