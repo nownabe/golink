@@ -38,6 +38,7 @@
   prCreation: "immediate", // from :prImmediately in config:base
   prHourlyLimit: 0,
   rangeStrategy: "pin",
+  semanticCommits: "enabled",
   separateMajorMinor: true, // from :separateMajor in config:base
   separateMinorPatch: false, // from :combinePatchMinorReleases in config:base
   updateNotScheduled: true, // from :updateNotScheduled in config:base
