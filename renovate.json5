@@ -33,6 +33,7 @@
   configMigration: true,
   dependencyDashboard: true,
   ignoreUnstable: true, // from :ignoreUnstable in config:base
+  labels: ["renovate"],
   prConcurrentLimit: 0,
   prCreation: "immediate", // from :prImmediately in config:base
   prHourlyLimit: 0,
