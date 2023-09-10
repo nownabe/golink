@@ -19,9 +19,9 @@
   configMigration: true,
   dependencyDashboard: true,
   ignoreUnstable: true, // from :ignoreUnstable in config:base
-  prConcurrentLimit: 20, // from :prConcurrentLimit20 in config:base
+  prConcurrentLimit: 0,
   prCreation: "immediate", // from :prImmediately in config:base
-  prHourlyLimit: 2, // from :prHourlyLimit2 in config:base
+  prHourlyLimit: 0,
   rangeStrategy: "pin",
   separateMajorMinor: true, // from :separateMajor in config:base
   separateMinorPatch: false, // from :combinePatchMinorReleases in config:base
