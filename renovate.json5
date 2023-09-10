@@ -6,13 +6,13 @@
   // https://docs.renovatebot.com/presets-default/
   // https://docs.renovatebot.com/presets-config/
   extends: [
-    // from config:base
+    // from config:recommended
     ":semanticPrefixFixDepsChoreOthers",
     ":ignoreModulesAndTests",
-    ":maintainLockFilesDisabled",
     "group:monorepos",
     "group:recommended",
-    "helpers:disableTypesNodeMajor",
+    "replacements:all",
+    "workarounds:all",
   ],
   automerge: false, // from :automergeDisabled in config:base
   branchPrefix: "renovate/", // from :renovatePrefix in config:base
