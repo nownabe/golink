@@ -50,10 +50,10 @@ devDependencies:
     specifier: 20.4.9
     version: 20.4.9
   '@types/react':
-    specifier: ^18.2.20
+    specifier: 18.2.20
     version: 18.2.20
   '@types/react-dom':
-    specifier: ^18.2.7
+    specifier: 18.2.7
     version: 18.2.7
   '@typescript-eslint/eslint-plugin':
     specifier: 5.62.0
