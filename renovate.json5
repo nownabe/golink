@@ -13,8 +13,18 @@
     "group:recommended",
     "replacements:all",
     "workarounds:all",
+
+    // automerge
+    ":automergeDigest",
+    ":automergeDisabled",
+    ":automergeLinters",
+    ":automergeMinor",
+    ":automergePatch",
+    ":automergePr", // Raise a PR first before any automerging.
+    ":automergeRequireAllStatusChecks",
+    ":automergeTesters",
+    ":automergeTypes",
   ],
-  automerge: false, // from :automergeDisabled in config:base
   branchPrefix: "renovate/", // from :renovatePrefix in config:base
   configMigration: true,
   dependencyDashboard: true,
