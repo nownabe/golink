@@ -1,0 +1,21 @@
+name: Conventional Commits
+
+on: [pull_request]
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "fetch_depth=$(( $commits + 1 ))" >> $GITHUB_ENV
+        env:
+          commits: ${{ github.event.pull_request.commits }}
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: ${{ env.fetch_depth }}
+      - uses: actions/setup-node@v3
+      - run: npm install -g @commitlint/cli @commitlint/config-conventional
+      - run: npx commitlint --from "$from" --to "$to" --verbose -x "$extends"
+        env:
+          from: ${{ github.event.pull_request.base.sha }}
+          to: ${{ github.event.pull_request.head.sha }}
+          extends: "@commitlint/config-conventional"
