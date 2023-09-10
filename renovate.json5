@@ -1,0 +1,43 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+
+  // Avoid using tiny presets like :dependencyDashboard, which have only one rule.
+  // Avoid using large presets like config:recommended, which are composed of some other presets.
+  // https://docs.renovatebot.com/presets-default/
+  // https://docs.renovatebot.com/presets-config/
+  extends: [
+    // from config:recommended
+    ":semanticPrefixFixDepsChoreOthers",
+    ":ignoreModulesAndTests",
+    "group:monorepos",
+    "group:recommended",
+    "replacements:all",
+    "workarounds:all",
+
+    // from config:best-practices
+    ":pinDevDependencies",
+    "helpers:pinGitHubActionDigests",
+
+    // automerge
+    ":automergeDigest",
+    ":automergeDisabled",
+    ":automergeLinters",
+    ":automergeMinor",
+    ":automergePatch",
+    ":automergePr", // Raise a PR first before any automerging.
+    ":automergeRequireAllStatusChecks",
+    ":automergeTesters",
+    ":automergeTypes",
+  ],
+  branchPrefix: "renovate/", // from :renovatePrefix in config:base
+  configMigration: true,
+  dependencyDashboard: true,
+  ignoreUnstable: true, // from :ignoreUnstable in config:base
+  prConcurrentLimit: 0,
+  prCreation: "immediate", // from :prImmediately in config:base
+  prHourlyLimit: 0,
+  rangeStrategy: "pin",
+  separateMajorMinor: true, // from :separateMajor in config:base
+  separateMinorPatch: false, // from :combinePatchMinorReleases in config:base
+  updateNotScheduled: true, // from :updateNotScheduled in config:base
+}
