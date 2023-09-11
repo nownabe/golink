@@ -13,7 +13,7 @@ async function initialize() {
     console.debug(`[golinkChanged] newUrl = '${newUrl}', oldUrl = '${oldUrl}'`);
     (async () => {
       if (newUrl) {
-        updateRedirectRule(newUrl);
+        await updateRedirectRule(newUrl);
       }
     })();
   });
