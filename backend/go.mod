@@ -9,10 +9,10 @@ require (
 	github.com/bufbuild/connect-go v1.10.0
 	github.com/google/go-cmp v0.5.9
 	github.com/rs/cors v1.10.0
-	go.opentelemetry.io/contrib/detectors/gcp v1.17.0
-	go.opentelemetry.io/otel v1.17.0
-	go.opentelemetry.io/otel/sdk v1.17.0
-	go.opentelemetry.io/otel/trace v1.17.0
+	go.opentelemetry.io/contrib/detectors/gcp v1.19.0
+	go.opentelemetry.io/otel v1.18.0
+	go.opentelemetry.io/otel/sdk v1.18.0
+	go.opentelemetry.io/otel/trace v1.18.0
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9
 	golang.org/x/net v0.15.0
 	google.golang.org/api v0.140.0
@@ -25,7 +25,7 @@ require (
 	cloud.google.com/go/compute v1.23.0 // indirect
 	cloud.google.com/go/longrunning v0.5.1 // indirect
 	cloud.google.com/go/trace v1.10.1 // indirect
-	github.com/GoogleCloudPlatform/opentelemetry-operations-go/detectors/gcp v1.13.1 // indirect
+	github.com/GoogleCloudPlatform/opentelemetry-operations-go/detectors/gcp v1.19.1 // indirect
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping v0.43.1 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -35,7 +35,7 @@ require (
 	github.com/googleapis/enterprise-certificate-proxy v0.2.5 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	go.opentelemetry.io/otel/metric v1.17.0 // indirect
+	go.opentelemetry.io/otel/metric v1.18.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	golang.org/x/crypto v0.13.0 // indirect
