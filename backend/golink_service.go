@@ -4,13 +4,13 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"slices"
 	"strings"
 
 	"cloud.google.com/go/firestore"
 	"github.com/bufbuild/connect-go"
 	"go.nownabe.dev/clog"
 	"go.nownabe.dev/clog/errors"
-	"golang.org/x/exp/slices"
 
 	golinkv1 "github.com/nownabe/golink/backend/gen/golink/v1"
 	"github.com/nownabe/golink/backend/golinkcontext"
