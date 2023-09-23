@@ -218,7 +218,7 @@ func NewHTTPLogger() Middleware {
 					Latency:       time.Since(start),
 					Protocol:      r.Proto,
 				}
-				clog.WithHTTPRequest(hr).Info(r.Context(), r.Method+" "+r.URL.Path)
+				clog.HTTPReq(r.Context(), hr)
 			}()
 
 			next.ServeHTTP(ww, r)
