@@ -86,9 +86,9 @@ func middlewares(
 		middleware.NewLocalConsoleRedirector(consolePrefix, ldcfg.LocalConsoleURL),
 		middleware.NewAuthorizer(),
 		middleware.NewCORS(allowedOrigins),
+		middleware.NewHTTPLogger(),
 		middleware.NewRequestID(),
 		middleware.NewTraceContext(tracerName),
-		middleware.NewHTTPLogger(),
 		middleware.NewRecoverer(),
 		middleware.NewDummyUser(ldcfg.DummyUserEmail, ldcfg.DummyUserID),
 		// outermost
