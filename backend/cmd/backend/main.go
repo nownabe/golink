@@ -8,56 +8,63 @@ import (
 	"cloud.google.com/go/compute/metadata"
 	"cloud.google.com/go/firestore"
 	texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
-	"github.com/nownabe/golink/backend"
-	"github.com/nownabe/golink/backend/clog"
-	"github.com/nownabe/golink/backend/errors"
+	"go.nownabe.dev/clog"
+	"go.nownabe.dev/clog/errors"
 	"go.opentelemetry.io/contrib/detectors/gcp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
+
+	"github.com/nownabe/golink/backend"
+	"github.com/nownabe/golink/backend/middleware"
 )
 
 func main() {
-	clog.SetDefault(clog.New(os.Stdout, clog.LevelInfo))
-
 	ctx := context.Background()
+
+	logger := clog.New(os.Stdout, clog.SeverityInfo, true,
+		clog.WithHandleFunc(middleware.RequestIDHandleFunc),
+	)
+	clog.SetDefault(logger)
 
 	app, err := buildApp(ctx)
 	if err != nil {
-		clog.AlertErr(ctx, errors.Wrap(err, "failed to build app"))
+		clog.AlertErr(ctx, errors.Errorf("failed to build app: %w", err))
 		os.Exit(1)
 	}
 
 	if err := app.Run(ctx); err != nil {
-		clog.AlertErr(ctx, errors.Wrap(err, "failed to run redirector"))
+		clog.AlertErr(ctx, errors.Errorf("failed to run redirector: %w", err))
 	}
 }
 
 func buildApp(ctx context.Context) (backend.App, error) {
+	projectID, err := getProjectID()
+	if err != nil {
+		clog.WarningErr(ctx, err)
+		projectID = "dummy-project"
+	} else {
+		clog.SetOptions(clog.WithTrace(projectID))
+	}
+	clog.Infof(ctx, "projectID=%q", projectID)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
-
-	projectID, err := getProjectID()
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to get project ID")
-	}
-	clog.Infof(ctx, "project ID: %s", projectID)
-	clog.SetContextHandler(projectID)
 
 	origins := strings.Split(os.Getenv("ALLOWED_ORIGINS"), ",")
 	clog.Infof(ctx, "Allowed origins: %v", origins)
 
 	fsClient, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to create Firestore client")
+		return nil, errors.Errorf("failed to create Firestore client: %w", err)
 	}
 
 	if err := setOtel(ctx, projectID); err != nil {
-		return nil, errors.Wrap(err, "failed to get tracer")
+		return nil, errors.Errorf("failed to get tracer: %w", err)
 	}
 
 	ldcfg := backend.LocalDevelopmentConfig{
@@ -80,7 +87,7 @@ func getProjectID() (string, error) {
 	os.Setenv("GCE_METADATA_HOST", "metadata.google.internal")
 	projectID, err := metadata.ProjectID()
 	if err != nil {
-		return "", errors.Wrap(err, "failed to get project ID from metadata server")
+		return "", errors.Errorf("failed to get project ID from metadata server: %w", err)
 	}
 
 	return projectID, nil
@@ -89,7 +96,7 @@ func getProjectID() (string, error) {
 func setOtel(ctx context.Context, projectID string) error {
 	exporter, err := texporter.New(texporter.WithProjectID(projectID))
 	if err != nil {
-		return errors.Wrapf(err, "failed to create exporter with project ID %s", projectID)
+		return errors.Errorf("failed to create exporter with project ID %s: %w", projectID, err)
 	}
 
 	res, err := resource.New(ctx,
@@ -100,7 +107,7 @@ func setOtel(ctx context.Context, projectID string) error {
 		),
 	)
 	if err != nil {
-		return errors.Wrap(err, "failed to create resource")
+		return errors.Errorf("failed to create resource: %w", err)
 	}
 
 	tp := sdktrace.NewTracerProvider(

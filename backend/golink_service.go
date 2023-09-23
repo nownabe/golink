@@ -8,11 +8,12 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/bufbuild/connect-go"
-	"github.com/nownabe/golink/backend/clog"
-	"github.com/nownabe/golink/backend/errors"
+	"go.nownabe.dev/clog"
+	"go.nownabe.dev/clog/errors"
+	"golang.org/x/exp/slices"
+
 	golinkv1 "github.com/nownabe/golink/backend/gen/golink/v1"
 	"github.com/nownabe/golink/backend/golinkcontext"
-	"golang.org/x/exp/slices"
 )
 
 type golinkService struct {
@@ -47,7 +48,7 @@ func (s *golinkService) CreateGolink(
 	err := s.repo.Transaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
 		e, err := s.repo.TxExists(ctx, tx, req.Msg.Name)
 		if err != nil {
-			return errors.Wrapf(err, "s.repo.Exists: name=%s", req.Msg.Name)
+			return errors.Errorf("s.repo.Exists: name=%s: %w", req.Msg.Name, err)
 		}
 
 		if e {
@@ -55,7 +56,7 @@ func (s *golinkService) CreateGolink(
 		}
 
 		if err := s.repo.TxCreate(ctx, tx, o); err != nil {
-			return errors.Wrapf(err, "failed to create Golink(name=%s)", req.Msg.Name)
+			return errors.Errorf("failed to create Golink(name=%s): %w", req.Msg.Name, err)
 		}
 
 		return nil
@@ -83,7 +84,7 @@ func (s *golinkService) GetGolink(
 		if errors.Is(err, errDocumentNotFound) {
 			return nil, errf(connect.CodeNotFound, "go/%s not found", req.Msg.Name)
 		}
-		err := errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
+		err := errors.Errorf("failed to get Golink(name=%s): %w", req.Msg.Name, err)
 		clog.Err(ctx, err)
 		return nil, errf(connect.CodeInternal, "internal error")
 	}
@@ -105,7 +106,7 @@ func (s *golinkService) ListGolinks(
 
 	dtos, err := s.repo.ListByOwner(ctx, email)
 	if err != nil {
-		err := errors.Wrap(err, "failed to list Golinks")
+		err := errors.Errorf("failed to list Golinks: %w", err)
 		clog.Err(ctx, err)
 		return nil, errf(connect.CodeInternal, "internal error")
 	}
@@ -126,7 +127,7 @@ func (s *golinkService) ListGolinksByUrl(
 ) (*connect.Response[golinkv1.ListGolinksByUrlResponse], error) {
 	dtos, err := s.repo.ListByURL(ctx, req.Msg.Url)
 	if err != nil {
-		err := errors.Wrapf(err, "s.repo.ListByURL(ctx, %q)", req.Msg.Url)
+		err := errors.Errorf("s.repo.ListByURL(ctx, %q): %w", req.Msg.Url, err)
 		clog.Err(ctx, err)
 		return nil, errf(connect.CodeInternal, "internal error")
 	}
@@ -157,7 +158,7 @@ func (s *golinkService) ListPopularGolinks(
 
 	golinks, err := s.repo.ListPopularGolinks(ctx, int(req.Msg.Days), int(req.Msg.Limit))
 	if err != nil {
-		err := errors.Wrapf(err, "s.repo.ListPopularGolinks(ctx, %d, %d)", req.Msg.Days, req.Msg.Limit)
+		err := errors.Errorf("s.repo.ListPopularGolinks(ctx, %d, %d): %w", req.Msg.Days, req.Msg.Limit, err)
 		clog.Err(ctx, err)
 		return nil, errf(connect.CodeInternal, "internal error")
 	}
@@ -191,7 +192,7 @@ func (s *golinkService) UpdateGolink(
 			if errors.Is(err, errDocumentNotFound) {
 				return errf(connect.CodeNotFound, "go/%s not found", req.Msg.Name)
 			}
-			return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
+			return errors.Errorf("failed to get Golink(name=%s): %w", req.Msg.Name, err)
 		}
 
 		if !slices.Contains(o.Owners, email) {
@@ -205,7 +206,7 @@ func (s *golinkService) UpdateGolink(
 		o.URL = req.Msg.Url
 
 		if err := s.repo.TxUpdate(ctx, tx, o); err != nil {
-			return errors.Wrapf(err, "failed to update Golink(name=%s)", req.Msg.Name)
+			return errors.Errorf("failed to update Golink(name=%s): %w", req.Msg.Name, err)
 		}
 
 		return nil
@@ -215,7 +216,7 @@ func (s *golinkService) UpdateGolink(
 		return nil, err
 	}
 	if err != nil {
-		err := errors.Wrapf(err, "update transaction failed: Golink(name=%s)", req.Msg.Name)
+		err := errors.Errorf("update transaction failed: Golink(name=%s): %w", req.Msg.Name, err)
 		clog.Err(ctx, err)
 		return nil, errf(connect.CodeInternal, "internal error")
 	}
@@ -242,7 +243,7 @@ func (s *golinkService) DeleteGolink(
 			if errors.Is(err, errDocumentNotFound) {
 				return errf(connect.CodeNotFound, "go/%s not found", req.Msg.Name)
 			}
-			return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
+			return errors.Errorf("failed to get Golink(name=%s): %w", req.Msg.Name, err)
 		}
 
 		if !slices.Contains(o.Owners, email) {
@@ -250,7 +251,7 @@ func (s *golinkService) DeleteGolink(
 		}
 
 		if err := s.repo.TxDelete(ctx, tx, req.Msg.Name); err != nil {
-			return errors.Wrapf(err, "failed to delete Golink(name=%s)", req.Msg.Name)
+			return errors.Errorf("failed to delete Golink(name=%s): %w", req.Msg.Name, err)
 		}
 
 		return nil
@@ -260,7 +261,7 @@ func (s *golinkService) DeleteGolink(
 		return nil, err
 	}
 	if err != nil {
-		err := errors.Wrapf(err, "delete transaction failed: Golink(name=%s)", req.Msg.Name)
+		err := errors.Errorf("delete transaction failed: Golink(name=%s): %w", req.Msg.Name, err)
 		clog.Err(ctx, err)
 		return nil, errf(connect.CodeInternal, "internal error")
 	}
@@ -289,7 +290,7 @@ func (s *golinkService) AddOwner(
 			if errors.Is(err, errDocumentNotFound) {
 				return errf(connect.CodeNotFound, "go/%s not found", req.Msg.Name)
 			}
-			return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
+			return errors.Errorf("failed to get Golink(name=%s): %w", req.Msg.Name, err)
 		}
 
 		if !slices.Contains(o.Owners, email) {
@@ -301,7 +302,7 @@ func (s *golinkService) AddOwner(
 		}
 
 		if err := s.repo.TxAddOwner(ctx, tx, req.Msg.Name, req.Msg.Owner); err != nil {
-			return errors.Wrapf(err, "failed to add owner: Golink(name=%s), owner=%s", req.Msg.Name, req.Msg.Owner)
+			return errors.Errorf("failed to add owner: Golink(name=%s), owner=%s: %w", req.Msg.Name, req.Msg.Owner, err)
 		}
 
 		return nil
@@ -311,7 +312,7 @@ func (s *golinkService) AddOwner(
 		return nil, err
 	}
 	if err != nil {
-		err := errors.Wrapf(err, "add owner transaction failed: Golink(name=%s)", req.Msg.Name)
+		err := errors.Errorf("add owner transaction failed: Golink(name=%s): %w", req.Msg.Name, err)
 		clog.Err(ctx, err)
 		return nil, errf(connect.CodeInternal, "internal error")
 	}
@@ -342,7 +343,7 @@ func (s *golinkService) RemoveOwner(
 			if errors.Is(err, errDocumentNotFound) {
 				return errf(connect.CodeNotFound, "go/%s not found", req.Msg.Name)
 			}
-			return errors.Wrapf(err, "failed to get Golink(name=%s)", req.Msg.Name)
+			return errors.Errorf("failed to get Golink(name=%s): %w", req.Msg.Name, err)
 		}
 
 		if !slices.Contains(o.Owners, email) {
@@ -358,7 +359,7 @@ func (s *golinkService) RemoveOwner(
 		}
 
 		if err := s.repo.TxRemoveOwner(ctx, tx, req.Msg.Name, req.Msg.Owner); err != nil {
-			return errors.Wrapf(err, "failed to remove owner: Golink(name=%s), owner=%s", req.Msg.Name, req.Msg.Owner)
+			return errors.Errorf("failed to remove owner: Golink(name=%s), owner=%s: %w", req.Msg.Name, req.Msg.Owner, err)
 		}
 
 		return nil
@@ -368,7 +369,7 @@ func (s *golinkService) RemoveOwner(
 		return nil, err
 	}
 	if err != nil {
-		err := errors.Wrapf(err, "remove owner transaction failed: Golink(name=%s)", req.Msg.Name)
+		err := errors.Errorf("remove owner transaction failed: Golink(name=%s): %w", req.Msg.Name, err)
 		clog.Err(ctx, err)
 		return nil, errf(connect.CodeInternal, "internal error")
 	}

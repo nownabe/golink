@@ -9,6 +9,7 @@ require (
 	github.com/bufbuild/connect-go v1.10.0
 	github.com/google/go-cmp v0.5.9
 	github.com/rs/cors v1.10.0
+	go.nownabe.dev/clog v0.0.0-20230923045328-e65337a8e154
 	go.opentelemetry.io/contrib/detectors/gcp v1.19.0
 	go.opentelemetry.io/otel v1.18.0
 	go.opentelemetry.io/otel/sdk v1.18.0
@@ -36,8 +37,6 @@ require (
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/otel/metric v1.18.0 // indirect
-	go.uber.org/atomic v1.10.0 // indirect
-	go.uber.org/multierr v1.8.0 // indirect
 	golang.org/x/crypto v0.13.0 // indirect
 	golang.org/x/oauth2 v0.12.0 // indirect
 	golang.org/x/sync v0.3.0 // indirect
