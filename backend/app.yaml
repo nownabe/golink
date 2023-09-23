@@ -28,4 +28,5 @@ handlers:
     redirect_http_response_code: 301
 main: ./cmd/backend
 env_variables:
-  ALLOWED_ORIGINS: chrome-extension://clecngohjeflemkblbfdfbjkjnigbjok
+  ALLOWED_ORIGINS: chrome-extension://clecngohjeflemkblbfdfbjkjnigbjok,chrome-extension://eipmfcmnbjjboiebaehdebbchemjlnmh
+  DEBUG: "true"

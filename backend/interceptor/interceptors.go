@@ -24,7 +24,7 @@ func NewRecoverer() connect.UnaryInterceptorFunc {
 					if !ok {
 						err = errors.Errorf("%v", r)
 					}
-					err = errors.Errorf("recovering panic: %w")
+					err = errors.Errorf("recovering panic: %w", err)
 					clog.AlertErr(ctx, err)
 
 					retErr = connect.NewError(http.StatusInternalServerError, errors.NewWithoutStack("internal error"))
