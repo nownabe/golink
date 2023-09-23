@@ -9,11 +9,12 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
-	"github.com/nownabe/golink/backend/clog"
-	"github.com/nownabe/golink/backend/errors"
-	"github.com/nownabe/golink/backend/middleware"
+	"go.nownabe.dev/clog"
+	"go.nownabe.dev/clog/errors"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
+
+	"github.com/nownabe/golink/backend/middleware"
 )
 
 const (
@@ -85,9 +86,9 @@ func middlewares(
 		middleware.NewLocalConsoleRedirector(consolePrefix, ldcfg.LocalConsoleURL),
 		middleware.NewAuthorizer(),
 		middleware.NewCORS(allowedOrigins),
+		middleware.NewHTTPLogger(),
 		middleware.NewRequestID(),
 		middleware.NewTraceContext(tracerName),
-		middleware.NewHTTPLogger(),
 		middleware.NewRecoverer(),
 		middleware.NewDummyUser(ldcfg.DummyUserEmail, ldcfg.DummyUserID),
 		// outermost
@@ -125,7 +126,7 @@ func (a *app) serve(ctx context.Context) error {
 		defer cancel()
 
 		if err := s.Shutdown(ctx); err != nil {
-			err := errors.Wrap(err, "failed to shutdown gracefully")
+			err := errors.Errorf("failed to shutdown gracefully: %w", err)
 			clog.Err(ctx, err)
 		}
 
@@ -136,7 +137,7 @@ func (a *app) serve(ctx context.Context) error {
 	clog.Notice(ctx, "starting to listen and serve")
 
 	if err := s.ListenAndServe(); err != http.ErrServerClosed {
-		return errors.Wrap(err, "failed to listen and serve")
+		return errors.Errorf("failed to listen and serve: %w", err)
 	}
 
 	<-idleConnsClosed

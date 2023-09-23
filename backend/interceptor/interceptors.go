@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/bufbuild/connect-go"
-	"github.com/nownabe/golink/backend/clog"
-	"github.com/nownabe/golink/backend/errors"
+	"go.nownabe.dev/clog"
+	"go.nownabe.dev/clog/errors"
 )
 
 // https://github.com/golang/go/issues/25448
@@ -24,7 +24,7 @@ func NewRecoverer() connect.UnaryInterceptorFunc {
 					if !ok {
 						err = errors.Errorf("%v", r)
 					}
-					err = errors.Wrap(err, "recovering panic")
+					err = errors.Errorf("recovering panic: %w", err)
 					clog.AlertErr(ctx, err)
 
 					retErr = connect.NewError(http.StatusInternalServerError, errors.NewWithoutStack("internal error"))

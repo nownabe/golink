@@ -5,14 +5,16 @@ import (
 	"context"
 	"crypto/rand"
 	"io"
+	"log/slog"
 	"net/http"
 	"sync"
 
-	"github.com/nownabe/golink/backend/clog"
-	"github.com/nownabe/golink/backend/clog/clogcontext"
-	"github.com/nownabe/golink/backend/errors"
+	"go.nownabe.dev/clog"
+	"go.nownabe.dev/clog/errors"
 	"go.opentelemetry.io/otel/trace"
 )
+
+type ctxKeyRequestID struct{}
 
 const headerRequestID = "X-Request-Id"
 
@@ -30,10 +32,19 @@ func NewRequestID() Middleware {
 				}
 				r.Header.Set(headerRequestID, reqID)
 			}
-			ctx = clogcontext.WithRequestID(r.Context(), reqID)
+			ctx = context.WithValue(ctx, ctxKeyRequestID{}, reqID)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
+}
+
+func RequestIDHandleFunc(next clog.HandleFunc) clog.HandleFunc {
+	return clog.HandleFunc(func(ctx context.Context, r slog.Record) error {
+		if reqID, ok := ctx.Value(ctxKeyRequestID{}).(string); ok {
+			r.AddAttrs(slog.String("request_id", reqID))
+		}
+		return next(ctx, r)
+	})
 }
 
 var randomReaderPool = sync.Pool{New: func() interface{} {
@@ -62,7 +73,7 @@ func randomString(length uint8) string {
 	for {
 		_, err := io.ReadFull(reader, r)
 		if err != nil {
-			err := errors.Wrap(err, "failed to read random bytes")
+			err := errors.Errorf("failed to read random bytes: %w", err)
 			clog.AlertErr(context.Background(), err)
 			panic("unexpected error in randomString")
 		}

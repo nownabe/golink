@@ -3,8 +3,8 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/nownabe/golink/backend/clog"
-	"github.com/nownabe/golink/backend/errors"
+	"go.nownabe.dev/clog"
+	"go.nownabe.dev/clog/errors"
 )
 
 func NewRecoverer() Middleware {
@@ -22,7 +22,7 @@ func NewRecoverer() Middleware {
 					if !ok {
 						err = errors.Errorf("%v", rcv)
 					}
-					err = errors.Wrap(err, "recovering panic")
+					err = errors.Errorf("recovering panic: %w", err)
 					clog.AlertErr(ctx, err)
 
 					w.WriteHeader(http.StatusInternalServerError)

@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
-	"github.com/nownabe/golink/backend/clog"
-	"github.com/nownabe/golink/backend/errors"
+	"go.nownabe.dev/clog"
+	"go.nownabe.dev/clog/errors"
 )
 
 type redirectHandler struct {
@@ -42,7 +42,7 @@ func (h *redirectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err := errors.Wrapf(err, "failed to get url for %q", path[0])
+		err := errors.Errorf("failed to get url for %q: %w", path[0], err)
 		clog.Err(ctx, err)
 
 		http.Error(w, "internal server error", http.StatusInternalServerError)
@@ -51,7 +51,7 @@ func (h *redirectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	u, err := url.Parse(golink.URL)
 	if err != nil {
-		err := errors.Wrapf(err, "failed to parse url (id=%q): %q", path[0], golink.URL)
+		err := errors.Errorf("failed to parse url (id=%q): %q: %w", path[0], golink.URL, err)
 		clog.Err(ctx, err)
 
 		http.Error(w, "internal server error", http.StatusInternalServerError)
@@ -71,7 +71,7 @@ func (h *redirectHandler) count(ctx context.Context, name string) {
 	err := h.repo.Transaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
 		o, err := h.repo.TxGet(ctx, tx, name)
 		if err != nil {
-			return errors.Wrapf(err, "failed to get %q", name)
+			return errors.Errorf("failed to get %q: %w", name, err)
 		}
 
 		today := time.Now().UTC().Truncate(24 * time.Hour)
@@ -79,13 +79,13 @@ func (h *redirectHandler) count(ctx context.Context, name string) {
 		updateRedirectCount(o, daysDelayed)
 
 		if err := h.repo.TxUpdate(ctx, tx, o); err != nil {
-			return errors.Wrapf(err, "failed to update %q", name)
+			return errors.Errorf("failed to update %q: %w", name, err)
 		}
 
 		return nil
 	})
 	if err != nil {
-		err := errors.Wrapf(err, "failed to count of %q", name)
+		err := errors.Errorf("failed to count of %q: %w", name, err)
 		clog.Err(ctx, err)
 	}
 }

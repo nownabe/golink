@@ -4,8 +4,9 @@ import (
 	"context"
 
 	"github.com/bufbuild/connect-go"
-	"github.com/nownabe/golink/backend/clog"
-	"github.com/nownabe/golink/backend/errors"
+	"go.nownabe.dev/clog"
+	"go.nownabe.dev/clog/errors"
+
 	golinkv1 "github.com/nownabe/golink/backend/gen/golink/v1"
 )
 
@@ -16,7 +17,7 @@ func (s *debugService) Debug(
 	req *connect.Request[golinkv1.DebugRequest],
 ) (*connect.Response[golinkv1.DebugResponse], error) {
 	if err := debug1(ctx, req); err != nil {
-		clog.Err(ctx, errors.Wrap(err, "debug1 failed"))
+		clog.Err(ctx, errors.Errorf("debug1 failed: %w", err))
 	}
 
 	return connect.NewResponse(&golinkv1.DebugResponse{}), nil
@@ -24,7 +25,7 @@ func (s *debugService) Debug(
 
 func debug1(ctx context.Context, req *connect.Request[golinkv1.DebugRequest]) error {
 	if err := debug2(ctx, req); err != nil {
-		return errors.Wrap(err, "debug2 failed")
+		return errors.Errorf("debug2 failed: %w", err)
 	}
 
 	return nil
@@ -32,7 +33,7 @@ func debug1(ctx context.Context, req *connect.Request[golinkv1.DebugRequest]) er
 
 func debug2(ctx context.Context, req *connect.Request[golinkv1.DebugRequest]) error {
 	if err := debug3(ctx, req); err != nil {
-		return errors.Wrap(err, "debug3 failed")
+		return errors.Errorf("debug3 failed: %w", err)
 	}
 
 	return nil

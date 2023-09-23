@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/nownabe/golink/backend/clog"
+	"go.nownabe.dev/clog"
 )
 
 const (
@@ -208,7 +208,7 @@ func NewHTTPLogger() Middleware {
 				hr := &clog.HTTPRequest{
 					RequestMethod: r.Method,
 					RequestURL:    r.URL.String(),
-					RequestSize:   r.Header.Get(headerContentLength),
+					RequestSize:   r.ContentLength,
 					Status:        ww.status(),
 					ResponseSize:  int64(ww.bytes()),
 					UserAgent:     r.UserAgent(),
@@ -218,7 +218,7 @@ func NewHTTPLogger() Middleware {
 					Latency:       time.Since(start),
 					Protocol:      r.Proto,
 				}
-				clog.InfoHTTPRequest(r.Context(), r.URL.Path, hr)
+				clog.HTTPReq(r.Context(), hr)
 			}()
 
 			next.ServeHTTP(ww, r)

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/firestore"
-	"github.com/nownabe/golink/backend/errors"
+	"go.nownabe.dev/clog/errors"
 	"google.golang.org/api/iterator"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -28,7 +28,7 @@ func (r *repository) Transaction(
 	f func(ctx context.Context, tx *firestore.Transaction) error,
 ) error {
 	if err := r.firestore.RunTransaction(ctx, f); err != nil {
-		return errors.Wrap(err, "r.firestore.RunTransaction(ctx, f)")
+		return errors.Errorf("r.firestore.RunTransaction(ctx, f): %w", err)
 	}
 
 	return nil
@@ -43,7 +43,7 @@ func (r *repository) TxExists(ctx context.Context, tx *firestore.Transaction, na
 		return false, nil
 	}
 	if err != nil {
-		return false, errors.Wrapf(err, "failed to get %s", doc.Path)
+		return false, errors.Errorf("failed to get %s: %w", doc.Path, err)
 	}
 
 	return s.Exists(), nil
@@ -55,15 +55,15 @@ func (r *repository) Get(ctx context.Context, name string) (*dto, error) {
 
 	s, err := doc.Get(ctx)
 	if status.Code(err) == codes.NotFound {
-		return nil, errors.Wrapf(errDocumentNotFound, "%s not found", doc.Path)
+		return nil, errors.Errorf("%s not found: %w", doc.Path, errDocumentNotFound)
 	}
 
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to get %s", doc.Path)
+		return nil, errors.Errorf("failed to get %s: %w", doc.Path, err)
 	}
 	var o dto
 	if err := s.DataTo(&o); err != nil {
-		return nil, errors.Wrapf(err, "failed to populate %s", doc.Path)
+		return nil, errors.Errorf("failed to populate %s: %w", doc.Path, err)
 	}
 
 	return &o, nil
@@ -75,15 +75,15 @@ func (r *repository) TxGet(ctx context.Context, tx *firestore.Transaction, name 
 
 	s, err := tx.Get(doc)
 	if status.Code(err) == codes.NotFound {
-		return nil, errors.Wrapf(errDocumentNotFound, "%s not found", doc.Path)
+		return nil, errors.Errorf("%s not found: %w", doc.Path, errDocumentNotFound)
 	}
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to get %s", doc.Path)
+		return nil, errors.Errorf("failed to get %s: %w", doc.Path, err)
 	}
 
 	var o dto
 	if err := s.DataTo(&o); err != nil {
-		return nil, errors.Wrapf(err, "failed to populate %s", doc.Path)
+		return nil, errors.Errorf("failed to populate %s: %w", doc.Path, err)
 	}
 
 	return &o, nil
@@ -98,7 +98,7 @@ func (r *repository) TxCreate(ctx context.Context, tx *firestore.Transaction, dt
 	dto.UpdatedAt = time.Now()
 
 	if err := tx.Create(doc, dto); err != nil {
-		return errors.Wrapf(err, "failed to create %s", doc.Path)
+		return errors.Errorf("failed to create %s: %w", doc.Path, err)
 	}
 
 	return nil
@@ -116,12 +116,12 @@ func (r *repository) ListByOwner(ctx context.Context, owner string) ([]*dto, err
 			break
 		}
 		if err != nil {
-			return nil, errors.Wrapf(err, "failed to iterate %s", col.Path)
+			return nil, errors.Errorf("failed to iterate %s: %w", col.Path, err)
 		}
 
 		var o dto
 		if err := s.DataTo(&o); err != nil {
-			return nil, errors.Wrapf(err, "failed to populate %s", s.Ref.Path)
+			return nil, errors.Errorf("failed to populate %s: %w", s.Ref.Path, err)
 		}
 
 		dtos = append(dtos, &o)
@@ -142,12 +142,12 @@ func (r *repository) ListByURL(ctx context.Context, url string) ([]*dto, error) 
 			break
 		}
 		if err != nil {
-			return nil, errors.Wrapf(err, "failed to iterate %s", col.Path)
+			return nil, errors.Errorf("failed to iterate %s: %w", col.Path, err)
 		}
 
 		var o dto
 		if err := s.DataTo(&o); err != nil {
-			return nil, errors.Wrapf(err, "failed to populate %s", s.Ref.Path)
+			return nil, errors.Errorf("failed to populate %s: %w", s.Ref.Path, err)
 		}
 
 		dtos = append(dtos, &o)
@@ -179,12 +179,12 @@ func (r *repository) ListPopularGolinks(ctx context.Context, days, limit int) ([
 			break
 		}
 		if err != nil {
-			return nil, errors.Wrapf(err, "failed to iterate %s", col.Path)
+			return nil, errors.Errorf("failed to iterate %s: %w", col.Path, err)
 		}
 
 		var golink dto
 		if err := s.DataTo(&golink); err != nil {
-			return nil, errors.Wrapf(err, "failed to populate %s", s.Ref.Path)
+			return nil, errors.Errorf("failed to populate %s: %w", s.Ref.Path, err)
 		}
 
 		golinks = append(golinks, &golink)
@@ -207,7 +207,7 @@ func (r *repository) TxUpdate(ctx context.Context, tx *firestore.Transaction, dt
 		{Path: "daily_redirect_counts", Value: dto.DailyRedirectCounts},
 		{Path: "updated_at", Value: dto.UpdatedAt},
 	}); err != nil {
-		return errors.Wrapf(err, "failed to update %s", doc.Path)
+		return errors.Errorf("failed to update %s: %w", doc.Path, err)
 	}
 
 	return nil
@@ -218,7 +218,7 @@ func (r *repository) TxDelete(ctx context.Context, tx *firestore.Transaction, na
 	doc := col.Doc(nameToID(name))
 
 	if err := tx.Delete(doc); err != nil {
-		return errors.Wrapf(err, "failed to delete %s", doc.Path)
+		return errors.Errorf("failed to delete %s: %w", doc.Path, err)
 	}
 
 	return nil
@@ -232,7 +232,7 @@ func (r *repository) TxAddOwner(ctx context.Context, tx *firestore.Transaction, 
 		{Path: "owners", Value: firestore.ArrayUnion(owner)},
 		{Path: "updated_at", Value: time.Now()},
 	}); err != nil {
-		return errors.Wrapf(err, "failed to update %s", doc.Path)
+		return errors.Errorf("failed to update %s: %w", doc.Path, err)
 	}
 
 	return nil
@@ -246,7 +246,7 @@ func (r *repository) TxRemoveOwner(ctx context.Context, tx *firestore.Transactio
 		{Path: "owners", Value: firestore.ArrayRemove(owner)},
 		{Path: "updated_at", Value: time.Now()},
 	}); err != nil {
-		return errors.Wrapf(err, "failed to update %s", doc.Path)
+		return errors.Errorf("failed to update %s: %w", doc.Path, err)
 	}
 
 	return nil
