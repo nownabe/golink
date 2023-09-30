@@ -19,7 +19,8 @@ import (
 
 const (
 	readHeaderTimeoutSeconds = 10
-	shutdownTimeoutSeconds   = 120
+	// https://cloud.google.com/appengine/docs/standard/how-instances-are-managed#shutdown
+	shutdownTimeoutSeconds = 3
 )
 
 type LocalDevelopmentConfig struct {
@@ -117,10 +118,12 @@ func (a *app) serve(ctx context.Context) error {
 
 	go func() {
 		ch := make(chan os.Signal, 1)
+
+		// https://cloud.google.com/appengine/docs/standard/how-instances-are-managed#shutdown
 		signal.Notify(ch, syscall.SIGTERM, syscall.SIGINT)
 
 		sig := <-ch
-		clog.Noticef(ctx, "received signal %v and terminating", sig)
+		clog.Noticef(ctx, "received signal %v and started terminating gracefully", sig)
 
 		ctx, cancel := context.WithTimeout(context.Background(), shutdownTimeoutSeconds*time.Second)
 		defer cancel()
