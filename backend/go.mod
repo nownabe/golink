@@ -9,7 +9,7 @@ require (
 	github.com/bufbuild/connect-go v1.10.0
 	github.com/google/go-cmp v0.5.9
 	github.com/rs/cors v1.10.1
-	go.nownabe.dev/clog v0.0.0-20230923104126-647dfdd5ed31
+	go.nownabe.dev/clog v0.0.0-20231007150231-48ed11643507
 	go.opentelemetry.io/contrib/detectors/gcp v1.20.0
 	go.opentelemetry.io/otel v1.19.0
 	go.opentelemetry.io/otel/sdk v1.19.0
