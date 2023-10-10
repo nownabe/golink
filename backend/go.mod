@@ -7,7 +7,7 @@ require (
 	cloud.google.com/go/firestore v1.13.0
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v1.19.1
 	github.com/bufbuild/connect-go v1.10.0
-	github.com/google/go-cmp v0.5.9
+	github.com/google/go-cmp v0.6.0
 	github.com/rs/cors v1.10.1
 	go.nownabe.dev/clog v0.0.0-20231008142753-d24dbceb3d4c
 	go.opentelemetry.io/contrib/detectors/gcp v1.20.0
