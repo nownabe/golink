@@ -106,6 +106,8 @@ go.nownabe.dev/clog v0.0.0-20231007150231-48ed11643507 h1:7MivLTkVu9ArbYvhKjWyqD
 go.nownabe.dev/clog v0.0.0-20231007150231-48ed11643507/go.mod h1:BVjvf3u1luzUafVwCLEWxhDK3rAeHEm3pjZQ/xeBBNQ=
 go.nownabe.dev/clog v0.0.0-20231008142753-d24dbceb3d4c h1:CWzIuJeAtGe+4TtMgd/r7ezz5txaTrUU92dm7qsFV6c=
 go.nownabe.dev/clog v0.0.0-20231008142753-d24dbceb3d4c/go.mod h1:BVjvf3u1luzUafVwCLEWxhDK3rAeHEm3pjZQ/xeBBNQ=
+go.nownabe.dev/clog v0.0.0-20231029113934-ced3180a4763 h1:T0Yj0I9aEDmy/xjvw33MKdLsBjtU2M0L9NHmALfAytM=
+go.nownabe.dev/clog v0.0.0-20231029113934-ced3180a4763/go.mod h1:BVjvf3u1luzUafVwCLEWxhDK3rAeHEm3pjZQ/xeBBNQ=
 go.opencensus.io v0.24.0 h1:y73uSU6J157QMP2kn2r30vwW1A2W2WFwSCGnAVxeaD0=
 go.opencensus.io v0.24.0/go.mod h1:vNK8G9p7aAivkbmorf4v+7Hgx+Zs0yY+0fOtgBfjQKo=
 go.opentelemetry.io/contrib/detectors/gcp v1.19.0 h1:jQuVHQiHTnJa8JmZLe8ivKHZUh6x7pqC0DSGDG376II=
