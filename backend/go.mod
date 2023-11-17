@@ -11,9 +11,9 @@ require (
 	github.com/rs/cors v1.10.1
 	go.nownabe.dev/clog v0.0.0-20231029113934-ced3180a4763
 	go.opentelemetry.io/contrib/detectors/gcp v1.21.0
-	go.opentelemetry.io/otel v1.20.0
-	go.opentelemetry.io/otel/sdk v1.20.0
-	go.opentelemetry.io/otel/trace v1.20.0
+	go.opentelemetry.io/otel v1.21.0
+	go.opentelemetry.io/otel/sdk v1.21.0
+	go.opentelemetry.io/otel/trace v1.21.0
 	golang.org/x/net v0.18.0
 	google.golang.org/api v0.150.0
 	google.golang.org/grpc v1.59.0
@@ -35,7 +35,7 @@ require (
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	go.opentelemetry.io/otel/metric v1.20.0 // indirect
+	go.opentelemetry.io/otel/metric v1.21.0 // indirect
 	golang.org/x/crypto v0.15.0 // indirect
 	golang.org/x/oauth2 v0.13.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
