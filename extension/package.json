@@ -23,6 +23,6 @@
   "dependencies": {
     "@bufbuild/connect": "0.13.0",
     "@bufbuild/connect-web": "0.13.0",
-    "@bufbuild/protobuf": "1.5.0"
+    "@bufbuild/protobuf": "1.5.1"
   }
 }
