@@ -41,7 +41,7 @@
   "dependencies": {
     "@bufbuild/connect": "0.13.0",
     "@bufbuild/connect-web": "0.13.0",
-    "@bufbuild/protobuf": "1.7.0",
+    "@bufbuild/protobuf": "1.7.1",
     "@emotion/react": "11.11.3",
     "@emotion/styled": "11.11.0",
     "@fontsource/roboto": "5.0.8",
