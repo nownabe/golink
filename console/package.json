@@ -18,7 +18,7 @@
     "@tanstack/eslint-plugin-query": "4.38.0",
     "@types/node": "20.11.24",
     "@types/react": "18.2.63",
-    "@types/react-dom": "18.2.19",
+    "@types/react-dom": "18.2.20",
     "@typescript-eslint/eslint-plugin": "7.1.1",
     "@typescript-eslint/parser": "7.1.1",
     "@vitejs/plugin-react": "4.2.1",
