@@ -3,7 +3,7 @@ module github.com/nownabe/golink/backend
 go 1.21
 
 require (
-	cloud.google.com/go/compute/metadata v0.2.3
+	cloud.google.com/go/compute/metadata v0.3.0
 	cloud.google.com/go/firestore v1.15.0
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v1.19.1
 	github.com/bufbuild/connect-go v1.10.0
