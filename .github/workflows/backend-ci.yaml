@@ -48,7 +48,7 @@ jobs:
         with:
           go-version: "1.21"
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@3a919529898de77ec3da873e3063ca4b10e7f5cc # v3
+        uses: golangci/golangci-lint-action@d6238b002a20823d52840fda27e2d4891c5952dc # v4
         with:
           working-directory: ./backend
           skip-cache: true
