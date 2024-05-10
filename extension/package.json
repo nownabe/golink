@@ -15,7 +15,7 @@
     "check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/chrome": "0.0.267",
+    "@types/chrome": "0.0.268",
     "parcel": "2.12.0",
     "process": "0.11.10",
     "typescript": "5.4.5"
