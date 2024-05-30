@@ -7,13 +7,13 @@ settings:
 dependencies:
   '@bufbuild/connect':
     specifier: 0.13.0
-    version: 0.13.0(@bufbuild/protobuf@1.9.0)
+    version: 0.13.0(@bufbuild/protobuf@1.10.0)
   '@bufbuild/connect-web':
     specifier: 0.13.0
-    version: 0.13.0(@bufbuild/protobuf@1.9.0)
+    version: 0.13.0(@bufbuild/protobuf@1.10.0)
   '@bufbuild/protobuf':
-    specifier: 1.9.0
-    version: 1.9.0
+    specifier: 1.10.0
+    version: 1.10.0
   '@emotion/react':
     specifier: 11.11.4
     version: 11.11.4(@types/react@18.3.3)(react@18.3.1)
@@ -396,25 +396,25 @@ packages:
       to-fast-properties: 2.0.0
     dev: true
 
-  /@bufbuild/connect-web@0.13.0(@bufbuild/protobuf@1.9.0):
+  /@bufbuild/connect-web@0.13.0(@bufbuild/protobuf@1.10.0):
     resolution: {integrity: sha512-Ys9VFDWYktD9yFQSLOlkpsD42LonDNMCysLCfjXFuxlupYuf4f7qg0zkT5bESyTfqk4xtRDSSGR3xygaj/ONIQ==}
     peerDependencies:
       '@bufbuild/protobuf': ^1.2.1
     dependencies:
-      '@bufbuild/connect': 0.13.0(@bufbuild/protobuf@1.9.0)
-      '@bufbuild/protobuf': 1.9.0
+      '@bufbuild/connect': 0.13.0(@bufbuild/protobuf@1.10.0)
+      '@bufbuild/protobuf': 1.10.0
     dev: false
 
-  /@bufbuild/connect@0.13.0(@bufbuild/protobuf@1.9.0):
+  /@bufbuild/connect@0.13.0(@bufbuild/protobuf@1.10.0):
     resolution: {integrity: sha512-eZSMbVLyUFtXiZNORgCEvv580xKZeYQdMOWj2i/nxOcpXQcrEzTMTA7SZzWv4k4gveWCOSRoWmYDeOhfWXJv0g==}
     peerDependencies:
       '@bufbuild/protobuf': ^1.2.1
     dependencies:
-      '@bufbuild/protobuf': 1.9.0
+      '@bufbuild/protobuf': 1.10.0
     dev: false
 
-  /@bufbuild/protobuf@1.9.0:
-    resolution: {integrity: sha512-W7gp8Q/v1NlCZLsv8pQ3Y0uCu/SHgXOVFK+eUluUKWXmsb6VHkpNx0apdOWWcDbB9sJoKeP8uPrjmehJz6xETQ==}
+  /@bufbuild/protobuf@1.10.0:
+    resolution: {integrity: sha512-QDdVFLoN93Zjg36NoQPZfsVH9tZew7wKDKyV5qRdj8ntT4wQCOradQjRaTdwMhWUYsgKsvCINKKm87FdEk96Ag==}
     dev: false
 
   /@emotion/babel-plugin@11.11.0:
