@@ -15,15 +15,15 @@ require (
 	go.opentelemetry.io/otel/sdk v1.28.0
 	go.opentelemetry.io/otel/trace v1.28.0
 	golang.org/x/net v0.27.0
-	google.golang.org/api v0.188.0
+	google.golang.org/api v0.189.0
 	google.golang.org/grpc v1.65.0
 	google.golang.org/protobuf v1.34.2
 )
 
 require (
 	cloud.google.com/go v0.115.0 // indirect
-	cloud.google.com/go/auth v0.7.0 // indirect
-	cloud.google.com/go/auth/oauth2adapt v0.2.2 // indirect
+	cloud.google.com/go/auth v0.7.2 // indirect
+	cloud.google.com/go/auth/oauth2adapt v0.2.3 // indirect
 	cloud.google.com/go/compute v1.27.2 // indirect
 	cloud.google.com/go/longrunning v0.5.9 // indirect
 	cloud.google.com/go/trace v1.10.9 // indirect
@@ -50,7 +50,7 @@ require (
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
-	google.golang.org/genproto v0.0.0-20240708141625-4ad9e859172b // indirect
+	google.golang.org/genproto v0.0.0-20240722135656-d784300faade // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240701130421-f6361c86f094 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240708141625-4ad9e859172b // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240722135656-d784300faade // indirect
 )
