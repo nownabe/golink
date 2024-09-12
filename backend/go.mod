@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	cloud.google.com/go/compute/metadata v0.5.0
-	cloud.google.com/go/firestore v1.16.0
+	cloud.google.com/go/firestore v1.17.0
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v1.19.1
 	github.com/bufbuild/connect-go v1.10.0
 	github.com/google/go-cmp v0.6.0
@@ -51,6 +51,6 @@ require (
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/genproto v0.0.0-20240903143218-8af14fe29dc1 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20240827150818-7e3bb234dfed // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20240903143218-8af14fe29dc1 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240903143218-8af14fe29dc1 // indirect
 )
