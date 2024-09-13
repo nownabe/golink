@@ -21,8 +21,8 @@ dependencies:
     specifier: 11.13.0
     version: 11.13.0(@emotion/react@11.13.3)(@types/react@18.3.5)(react@18.3.1)
   '@fontsource/roboto':
-    specifier: 5.0.15
-    version: 5.0.15
+    specifier: 5.1.0
+    version: 5.1.0
   '@mui/icons-material':
     specifier: 5.16.7
     version: 5.16.7(@mui/material@5.16.7)(@types/react@18.3.5)(react@18.3.1)
@@ -751,8 +751,8 @@ packages:
       levn: 0.4.1
     dev: true
 
-  /@fontsource/roboto@5.0.15:
-    resolution: {integrity: sha512-352XiID9jfwmYaHpdmS3ocGJi3PA+vOm4HzJIRfSyPEyLP6dZN8iiEKUbdAfB5YXQO3YxO2KZpR+R28q2zMiYw==}
+  /@fontsource/roboto@5.1.0:
+    resolution: {integrity: sha512-cFRRC1s6RqPygeZ8Uw/acwVHqih8Czjt6Q0MwoUoDe9U3m4dH1HmNDRBZyqlMSFwgNAUKgFImncKdmDHyKpwdg==}
     dev: false
 
   /@humanwhocodes/module-importer@1.0.1:

@@ -44,7 +44,7 @@
     "@bufbuild/protobuf": "1.10.0",
     "@emotion/react": "11.13.3",
     "@emotion/styled": "11.13.0",
-    "@fontsource/roboto": "5.0.15",
+    "@fontsource/roboto": "5.1.0",
     "@mui/icons-material": "5.16.7",
     "@mui/material": "5.16.7",
     "react": "18.3.1",
