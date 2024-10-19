@@ -4,10 +4,10 @@
   "private": true,
   "engines": {
     "npm": "use pnpm",
-    "pnpm": "8.15.9",
+    "pnpm": "9.12.2",
     "yarn": "use pnpm"
   },
-  "packageManager": "pnpm@8.15.9",
+  "packageManager": "pnpm@9.12.2",
   "scripts": {
     "dev": "VITE_API_ENDPOINT='http://localhost:8080/api' vite",
     "build": "vite build --outDir ../backend/console --assetsDir './-/assets'",
