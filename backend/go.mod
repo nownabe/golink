@@ -1,6 +1,6 @@
 module github.com/nownabe/golink/backend
 
-go 1.22
+go 1.22.7
 
 toolchain go1.23.3
 
@@ -18,7 +18,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.31.0
 	golang.org/x/net v0.30.0
 	google.golang.org/api v0.205.0
-	google.golang.org/grpc v1.67.1
+	google.golang.org/grpc v1.68.0
 	google.golang.org/protobuf v1.35.1
 )
 
