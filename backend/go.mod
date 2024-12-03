@@ -2,7 +2,7 @@ module github.com/nownabe/golink/backend
 
 go 1.22.7
 
-toolchain go1.23.3
+toolchain go1.23.4
 
 require (
 	cloud.google.com/go/compute/metadata v0.5.2
