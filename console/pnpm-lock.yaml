@@ -24,11 +24,11 @@ dependencies:
     specifier: 5.1.0
     version: 5.1.0
   '@mui/icons-material':
-    specifier: 5.16.10
-    version: 5.16.10(@mui/material@5.16.9)(@types/react@18.3.16)(react@18.3.1)
+    specifier: 5.16.11
+    version: 5.16.11(@mui/material@5.16.11)(@types/react@18.3.16)(react@18.3.1)
   '@mui/material':
-    specifier: 5.16.9
-    version: 5.16.9(@emotion/react@11.14.0)(@emotion/styled@11.14.0)(@types/react@18.3.16)(react-dom@18.3.1)(react@18.3.1)
+    specifier: 5.16.11
+    version: 5.16.11(@emotion/react@11.14.0)(@emotion/styled@11.14.0)(@types/react@18.3.16)(react-dom@18.3.1)(react@18.3.1)
   react:
     specifier: 18.3.1
     version: 18.3.1
@@ -358,16 +358,6 @@ packages:
       stylis: 4.2.0
     transitivePeerDependencies:
       - supports-color
-    dev: false
-
-  /@emotion/cache@11.13.5:
-    resolution: {integrity: sha512-Z3xbtJ+UcK76eWkagZ1onvn/wAVb1GOMuR15s30Fm2wrMgC7jzpnO2JZXr4eujTTqoQFUrZIw/rT0c6Zzjca1g==}
-    dependencies:
-      '@emotion/memoize': 0.9.0
-      '@emotion/sheet': 1.4.0
-      '@emotion/utils': 1.4.2
-      '@emotion/weak-memoize': 0.4.0
-      stylis: 4.2.0
     dev: false
 
   /@emotion/cache@11.14.0:
@@ -794,12 +784,12 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  /@mui/core-downloads-tracker@5.16.9:
-    resolution: {integrity: sha512-ue3j79XJ56+F6DlTtFTM+n//5AvNENOvl3MFruZZP5iZzz+hOq6WBwnr+YxiMlr+kvmMHuHxgOHFdPR8+mElDw==}
+  /@mui/core-downloads-tracker@5.16.11:
+    resolution: {integrity: sha512-2eVDGg9OvIXNRmfDUQyKYH+jNcjdv1JkCH5F2YDgUye5fMX5nxGiYHAUe1BXaXyDMaLSwXC7LRksEKMiIQsFdw==}
     dev: false
 
-  /@mui/icons-material@5.16.10(@mui/material@5.16.9)(@types/react@18.3.16)(react@18.3.1):
-    resolution: {integrity: sha512-XtH9CF/QWffwT6uKbJSoPqk6Rlk0+vZb11rRQmXLS1Ok95+OmcEB2QqnwgWA7qzDn4hWv5TH4gItA+Q+Faqk/g==}
+  /@mui/icons-material@5.16.11(@mui/material@5.16.11)(@types/react@18.3.16)(react@18.3.1):
+    resolution: {integrity: sha512-LjIiDVGGPzessDd5uSGFYZNqrXqECLiJ9hESE6Xkk8CtGTN2m2h6iImKJpkoryNXYxulv87WLeqfTMWAfA4Igg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@mui/material': ^5.0.0
@@ -810,13 +800,13 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.23.9
-      '@mui/material': 5.16.9(@emotion/react@11.14.0)(@emotion/styled@11.14.0)(@types/react@18.3.16)(react-dom@18.3.1)(react@18.3.1)
+      '@mui/material': 5.16.11(@emotion/react@11.14.0)(@emotion/styled@11.14.0)(@types/react@18.3.16)(react-dom@18.3.1)(react@18.3.1)
       '@types/react': 18.3.16
       react: 18.3.1
     dev: false
 
-  /@mui/material@5.16.9(@emotion/react@11.14.0)(@emotion/styled@11.14.0)(@types/react@18.3.16)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-XC0oHFm7mrWV0tvhed9uv/o6kLNClnLj1eo/ufuKbj+rgk47ek8Y6HjHe3cGvMn4Bcq8KyoQPgzdwqvS2ZzYrA==}
+  /@mui/material@5.16.11(@emotion/react@11.14.0)(@emotion/styled@11.14.0)(@types/react@18.3.16)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-uoc67oecKdnVKaMHBVE433YrMuxQs22xY5nIjRb5sAPB+GaeZQWp8brQ3/adeH6k2IDa8+9i2IVd4fNLuvHSvA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@emotion/react': ^11.5.0
@@ -835,7 +825,7 @@ packages:
       '@babel/runtime': 7.23.9
       '@emotion/react': 11.14.0(@types/react@18.3.16)(react@18.3.1)
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0)(@types/react@18.3.16)(react@18.3.1)
-      '@mui/core-downloads-tracker': 5.16.9
+      '@mui/core-downloads-tracker': 5.16.11
       '@mui/system': 5.16.8(@emotion/react@11.14.0)(@emotion/styled@11.14.0)(@types/react@18.3.16)(react@18.3.1)
       '@mui/types': 7.2.15(@types/react@18.3.16)
       '@mui/utils': 5.16.8(@types/react@18.3.16)(react@18.3.1)
@@ -882,7 +872,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.23.9
-      '@emotion/cache': 11.13.5
+      '@emotion/cache': 11.14.0
       '@emotion/react': 11.14.0(@types/react@18.3.16)(react@18.3.1)
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0)(@types/react@18.3.16)(react@18.3.1)
       csstype: 3.1.3
