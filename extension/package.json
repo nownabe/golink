@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@types/chrome": "0.0.271",
-    "parcel": "2.13.2",
+    "parcel": "2.13.3",
     "process": "0.11.10",
     "typescript": "5.7.2"
   },
