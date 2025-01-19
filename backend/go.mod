@@ -12,7 +12,7 @@ require (
 	github.com/google/go-cmp v0.6.0
 	github.com/rs/cors v1.11.1
 	go.nownabe.dev/clog v0.0.0-20240208003331-02cb1ad137c2
-	go.opentelemetry.io/contrib/detectors/gcp v1.33.0
+	go.opentelemetry.io/contrib/detectors/gcp v1.34.0
 	go.opentelemetry.io/otel v1.34.0
 	go.opentelemetry.io/otel/sdk v1.34.0
 	go.opentelemetry.io/otel/trace v1.34.0
