@@ -63,7 +63,7 @@ devDependencies:
     version: 8.20.0(eslint@9.18.0)(typescript@5.7.3)
   '@vitejs/plugin-react':
     specifier: 4.3.4
-    version: 4.3.4(vite@4.5.5)
+    version: 4.3.4(vite@4.5.7)
   eslint:
     specifier: 9.18.0
     version: 9.18.0
@@ -104,11 +104,11 @@ devDependencies:
     specifier: 5.7.3
     version: 5.7.3
   vite:
-    specifier: 4.5.5
-    version: 4.5.5(@types/node@22.10.7)
+    specifier: 4.5.7
+    version: 4.5.7(@types/node@22.10.7)
   vite-tsconfig-paths:
     specifier: 4.3.2
-    version: 4.3.2(typescript@5.7.3)(vite@4.5.5)
+    version: 4.3.2(typescript@5.7.3)(vite@4.5.7)
 
 packages:
 
@@ -1255,7 +1255,7 @@ packages:
       eslint-visitor-keys: 4.2.0
     dev: true
 
-  /@vitejs/plugin-react@4.3.4(vite@4.5.5):
+  /@vitejs/plugin-react@4.3.4(vite@4.5.7):
     resolution: {integrity: sha512-SCCPBJtYLdE8PX/7ZQAs1QAZ8Jqwih+0VBLum1EGqmCCQal+MIUqLCzj3ZUy8ufbC0cAM4LRlSTm7IQJwWT4ug==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -1266,7 +1266,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.26.0)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 4.5.5(@types/node@22.10.7)
+      vite: 4.5.7(@types/node@22.10.7)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -3057,10 +3057,6 @@ packages:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
 
-  /picocolors@1.0.1:
-    resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
-    dev: true
-
   /picocolors@1.1.0:
     resolution: {integrity: sha512-TQ92mBOW0l3LeMeyLV6mzy/kWr8lkd/hp3mTg7wYK7zJhuBStmGMBG0BdeDZS/dZx1IukaX6Bk11zcln25o1Aw==}
 
@@ -3079,7 +3075,7 @@ packages:
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.3.6
-      picocolors: 1.0.1
+      picocolors: 1.1.0
       source-map-js: 1.0.2
     dev: true
 
@@ -3677,7 +3673,7 @@ packages:
       punycode: 2.3.0
     dev: true
 
-  /vite-tsconfig-paths@4.3.2(typescript@5.7.3)(vite@4.5.5):
+  /vite-tsconfig-paths@4.3.2(typescript@5.7.3)(vite@4.5.7):
     resolution: {integrity: sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA==}
     peerDependencies:
       vite: '*'
@@ -3688,14 +3684,14 @@ packages:
       debug: 4.3.4
       globrex: 0.1.2
       tsconfck: 3.0.3(typescript@5.7.3)
-      vite: 4.5.5(@types/node@22.10.7)
+      vite: 4.5.7(@types/node@22.10.7)
     transitivePeerDependencies:
       - supports-color
       - typescript
     dev: true
 
-  /vite@4.5.5(@types/node@22.10.7):
-    resolution: {integrity: sha512-ifW3Lb2sMdX+WU91s3R0FyQlAyLxOzCSCP37ujw0+r5POeHPwe6udWVIElKQq8gk3t7b8rkmvqC6IHBpCff4GQ==}
+  /vite@4.5.7(@types/node@22.10.7):
+    resolution: {integrity: sha512-vNeGkxk5lbs2CNXFz5nVSKjivMr1oYSb+xcClCSgH9oe/9FK3xzDgjjKTvO0Udc48eCV2AY4GYT61D6Y3iX9iQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
