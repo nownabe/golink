@@ -44,8 +44,8 @@ dependencies:
 
 devDependencies:
   '@tanstack/eslint-plugin-query':
-    specifier: 4.38.0
-    version: 4.38.0(eslint@9.22.0)
+    specifier: 5.67.2
+    version: 5.67.2(eslint@9.22.0)(typescript@5.8.2)
   '@types/node':
     specifier: 22.13.10
     version: 22.13.10
@@ -998,12 +998,16 @@ packages:
     resolution: {integrity: sha512-WJgX9nzTqknM393q1QJDJmoW28kUfEnybeTfVNcNAPnIx210RXm2DiXiHzfNPJNIUUb1tJnz/l4QGtJ30PgWmA==}
     dev: true
 
-  /@tanstack/eslint-plugin-query@4.38.0(eslint@9.22.0):
-    resolution: {integrity: sha512-KmcrnjTQzONBqxNWSVKyPNi5tLq0URvIiWThE9HIK5qePGtB0VqoHfOsn4nuGJD268xDNDpFQjQiko9mMa5iLQ==}
+  /@tanstack/eslint-plugin-query@5.67.2(eslint@9.22.0)(typescript@5.8.2):
+    resolution: {integrity: sha512-bWAA/0lYGBNv7lIV6tID2o5wC6yWUjkh9yx8ow9YMP3brxIhuUPdCAtJBhXL2nVzJTnc6FRrL401KFG5PPEkZg==}
     peerDependencies:
-      eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
+      eslint: ^8.57.0 || ^9.0.0
     dependencies:
+      '@typescript-eslint/utils': 8.26.0(eslint@9.22.0)(typescript@5.8.2)
       eslint: 9.22.0
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
     dev: true
 
   /@types/babel__core@7.20.5:
