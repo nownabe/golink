@@ -17,7 +17,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.35.0
 	go.opentelemetry.io/otel/trace v1.35.0
 	golang.org/x/net v0.37.0
-	google.golang.org/api v0.227.0
+	google.golang.org/api v0.228.0
 	google.golang.org/grpc v1.71.0
 	google.golang.org/protobuf v1.36.6
 )
@@ -25,7 +25,7 @@ require (
 require (
 	cloud.google.com/go v0.117.0 // indirect
 	cloud.google.com/go/auth v0.15.0 // indirect
-	cloud.google.com/go/auth/oauth2adapt v0.2.7 // indirect
+	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
 	cloud.google.com/go/compute v1.29.0 // indirect
 	cloud.google.com/go/longrunning v0.6.2 // indirect
 	cloud.google.com/go/trace v1.11.2 // indirect
