@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "4.38.0",
-    "@types/node": "22.14.1",
+    "@types/node": "22.15.0",
     "@types/react": "18.3.20",
     "@types/react-dom": "18.3.6",
     "@typescript-eslint/eslint-plugin": "8.29.0",
