@@ -47,8 +47,8 @@ devDependencies:
     specifier: 4.38.0
     version: 4.38.0(eslint@9.23.0)
   '@types/node':
-    specifier: 22.15.3
-    version: 22.15.3
+    specifier: 22.15.12
+    version: 22.15.12
   '@types/react':
     specifier: 18.3.20
     version: 18.3.20
@@ -105,7 +105,7 @@ devDependencies:
     version: 5.8.2
   vite:
     specifier: 4.5.14
-    version: 4.5.14(@types/node@22.15.3)
+    version: 4.5.14(@types/node@22.15.12)
   vite-tsconfig-paths:
     specifier: 4.3.2
     version: 4.3.2(typescript@5.8.2)(vite@4.5.14)
@@ -1030,8 +1030,8 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
-  /@types/node@22.15.3:
-    resolution: {integrity: sha512-lX7HFZeHf4QG/J7tBZqrCAXwz9J5RD56Y6MpP0eJkka8p+K0RY/yBTW7CYFJ4VGCclxqOLKmiGP5juQc6MKgcw==}
+  /@types/node@22.15.12:
+    resolution: {integrity: sha512-K0fpC/ZVeb8G9rm7bH7vI0KAec4XHEhBam616nVJCV51bKzJ6oA3luG4WdKoaztxe70QaNjS/xBmcDLmr4PiGw==}
     dependencies:
       undici-types: 6.21.0
     dev: true
@@ -1254,7 +1254,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.26.10)
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 4.5.14(@types/node@22.15.3)
+      vite: 4.5.14(@types/node@22.15.12)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -3716,13 +3716,13 @@ packages:
       debug: 4.3.4
       globrex: 0.1.2
       tsconfck: 3.0.3(typescript@5.8.2)
-      vite: 4.5.14(@types/node@22.15.3)
+      vite: 4.5.14(@types/node@22.15.12)
     transitivePeerDependencies:
       - supports-color
       - typescript
     dev: true
 
-  /vite@4.5.14(@types/node@22.15.3):
+  /vite@4.5.14(@types/node@22.15.12):
     resolution: {integrity: sha512-+v57oAaoYNnO3hIu5Z/tJRZjq5aHM2zDve9YZ8HngVHbhk66RStobhb1sqPMIPEleV6cNKYK4eGrAbE9Ulbl2g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -3750,7 +3750,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 22.15.3
+      '@types/node': 22.15.12
       esbuild: 0.18.20
       postcss: 8.4.27
       rollup: 3.28.0
