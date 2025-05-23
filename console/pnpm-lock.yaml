@@ -62,8 +62,8 @@ devDependencies:
     specifier: 8.29.0
     version: 8.29.0(eslint@9.23.0)(typescript@5.8.2)
   '@vitejs/plugin-react':
-    specifier: 4.4.1
-    version: 4.4.1(vite@4.5.14)
+    specifier: 4.5.0
+    version: 4.5.0(vite@4.5.14)
   eslint:
     specifier: 9.23.0
     version: 9.23.0
@@ -973,6 +973,10 @@ packages:
     engines: {node: '>=14.0.0'}
     dev: false
 
+  /@rolldown/pluginutils@1.0.0-beta.9:
+    resolution: {integrity: sha512-e9MeMtVWo186sgvFFJOPGy7/d2j2mZhLJIdVW0C/xDluuOvymEATqz6zKsP0ZmXGzQtqlyjz5sC1sYQUoJG98w==}
+    dev: true
+
   /@rtsao/scc@1.1.0:
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
     dev: true
@@ -1243,8 +1247,8 @@ packages:
       eslint-visitor-keys: 4.2.0
     dev: true
 
-  /@vitejs/plugin-react@4.4.1(vite@4.5.14):
-    resolution: {integrity: sha512-IpEm5ZmeXAP/osiBXVVP5KjFMzbWOonMs0NaQQl+xYnUAcq4oHUBsF2+p4MgKWG4YMmFYJU8A6sxRPuowllm6w==}
+  /@vitejs/plugin-react@4.5.0(vite@4.5.14):
+    resolution: {integrity: sha512-JuLWaEqypaJmOJPLWwO335Ig6jSgC1FTONCWAxnqcQthLTK/Yc9aH6hr9z/87xciejbQcnP3GnA1FWUSWeXaeg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0
@@ -1252,6 +1256,7 @@ packages:
       '@babel/core': 7.26.10
       '@babel/plugin-transform-react-jsx-self': 7.25.9(@babel/core@7.26.10)
       '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.26.10)
+      '@rolldown/pluginutils': 1.0.0-beta.9
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
       vite: 4.5.14(@types/node@22.15.21)
