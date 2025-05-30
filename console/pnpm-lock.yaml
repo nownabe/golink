@@ -47,8 +47,8 @@ devDependencies:
     specifier: 4.38.0
     version: 4.38.0(eslint@9.23.0)
   '@types/node':
-    specifier: 22.15.24
-    version: 22.15.24
+    specifier: 22.15.27
+    version: 22.15.27
   '@types/react':
     specifier: 18.3.23
     version: 18.3.23
@@ -105,7 +105,7 @@ devDependencies:
     version: 5.8.2
   vite:
     specifier: 4.5.14
-    version: 4.5.14(@types/node@22.15.24)
+    version: 4.5.14(@types/node@22.15.27)
   vite-tsconfig-paths:
     specifier: 4.3.2
     version: 4.3.2(typescript@5.8.2)(vite@4.5.14)
@@ -1034,8 +1034,8 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
-  /@types/node@22.15.24:
-    resolution: {integrity: sha512-w9CZGm9RDjzTh/D+hFwlBJ3ziUaVw7oufKA3vOFSOZlzmW9AkZnfjPb+DLnrV6qtgL/LNmP0/2zBNCFHL3F0ng==}
+  /@types/node@22.15.27:
+    resolution: {integrity: sha512-5fF+eu5mwihV2BeVtX5vijhdaZOfkQTATrePEaXTcKqI16LhJ7gi2/Vhd9OZM0UojcdmiOCVg5rrax+i1MdoQQ==}
     dependencies:
       undici-types: 6.21.0
     dev: true
@@ -1259,7 +1259,7 @@ packages:
       '@rolldown/pluginutils': 1.0.0-beta.9
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 4.5.14(@types/node@22.15.24)
+      vite: 4.5.14(@types/node@22.15.27)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -3721,13 +3721,13 @@ packages:
       debug: 4.3.4
       globrex: 0.1.2
       tsconfck: 3.0.3(typescript@5.8.2)
-      vite: 4.5.14(@types/node@22.15.24)
+      vite: 4.5.14(@types/node@22.15.27)
     transitivePeerDependencies:
       - supports-color
       - typescript
     dev: true
 
-  /vite@4.5.14(@types/node@22.15.24):
+  /vite@4.5.14(@types/node@22.15.27):
     resolution: {integrity: sha512-+v57oAaoYNnO3hIu5Z/tJRZjq5aHM2zDve9YZ8HngVHbhk66RStobhb1sqPMIPEleV6cNKYK4eGrAbE9Ulbl2g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -3755,7 +3755,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 22.15.24
+      '@types/node': 22.15.27
       esbuild: 0.18.20
       postcss: 8.4.27
       rollup: 3.28.0
