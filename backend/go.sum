@@ -256,6 +256,8 @@ github.com/GoogleCloudPlatform/opentelemetry-operations-go/detectors/gcp v1.27.0
 github.com/GoogleCloudPlatform/opentelemetry-operations-go/detectors/gcp v1.27.0/go.mod h1:yAZHSGnqScoU556rBOVkwLze6WP5N+U11RHuWaGVxwY=
 github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v1.19.1 h1:lP8YpTi26Bei2OrXpQEUnNFPqKT6bTn3P8DvJC4i8WQ=
 github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v1.19.1/go.mod h1:g9zEQ45EhrGGA6HyCtxi8yL0BZ0vD+pVaqSkiLjVIzY=
+github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v1.29.0 h1:YVtMlmfRUTaWs3+1acwMBp7rBUo6zrxl6Kn13/R9YW4=
+github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v1.29.0/go.mod h1:rKOFVIPbNs2wZeh7ZeQ0D9p/XLgbNiTr5m7x6KuAshk=
 github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/cloudmock v0.43.1 h1:EA/FmSYRyeL2ZogHD8ZCPAt96UZh/U76wQjGhzRFEHE=
 github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/cloudmock v0.43.1/go.mod h1:OZ0OdcedAJJyQbJsfO97KMimDYkuOkzzO4AQPgV5QRI=
 github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping v0.43.1 h1:ti4stlXHjDhGl+1h+EpqXv9+Wxv0XqCB3XTT4W6ZoQU=
@@ -264,6 +266,8 @@ github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapp
 github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping v0.50.0/go.mod h1:otE2jQekW/PqXk1Awf5lmfokJx4uwuqcj1ab5SpGeW0=
 github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping v0.51.0 h1:6/0iUd0xrnX7qt+mLNRwg5c0PGv8wpE8K90ryANQwMI=
 github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping v0.51.0/go.mod h1:otE2jQekW/PqXk1Awf5lmfokJx4uwuqcj1ab5SpGeW0=
+github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping v0.53.0 h1:Ron4zCA/yk6U7WOBXhTJcDpsUBG9npumK6xw2auFltQ=
+github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping v0.53.0/go.mod h1:cSgYe11MCNYunTnRXrKiR/tHc0eoKjICUuWpNZoVCOo=
 github.com/bufbuild/connect-go v1.10.0 h1:QAJ3G9A1OYQW2Jbk3DeoJbkCxuKArrvZgDt47mjdTbg=
 github.com/bufbuild/connect-go v1.10.0/go.mod h1:CAIePUgkDR5pAFaylSMtNK45ANQjp9JvpluG20rhpV8=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
