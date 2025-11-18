@@ -36,7 +36,7 @@
     "process": "0.11.10",
     "typescript": "5.8.2",
     "vite": "4.5.14",
-    "vite-tsconfig-paths": "4.3.2"
+    "vite-tsconfig-paths": "5.1.4"
   },
   "dependencies": {
     "@bufbuild/connect": "0.13.0",
