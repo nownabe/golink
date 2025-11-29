@@ -18,7 +18,7 @@
     "@types/chrome": "0.0.271",
     "parcel": "2.16.1",
     "process": "0.11.10",
-    "typescript": "5.8.2"
+    "typescript": "5.9.3"
   },
   "dependencies": {
     "@bufbuild/connect": "0.13.0",
