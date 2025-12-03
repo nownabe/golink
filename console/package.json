@@ -34,7 +34,7 @@
     "eslint-plugin-react-hooks": "5.2.0",
     "prettier": "3.7.4",
     "process": "0.11.10",
-    "typescript": "5.8.2",
+    "typescript": "5.9.3",
     "vite": "4.5.14",
     "vite-tsconfig-paths": "4.3.2"
   },
