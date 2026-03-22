@@ -52,5 +52,5 @@ jobs:
         with:
           working-directory: ./backend
           skip-cache: true
-          version: v1.64.8
+          version: v2.11.4
           args: --config=.golangci.yaml
