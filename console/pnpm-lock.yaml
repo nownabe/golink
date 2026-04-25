@@ -68,8 +68,8 @@ devDependencies:
     specifier: 10.0.2
     version: 10.0.2
   eslint-config-next:
-    specifier: 16.0.0
-    version: 16.0.0(@typescript-eslint/parser@8.29.0)(eslint@10.0.2)(typescript@5.8.2)
+    specifier: 16.2.4
+    version: 16.2.4(@typescript-eslint/parser@8.29.0)(eslint@10.0.2)(typescript@5.8.2)
   eslint-config-prettier:
     specifier: 10.1.8
     version: 10.1.8(eslint@10.0.2)
@@ -992,8 +992,8 @@ packages:
       react-is: 19.0.0
     dev: false
 
-  /@next/eslint-plugin-next@16.0.0:
-    resolution: {integrity: sha512-IB7RzmmtrPOrpAgEBR1PIQPD0yea5lggh5cq54m51jHjjljU80Ia+czfxJYMlSDl1DPvpzb8S9TalCc0VMo9Hw==}
+  /@next/eslint-plugin-next@16.2.4:
+    resolution: {integrity: sha512-tOX826JJ96gYK/go18sPUgMq9FK1tqxBFfUCEufJb5XIkWFFmpgU7mahJANKGkHs7F41ir3tReJ3Lv5La0RvhA==}
     dependencies:
       fast-glob: 3.3.1
     dev: true
@@ -1163,7 +1163,7 @@ packages:
       eslint: ^8.57.0 || ^9.0.0
       typescript: '>=4.8.4 <6.0.0'
     dependencies:
-      '@eslint-community/regexpp': 4.12.1
+      '@eslint-community/regexpp': 4.12.2
       '@typescript-eslint/parser': 8.46.2(eslint@10.0.2)(typescript@5.8.2)
       '@typescript-eslint/scope-manager': 8.46.2
       '@typescript-eslint/type-utils': 8.46.2(eslint@10.0.2)(typescript@5.8.2)
@@ -2164,8 +2164,8 @@ packages:
       semver: 7.6.3
     dev: true
 
-  /eslint-config-next@16.0.0(@typescript-eslint/parser@8.29.0)(eslint@10.0.2)(typescript@5.8.2):
-    resolution: {integrity: sha512-DWKT1YAO9ex2rK0/EeiPpKU++ghTiG59z6m08/ReLRECOYIaEv17maSCYT8zmFQLwIrY5lhJ+iaJPQdT4sJd4g==}
+  /eslint-config-next@16.2.4(@typescript-eslint/parser@8.29.0)(eslint@10.0.2)(typescript@5.8.2):
+    resolution: {integrity: sha512-A6ekXYFj/YQxBPMl45g3e+U8zJo+X2+ZQwcz34pPKjpc/3S4roBA2Rd9xWB4FKuSxhofo1/95WjzmUY+wHrOhg==}
     peerDependencies:
       eslint: '>=9.0.0'
       typescript: '>=3.3.1'
@@ -2173,7 +2173,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@next/eslint-plugin-next': 16.0.0
+      '@next/eslint-plugin-next': 16.2.4
       eslint: 10.0.2
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.0(@typescript-eslint/parser@8.29.0)(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.32.0)(eslint@10.0.2)
