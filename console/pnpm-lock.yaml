@@ -75,13 +75,13 @@ devDependencies:
     version: 10.1.8(eslint@10.0.2)
   eslint-config-standard-with-typescript:
     specifier: 43.0.1
-    version: 43.0.1(@typescript-eslint/eslint-plugin@8.29.0)(eslint-plugin-import@2.32.0)(eslint-plugin-n@18.0.0)(eslint-plugin-promise@7.3.0)(eslint@10.0.2)(typescript@5.8.2)
+    version: 43.0.1(@typescript-eslint/eslint-plugin@8.29.0)(eslint-plugin-import@2.32.0)(eslint-plugin-n@18.0.1)(eslint-plugin-promise@7.3.0)(eslint@10.0.2)(typescript@5.8.2)
   eslint-plugin-import:
     specifier: 2.32.0
     version: 2.32.0(@typescript-eslint/parser@8.29.0)(eslint-import-resolver-typescript@3.6.0)(eslint@10.0.2)
   eslint-plugin-n:
-    specifier: 18.0.0
-    version: 18.0.0(eslint@10.0.2)(typescript@5.8.2)
+    specifier: 18.0.1
+    version: 18.0.1(eslint@10.0.2)(typescript@5.8.2)
   eslint-plugin-prettier:
     specifier: 5.5.5
     version: 5.5.5(eslint-config-prettier@10.1.8)(eslint@10.0.2)(prettier@3.8.3)
@@ -2179,7 +2179,7 @@ packages:
       eslint: 10.0.2
     dev: true
 
-  /eslint-config-standard-with-typescript@43.0.1(@typescript-eslint/eslint-plugin@8.29.0)(eslint-plugin-import@2.32.0)(eslint-plugin-n@18.0.0)(eslint-plugin-promise@7.3.0)(eslint@10.0.2)(typescript@5.8.2):
+  /eslint-config-standard-with-typescript@43.0.1(@typescript-eslint/eslint-plugin@8.29.0)(eslint-plugin-import@2.32.0)(eslint-plugin-n@18.0.1)(eslint-plugin-promise@7.3.0)(eslint@10.0.2)(typescript@5.8.2):
     resolution: {integrity: sha512-WfZ986+qzIzX6dcr4yGUyVb/l9N3Z8wPXCc5z/70fljs3UbWhhV+WxrfgsqMToRzuuyX9MqZ974pq2UPhDTOcA==}
     peerDependencies:
       '@typescript-eslint/eslint-plugin': ^6.4.0
@@ -2192,16 +2192,16 @@ packages:
       '@typescript-eslint/eslint-plugin': 8.29.0(@typescript-eslint/parser@8.29.0)(eslint@10.0.2)(typescript@5.8.2)
       '@typescript-eslint/parser': 6.21.0(eslint@10.0.2)(typescript@5.8.2)
       eslint: 10.0.2
-      eslint-config-standard: 17.1.0(eslint-plugin-import@2.32.0)(eslint-plugin-n@18.0.0)(eslint-plugin-promise@7.3.0)(eslint@10.0.2)
+      eslint-config-standard: 17.1.0(eslint-plugin-import@2.32.0)(eslint-plugin-n@18.0.1)(eslint-plugin-promise@7.3.0)(eslint@10.0.2)
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.29.0)(eslint-import-resolver-typescript@3.6.0)(eslint@10.0.2)
-      eslint-plugin-n: 18.0.0(eslint@10.0.2)(typescript@5.8.2)
+      eslint-plugin-n: 18.0.1(eslint@10.0.2)(typescript@5.8.2)
       eslint-plugin-promise: 7.3.0(eslint@10.0.2)
       typescript: 5.8.2
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /eslint-config-standard@17.1.0(eslint-plugin-import@2.32.0)(eslint-plugin-n@18.0.0)(eslint-plugin-promise@7.3.0)(eslint@10.0.2):
+  /eslint-config-standard@17.1.0(eslint-plugin-import@2.32.0)(eslint-plugin-n@18.0.1)(eslint-plugin-promise@7.3.0)(eslint@10.0.2):
     resolution: {integrity: sha512-IwHwmaBNtDK4zDHQukFDW5u/aTb8+meQWZvNFWkiGmbWjD6bqyuSSBxxXKkCftCUzc1zwCH2m/baCNDLGmuO5Q==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -2212,7 +2212,7 @@ packages:
     dependencies:
       eslint: 10.0.2
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.29.0)(eslint-import-resolver-typescript@3.6.0)(eslint@10.0.2)
-      eslint-plugin-n: 18.0.0(eslint@10.0.2)(typescript@5.8.2)
+      eslint-plugin-n: 18.0.1(eslint@10.0.2)(typescript@5.8.2)
       eslint-plugin-promise: 7.3.0(eslint@10.0.2)
     dev: true
 
@@ -2353,13 +2353,13 @@ packages:
       string.prototype.includes: 2.0.1
     dev: true
 
-  /eslint-plugin-n@18.0.0(eslint@10.0.2)(typescript@5.8.2):
-    resolution: {integrity: sha512-a1S1CiOrfOyZbH69f/n5JQoKToGvALRk7Vt2yjCNFhipy7RDhjnLNLzigOb7YxDuHpUp/IOQsz10CKAjoU/0aA==}
+  /eslint-plugin-n@18.0.1(eslint@10.0.2)(typescript@5.8.2):
+    resolution: {integrity: sha512-q3ARhk+eZRc7myR0KHx+R3/GJeOHF+Ir6PK95Pu2tEX8Sl/4BIpmmVLva2kPrjC2gCmn6WHlHm+3yeo6Rxhycw==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
     peerDependencies:
       eslint: '>=8.57.1'
       ts-declaration-location: ^1.0.6
-      typescript: ^5.0.0
+      typescript: '>=5.0.0'
     peerDependenciesMeta:
       ts-declaration-location:
         optional: true
