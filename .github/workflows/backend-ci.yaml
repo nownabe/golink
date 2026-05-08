@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       - uses: actions/setup-go@7b8cf10d4e4a01d4992d18a89f4d7dc5a3e6d6f4 # v4
         with:
-          go-version: "1.21.13"
+          go-version: "1.26.3"
       - run: go mod download
       - name: Firestore Emulator
         run: docker run -d -p 9000:9000 gcr.io/google.com/cloudsdktool/cloud-sdk:emulators gcloud emulators firestore start --host-port=0.0.0.0:9000
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       - uses: actions/setup-go@7b8cf10d4e4a01d4992d18a89f4d7dc5a3e6d6f4 # v4
         with:
-          go-version: "1.21.13"
+          go-version: "1.26.3"
       - name: golangci-lint
         uses: golangci/golangci-lint-action@3a919529898de77ec3da873e3063ca4b10e7f5cc # v3
         with:
