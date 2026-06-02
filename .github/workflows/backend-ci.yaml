@@ -33,7 +33,7 @@ jobs:
         env:
           FIRESTORE_EMULATOR_HOST: "localhost:9000"
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457 # v3
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6
         env:
           directory: ./backend
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
