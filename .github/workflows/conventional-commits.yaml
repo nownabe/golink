@@ -9,10 +9,10 @@ jobs:
       - run: echo "fetch_depth=$(( $commits + 1 ))" >> $GITHUB_ENV
         env:
           commits: ${{ github.event.pull_request.commits }}
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: ${{ env.fetch_depth }}
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
       - run: npm install -g @commitlint/cli @commitlint/config-conventional
       - run: npx commitlint --from "$from" --to "$to" --verbose -x "$extends"
         env:
