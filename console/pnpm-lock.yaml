@@ -107,8 +107,8 @@ devDependencies:
     specifier: 4.5.14
     version: 4.5.14(@types/node@22.17.1)
   vite-tsconfig-paths:
-    specifier: 4.3.2
-    version: 4.3.2(typescript@5.8.2)(vite@4.5.14)
+    specifier: 6.1.1
+    version: 6.1.1(typescript@5.8.2)(vite@4.5.14)
 
 packages:
 
@@ -3934,6 +3934,7 @@ packages:
   /tsconfck@3.0.3(typescript@5.8.2):
     resolution: {integrity: sha512-4t0noZX9t6GcPTfBAbIbbIU4pfpCwh0ueq3S4O/5qXI1VwK1outmxhe9dOiEWqMz3MW2LKgDTpqWV+37IWuVbA==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -4059,13 +4060,10 @@ packages:
       punycode: 2.3.0
     dev: true
 
-  /vite-tsconfig-paths@4.3.2(typescript@5.8.2)(vite@4.5.14):
-    resolution: {integrity: sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA==}
+  /vite-tsconfig-paths@6.1.1(typescript@5.8.2)(vite@4.5.14):
+    resolution: {integrity: sha512-2cihq7zliibCCZ8P9cKJrQBkfgdvcFkOOc3Y02o3GWUDLgqjWsZudaoiuOwO/gzTzy17cS5F7ZPo4bsnS4DGkg==}
     peerDependencies:
       vite: '*'
-    peerDependenciesMeta:
-      vite:
-        optional: true
     dependencies:
       debug: 4.3.4
       globrex: 0.1.2
